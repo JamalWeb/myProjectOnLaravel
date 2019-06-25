@@ -34,17 +34,20 @@ return [
                 ],
             ],
         ],
+        'response'     => [
+            'format'  => yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
+        'urlManager'   => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
+            'showScriptName'  => false,
+            'rules'           => [
             ],
         ],
-        */
+
     ],
     'params'              => $params,
 ];
