@@ -1,14 +1,10 @@
 require 'yaml'
 require 'fileutils'
 
-required_plugins = %w( vagrant-hostmanager vagrant-vbguest )
-required_plugins.each do |plugin|
-    exec "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
-end
-
 domains = {
-  frontend: 'y2aa-frontend.test',
-  backend:  'y2aa-backend.test'
+  frontend:  'project.loc',
+  backend:   'backend.project.loc',
+  api:       'api.project.loc'
 }
 
 config = {
@@ -66,6 +62,9 @@ Vagrant.configure(2) do |config|
   config.hostmanager.ignore_private_ip  = false
   config.hostmanager.include_offline    = true
   config.hostmanager.aliases            = domains.values
+
+  config.vm.boot_timeout                = 300
+  config.ssh.private_key_path=
 
   # provisioners
   config.vm.provision 'shell', path: './vagrant/provision/once-as-root.sh', args: [options['timezone']]

@@ -47,7 +47,6 @@ return [
             'rules'           => [
             ],
         ],
-
     ],
     'params'              => $params,
 ];
