@@ -13,6 +13,32 @@ use common\models\LoginForm;
  */
 class SiteController extends Controller
 {
+    public function actions()
+    {
+        return [
+            //The document preview addesss:http://api.yourhost.com/site/doc
+            'doc' => [
+                'class' => 'light\swagger\SwaggerAction',
+                'restUrl' => \yii\helpers\Url::to(['/site/api'], true),
+            ],
+            //The resultUrl action.
+            'api' => [
+                'class' => 'light\swagger\SwaggerApiAction',
+                //The scan directories, you should use real path there.
+                'scanDir' => [
+                    Yii::getAlias('@api/modules/versions/v1/swagger'),
+                    Yii::getAlias('@api/modules/versions/v1/controllers'),
+                    Yii::getAlias('@api/modules/versions/v1/models'),
+                    Yii::getAlias('@api/models'),
+                ],
+                //The security key
+                'api_key' => 'test',
+                'cache' => 'cache',
+                'cacheKey' => 'api-swagger-cache', // default is 'api-swagger-cache'
+            ],
+        ];
+    }
+
     /**
      * Displays homepage.
      *
@@ -20,6 +46,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return 1;
+        return Yii::getAlias('@api/modules/versions/v1/controllers');
     }
 }

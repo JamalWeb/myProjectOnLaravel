@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e49b312d14b408b3b7091e599a672f80",
+    "content-hash": "227ff7c018112a5e7ae686d652229b32",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -32,7 +32,7 @@
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "https://github.com/RobinHerbots/Inputmask.git",
+                "url": "git@github.com:RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -80,6 +80,26 @@
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
             },
             "type": "bower-asset"
+        },
+        {
+            "name": "bower-asset/swagger-ui",
+            "version": "v2.2.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swagger-api/swagger-ui.git",
+                "reference": "64dc3060b3700b12e466f8d67b7d7ec3574b015f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/64dc3060b3700b12e466f8d67b7d7ec3574b015f",
+                "reference": "64dc3060b3700b12e466f8d67b7d7ec3574b015f"
+            },
+            "type": "bower-asset",
+            "license": [
+                "Apache-2.0",
+                "Copyright 2016 SmartBear Software",
+                "./LICENSE"
+            ]
         },
         {
             "name": "bower-asset/yii2-pjax",
@@ -161,6 +181,74 @@
                 "markdown-extra"
             ],
             "time": "2018-03-26T11:24:36+00:00"
+        },
+        {
+            "name": "doctrine/annotations",
+            "version": "v1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/annotations.git",
+                "reference": "53120e0eb10355388d6ccbe462f1fea34ddadb24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/53120e0eb10355388d6ccbe462f1fea34ddadb24",
+                "reference": "53120e0eb10355388d6ccbe462f1fea34ddadb24",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "1.*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "doctrine/cache": "1.*",
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Docblock Annotations Parser",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "parser"
+            ],
+            "time": "2019-03-25T19:12:02+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -327,6 +415,56 @@
             "time": "2018-02-23T01:58:20+00:00"
         },
         {
+            "name": "light/yii2-swagger",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lichunqiang/yii2-swagger.git",
+                "reference": "0a9d37204398df245ec1420b07296fd78b6a2a8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lichunqiang/yii2-swagger/zipball/0a9d37204398df245ec1420b07296fd78b6a2a8c",
+                "reference": "0a9d37204398df245ec1420b07296fd78b6a2a8c",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/swagger-ui": "2.2.10",
+                "yiisoft/yii2": "^2.0.0",
+                "zircote/swagger-php": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "light\\swagger\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "lichunqiang",
+                    "email": "light-li@hotmail.com"
+                }
+            ],
+            "description": "swagger intergation with yii2",
+            "keywords": [
+                "document",
+                "extension",
+                "restful",
+                "swagger",
+                "yii2"
+            ],
+            "time": "2018-02-07T02:40:19+00:00"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v6.2.1",
             "source": {
@@ -387,6 +525,55 @@
                 "mailer"
             ],
             "time": "2019-04-21T09:21:45+00:00"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v4.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a",
+                "reference": "33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Finder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "https://symfony.com",
+            "time": "2019-06-13T11:03:18+00:00"
         },
         {
             "name": "symfony/polyfill-iconv",
@@ -889,6 +1076,68 @@
                 "yii2"
             ],
             "time": "2018-09-23T22:00:47+00:00"
+        },
+        {
+            "name": "zircote/swagger-php",
+            "version": "2.0.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zircote/swagger-php.git",
+                "reference": "f2a00f26796e5cd08fd812275ba2db3d1e807663"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/f2a00f26796e5cd08fd812275ba2db3d1e807663",
+                "reference": "f2a00f26796e5cd08fd812275ba2db3d1e807663",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "*",
+                "php": ">=5.6",
+                "symfony/finder": ">=2.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8.35 <=5.6",
+                "squizlabs/php_codesniffer": ">=2.7",
+                "zendframework/zend-form": "<2.8"
+            },
+            "bin": [
+                "bin/swagger"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Swagger\\": "src"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Allen",
+                    "email": "zircote@gmail.com",
+                    "homepage": "http://www.zircote.com"
+                },
+                {
+                    "name": "Bob Fanger",
+                    "email": "bfanger@gmail.com",
+                    "homepage": "http://bfanger.nl"
+                }
+            ],
+            "description": "Swagger-PHP - Generate interactive documentation for your RESTful API using phpdoc annotations",
+            "homepage": "https://github.com/zircote/swagger-php/",
+            "keywords": [
+                "api",
+                "json",
+                "rest",
+                "service discovery"
+            ],
+            "time": "2019-05-17T10:10:34+00:00"
         }
     ],
     "packages-dev": [
@@ -1265,33 +1514,37 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.5.2",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "9f83dded91781a01c63574e387eaa769be769115"
+                "reference": "dc784032a3f6f4e7a4b882e272b771f6fe4c37cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9f83dded91781a01c63574e387eaa769be769115",
-                "reference": "9f83dded91781a01c63574e387eaa769be769115",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/dc784032a3f6f4e7a4b882e272b771f6fe4c37cf",
+                "reference": "dc784032a3f6f4e7a4b882e272b771f6fe4c37cf",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "psr/http-message": "~1.0",
-                "ralouphie/getallheaders": "^2.0.5"
+                "ralouphie/getallheaders": "^2.0.5 || ^3.0.0"
             },
             "provide": {
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
+                "ext-zlib": "*",
                 "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+            },
+            "suggest": {
+                "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.6-dev"
                 }
             },
             "autoload": {
@@ -1328,7 +1581,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2018-12-04T20:46:45+00:00"
+            "time": "2019-06-30T00:37:05+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2227,24 +2480,24 @@
         },
         {
             "name": "ralouphie/getallheaders",
-            "version": "2.0.5",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ralouphie/getallheaders.git",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
+                "reference": "120b605dfeb996808c31b6477290a714d356e822"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/120b605dfeb996808c31b6477290a714d356e822",
+                "reference": "120b605dfeb996808c31b6477290a714d356e822",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "~3.7.0",
-                "satooshi/php-coveralls": ">=1.0"
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^5 || ^6.5"
             },
             "type": "library",
             "autoload": {
@@ -2263,7 +2516,7 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
-            "time": "2016-02-11T07:05:27+00:00"
+            "time": "2019-03-08T08:55:37+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2883,16 +3136,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.3.1",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64"
+                "reference": "b592b26a24265a35172d8a2094d8b10f22b7cc39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
-                "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
+                "url": "https://api.github.com/repos/symfony/console/zipball/b592b26a24265a35172d8a2094d8b10f22b7cc39",
+                "reference": "b592b26a24265a35172d8a2094d8b10f22b7cc39",
                 "shasum": ""
             },
             "require": {
@@ -2954,11 +3207,11 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-05T13:25:51+00:00"
+            "time": "2019-06-13T11:03:18+00:00"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v4.3.1",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -3011,16 +3264,16 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v4.3.1",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "06ee58fbc9a8130f1d35b5280e15235a0515d457"
+                "reference": "291397232a2eefb3347eaab9170409981eaad0e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/06ee58fbc9a8130f1d35b5280e15235a0515d457",
-                "reference": "06ee58fbc9a8130f1d35b5280e15235a0515d457",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/291397232a2eefb3347eaab9170409981eaad0e2",
+                "reference": "291397232a2eefb3347eaab9170409981eaad0e2",
                 "shasum": ""
             },
             "require": {
@@ -3068,20 +3321,20 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-31T18:55:30+00:00"
+            "time": "2019-06-13T11:03:18+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v4.3.1",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "4e6c670af81c4fb0b6c08b035530a9915d0b691f"
+                "reference": "d257021c1ab28d48d24a16de79dfab445ce93398"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/4e6c670af81c4fb0b6c08b035530a9915d0b691f",
-                "reference": "4e6c670af81c4fb0b6c08b035530a9915d0b691f",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/d257021c1ab28d48d24a16de79dfab445ce93398",
+                "reference": "d257021c1ab28d48d24a16de79dfab445ce93398",
                 "shasum": ""
             },
             "require": {
@@ -3138,7 +3391,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-30T16:10:05+00:00"
+            "time": "2019-06-13T11:03:18+00:00"
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -3197,55 +3450,6 @@
                 "standards"
             ],
             "time": "2019-06-20T06:46:26+00:00"
-        },
-        {
-            "name": "symfony/finder",
-            "version": "v4.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "b3d4f4c0e4eadfdd8b296af9ca637cfbf51d8176"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/b3d4f4c0e4eadfdd8b296af9ca637cfbf51d8176",
-                "reference": "b3d4f4c0e4eadfdd8b296af9ca637cfbf51d8176",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Finder\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Finder Component",
-            "homepage": "https://symfony.com",
-            "time": "2019-05-26T20:47:49+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -3423,7 +3627,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.3.1",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
