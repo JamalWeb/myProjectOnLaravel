@@ -10,27 +10,10 @@ use Yii;
 use Throwable;
 use yii\rest\Controller;
 
-use api_web\{
-    classes\UserWebApi,
-    exceptions\ValidationException
-};
-
-use common\models\{
-    licenses\License,
-    Organization,
-    User
-};
-
-use yii\filters\{
-    ContentNegotiator,
-    auth\HttpBearerAuth,
-    auth\QueryParamAuth
-};
+use common\models\User;
 
 use yii\web\{
-    BadRequestHttpException,
     HttpException,
-    Response,
     UnauthorizedHttpException
 };
 
@@ -47,16 +30,16 @@ use yii\web\{
  *     basePath="/"
  * )
  * @SWG\Info(
- *     title="MixCart API WEB - Документация",
- *     description = "Взаимодействие с сервисом MixCart",
+ *     title="Vorchami Project-name - Документация",
+ *     description = "Взаимодействие с сервисом project-name",
  *     version="1.0",
  *     contact={
- *          "name": "MixCart",
- *          "email": "narzyaev@yandex.ru"
+ *          "name": "Arsen",
+ *          "email": "arsen-web@yandex.ru"
  *     }
  * )
  */
-class WebApiController extends Controller
+class BaseController extends Controller
 {
     /**
      * @var User $user
@@ -98,44 +81,4 @@ class WebApiController extends Controller
      * Экземпляр класса из $this->className
      */
     protected $classWebApi;
-
-    /**
-     * @throws HttpException
-     * @throws Yii\base\ExitException
-     * @throws Yii\base\InvalidConfigException
-     * @throws Throwable
-     * @throws ValidationException
-     * @throws UnauthorizedHttpException
-     */
-    public function init()
-    {
-        $this->addHeaders();
-        $this->checkOptionsHeader();
-    }
-
-    /**
-     * Добавление заголовкой CORS
-     */
-    private function addHeaders()
-    {
-        $headers = Yii::$app->response->headers;
-        $headers->add('Access-Control-Allow-Origin', '*');
-        $headers->add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        $headers->add('Access-Control-Allow-Headers', 'Content-Type, Authorization, GMT');
-        $headers->add('Access-Control-Expose-Headers', 'License-Expire, License-Manager-Phone, FileName');
-    }
-
-    /**
-     * @throws Yii\base\ExitException
-     */
-    private function checkOptionsHeader()
-    {
-        if (Yii::$app->request->isOptions) {
-            Yii::$app->response->headers->add('Access-Control-Max-Age', 86400);
-            Yii::$app->response->statusCode = 200;
-            Yii::$app->response->content = ' ';
-            Yii::$app->response->send();
-            Yii::$app->end(200, Yii::$app->response);
-        }
-    }
 }

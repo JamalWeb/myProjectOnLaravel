@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>MixCart Api Web Documentation</title>
+    <title>Vorchami Project-name Api Documentation</title>
     <?php $this->head() ?>
     <script type="text/javascript">
         $(function () {
@@ -150,7 +150,7 @@
 
 <div id='header'>
     <div class="swagger-ui-wrap">
-        <a id="logo" href="https://mixcart.ru"><span class="logo__title">MixCart API WEB</span></a>
+        <a id="logo" href="#"><span class="logo__title">Vorchami Project-name Api Documentation</span></a>
     </div>
     <div class="panel">
         <label>Документация</label>

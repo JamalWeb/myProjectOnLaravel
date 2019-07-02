@@ -3,53 +3,71 @@
 namespace api\modules\versions\v1\controllers;
 
 use Yii;
-use yii\web\Controller;
+use yii\web\Response;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
-     * @SWG\Post(path="/users",
-     *     tags={"user"},
-     *     summary="创建用户接口",
-     *     description="测试Param是 *query* 类型, 如果设置成 *formData* 类型的就可以使用post获取数据",
-     *     produces={"application/json"},
+     * @SWG\Post(path="/v1/user/get",
+     *     tags={"User"},
+     *     summary="Информация о пользователе",
+     *     description="Информация о пользователе",
+     *     produces={
+     *         "apllication/json",
+     *         "multipart/form-data"
+     *     },
      *     @SWG\Parameter(
-     *        in = "formData",
-     *        name = "username",
-     *        description = "用户姓名",
-     *        required = true,
-     *        type = "string"
+     *         name="post",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema (
+     *              @SWG\Property(
+     *                  property="request",
+     *                  type="object",
+     *                  default={"id":1, "email":"neo@neo.com"}
+     *              )
+     *         )
      *     ),
      *     @SWG\Parameter(
-     *        in = "formData",
-     *        name = "phone",
-     *        description = "手机号",
-     *        required = true,
-     *        type = "string"
+     *         name="post1",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema (
+     *              @SWG\Property(
+     *                  property="request",
+     *                  type="object",
+     *                  default={"id":1, "email":"neo@neo.com"}
+     *              )
+     *         )
      *     ),
-     *     @SWG\Parameter(
-     *        in = "formData",
-     *        name = "sex",
-     *        description = "性别 1. 男 2.女 此项为非必填项.展示成select",
-     *        required = false,
-     *        type = "integer",
-     *        enum = {1, 2}
-     *     ),
-     *
      *     @SWG\Response(
      *         response = 200,
-     *         description = " success"
+     *         description = "success",
+     *         @SWG\Schema(
+     *            default={
+     *                   "id": 5,
+     *                   "email": "mail@yandex.ru",
+     *                   "phone": "+79999999999",
+     *                   "name": "Годный Старец",
+     *                   "role_id": 3,
+     *                   "role": "Руководитель"
+     *               }
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response = 400,
+     *         description = "BadRequestHttpException"
      *     ),
      *     @SWG\Response(
      *         response = 401,
-     *         description = "需要重新登陆",
-     *         @SWG\Schema(ref="#/definitions/Error")
+     *         description = "UnauthorizedHttpException"
      *     )
      * )
-     *
+     * @throws \Exception
      */
     public function actionGet()
     {
-        return Yii::getAlias('@api/modules/versions/v1/controllers');
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return 'Arsen';
     }
 }

@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>MixCart Api Web Documentation</title>
+    <title>Vorchami Project-name Api Documentation</title>
     <?php $this->head() ?>
     <script type="text/javascript">
 

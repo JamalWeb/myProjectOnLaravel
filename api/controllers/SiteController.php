@@ -16,6 +16,7 @@ class SiteController extends Controller
     public function actions()
     {
         $scanDir = [
+            Yii::getAlias('@api/swagger/definitions/'),
             Yii::getAlias('@api/modules/versions/v1/controllers/BaseController.php'),
             Yii::getAlias('@api/modules/versions/v1/controllers/UserController.php'),
         ];
@@ -28,7 +29,6 @@ class SiteController extends Controller
             'api' => [
                 'class'    => WebApiSwaggerAction::class,
                 'scanDir'  => $scanDir,
-                'api_key'  => 'test',
                 'cache'    => 'cache',
                 'cacheKey' => 'api-swagger-cache',
             ],
