@@ -7,6 +7,8 @@ source /app/vagrant/provision/common.sh
 info "Provision-script user: `whoami`"
 
 info "Restart web-stack"
-service php7.0-fpm restart
+localedef ru_RU.UTF-8 -i ru_RU -f UTF-8
+service php7.1-fpm restart
 service nginx restart
-service mysql restart
+service postgresql restart
+service supervisor restart
