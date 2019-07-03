@@ -2,20 +2,8 @@
 
 namespace api\modules\versions\v1\controllers;
 
-/**
- * Class WebApiController
- */
-
-use Yii;
-use Throwable;
-use yii\rest\Controller;
-
 use common\models\User;
-
-use yii\web\{
-    HttpException,
-    UnauthorizedHttpException
-};
+use yii\web\Controller;
 
 /**
  * @SWG\Swagger(

@@ -2,13 +2,10 @@
 
 namespace api\modules\versions\v1\controllers;
 
-use Yii;
-use yii\web\Response;
-
 class UserController extends BaseController
 {
     /**
-     * @SWG\Post(path="/v1/user/get",
+     * @SWG\Get(path="/v1/user/get",
      *     tags={"User"},
      *     summary="Информация о пользователе",
      *     description="Информация о пользователе",
@@ -18,27 +15,10 @@ class UserController extends BaseController
      *     },
      *     @SWG\Parameter(
      *         name="post",
-     *         in="body",
+     *         in="query",
      *         required=true,
-     *         @SWG\Schema (
-     *              @SWG\Property(
-     *                  property="request",
-     *                  type="object",
-     *                  default={"id":1, "email":"neo@neo.com"}
-     *              )
-     *         )
-     *     ),
-     *     @SWG\Parameter(
-     *         name="post1",
-     *         in="body",
-     *         required=true,
-     *         @SWG\Schema (
-     *              @SWG\Property(
-     *                  property="request",
-     *                  type="object",
-     *                  default={"id":1, "email":"neo@neo.com"}
-     *              )
-     *         )
+     *         type="integer",
+     *         default=1
      *     ),
      *     @SWG\Response(
      *         response = 200,
@@ -67,7 +47,6 @@ class UserController extends BaseController
      */
     public function actionGet()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
         return 'Arsen';
     }
 }

@@ -30,7 +30,7 @@
             window.swaggerUi = new SwaggerUi({
                 url: url,
                 dom_id: "swagger-ui-container",
-                supportedSubmitMethods: ['post'],
+                supportedSubmitMethods: ['post', 'get'],
                 onComplete: function (swaggerApi, swaggerUi) {
                     if (typeof initOAuth == "function") {
                         initOAuth(<?= json_encode($oauthConfig) ?>);
