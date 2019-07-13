@@ -1,13 +1,16 @@
 <?php
 return [
-    'aliases' => [
+    'aliases'    => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
-        'cache' => [
+        'cache'      => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'passHelper' => [
+            'class' => 'common\components\PassHelper',
         ],
     ],
 ];
