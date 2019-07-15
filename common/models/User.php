@@ -55,7 +55,6 @@ class User extends BaseModel
     }
 
     /**
-     * Наименование таблицы
      * {@inheritdoc}
      */
     public static function tableName()
@@ -142,6 +141,21 @@ class User extends BaseModel
         $this->password = $this->passHelper->encrypt($password);
     }
 
+    public static final function findByEmail(string $email): User
+    {
+        /**
+         * Пользователь
+         *
+         * @var User $user
+         */
+        $user = self::findOne([
+            'email'     => $email,
+            'is_banned' => self::BAN_INACTIVE
+        ]);
+
+        return $user;
+    }
+
     /**
      * Создание нового пользователя
      *
@@ -150,16 +164,17 @@ class User extends BaseModel
      * @throws InvalidConfigException
      * @throws Exception
      */
-    public static final function create(array $data): User
+    public static final function create(array $data): self
     {
         $data = ArrayHelper::merge($data, [
-            'token' => Yii::$app->security->generateRandomKey()
+            'token' => Yii::$app->security->generateRandomString()
         ]);
 
         $newUser = new self($data);
 
-        if (!$newUser->validate() && !$newUser->save()) {
-            throw new InvalidArgumentException('Ошибка при создании');
+        if (!$newUser->validate() || !$newUser->save()) {
+            Yii::debug($newUser->getFirstErrors(), 'user');
+            throw new InvalidArgumentException('Ошибка при создании пользователя');
         }
 
         return $newUser;
