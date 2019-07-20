@@ -15,7 +15,7 @@ export DEBIAN_FRONTEND=noninteractive
 info "Configure timezone"
 timedatectl set-timezone ${timezone} --no-ask-password
 
-info "Add PHp 7.1 repository"
+info "Add PHp 7.3 repository"
 add-apt-repository ppa:ondrej/php -y
 
 info "Add PostgreSQL sources"
@@ -31,7 +31,7 @@ apt-get install -y locales
 localedef ru_RU.UTF-8 -i ru_RU -f UTF-8
 
 info "Install additional software"
-apt-get install -y php7.1-curl php7.1-cli php7.1-intl php7.1-pgsql php7.1-gd php7.1-fpm php7.1-mbstring php7.1-xml php7.1-zip php7.1-soap php7.1-zmq php7.1-bcmath unzip nginx software-properties-common sshpass htop php.xdebug
+apt-get install -y php7.3-curl php7.3-cli php7.3-intl php7.3-pgsql php7.3-gd php7.3-fpm php7.3-mbstring php7.3-xml php7.3-zip php7.3-soap php7.3-zmq php7.3-bcmath unzip nginx software-properties-common sshpass htop php.xdebug
 apt-get install -y postgresql-10 postgresql-contrib-10
 
 info "Install Supervisor"
@@ -39,23 +39,23 @@ apt-get install -y supervisor
 
 # info "Configure PostgreSQL"
 info "Configure PostgreSQL"
-sudo -u postgres psql -c "CREATE USER vorDev WITH SUPERUSER CREATEDB ENCRYPTED PASSWORD 'vorDev996'"
+sudo -u postgres psql -c "CREATE USER vordev WITH SUPERUSER CREATEDB ENCRYPTED PASSWORD 'vorDev996'"
 sudo -u postgres psql -c "CREATE DATABASE project"
 sudo /etc/init.d/postgresql restart
 echo "Done!"
 
 info "Configure PHP-FPM"
-sed -i 's/user = www-data/user = vagrant/g' /etc/php/7.1/fpm/pool.d/www.conf
-sed -i 's/group = www-data/group = vagrant/g' /etc/php/7.1/fpm/pool.d/www.conf
-sed -i 's/owner = www-data/owner = vagrant/g' /etc/php/7.1/fpm/pool.d/www.conf
-cat << EOF > /etc/php/7.1/mods-available/xdebug.ini
+sed -i 's/user = www-data/user = vagrant/g' /etc/php/7.3/fpm/pool.d/www.conf
+sed -i 's/group = www-data/group = vagrant/g' /etc/php/7.3/fpm/pool.d/www.conf
+sed -i 's/owner = www-data/owner = vagrant/g' /etc/php/7.3/fpm/pool.d/www.conf
+cat << EOF > /etc/php/7.3/mods-available/xdebug.ini
 zend_extension=xdebug.so
 xdebug.remote_enable=1
 xdebug.remote_connect_back=1
 xdebug.remote_port=9000
 xdebug.remote_autostart=1
 EOF
-echo "...successful with php7.1-fpm service restart...";
+echo "...successful with php7.3-fpm service restart...";
 echo "Done!"
 
 info "Configure NGINX"

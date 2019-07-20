@@ -1,9 +1,21 @@
 <?php
 
-namespace api\modules\versions\v1\controllers;
+namespace api\modules\v1\controllers;
 
+use api\modules\v1\classes\UserApi;
+
+/**
+ * * @property UserApi $api
+ */
 class UserController extends BaseController
 {
+    public $modelName = UserApi::class;
+
+    public function actionRegistration()
+    {
+        return $this->api->get();
+    }
+
     /**
      * @SWG\Get(path="/v1/user/get",
      *     tags={"User"},

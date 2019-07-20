@@ -1,8 +1,8 @@
 <?php
 
-namespace api\modules\versions\v1\controllers;
+namespace api\modules\v1\controllers;
 
-use common\models\User;
+use common\models\user\User;
 use yii\web\Controller;
 
 /**
@@ -33,24 +33,6 @@ class BaseController extends Controller
      * @var User $user
      */
     protected $user;
-    /**
-     * @var array $request
-     */
-    protected $request;
-    /**
-     * @var array $response
-     */
-    protected $response;
-
-    /**
-     * @var array
-     */
-    public $not_log_actions = [];
-
-    /**
-     * @var integer id Service
-     */
-    public $license_service_id = 0;
 
     /**
      * Description
@@ -63,10 +45,22 @@ class BaseController extends Controller
      * Класс экземпляр которого поместим в $this->classWebApi
      *  Например ChatWebApi::class
      */
-    public $className = null;
+    public $modelName = null;
 
     /**
      * Экземпляр класса из $this->className
      */
-    protected $classWebApi;
+    protected $api;
+
+    public function beforeAction($action)
+    {
+
+        if (isset($this->modelName) && !is_null($this->modelName)) {
+            $this->api = new $this->modelName();
+        }
+        parent::beforeAction($action);
+
+        return true;
+    }
+
 }

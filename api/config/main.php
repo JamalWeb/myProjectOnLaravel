@@ -13,7 +13,7 @@ return [
     'bootstrap'           => ['log'],
     'modules'             => [
         'v1' => [
-            'class' => 'api\modules\versions\v1\ApiModule',
+            'class' => 'api\modules\v1\ApiModule',
         ],
     ],
     'components'          => [
@@ -21,7 +21,7 @@ return [
             'csrfParam' => '_csrf-api',
         ],
         'user'         => [
-            'identityClass'   => 'common\models\User',
+            'identityClass'   => 'common\models\user\User',
             'enableAutoLogin' => true,
             'identityCookie'  => ['name' => '_identity-api', 'httpOnly' => true],
         ],

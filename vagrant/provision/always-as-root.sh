@@ -8,7 +8,7 @@ info "Provision-script user: `whoami`"
 
 info "Restart web-stack"
 localedef ru_RU.UTF-8 -i ru_RU -f UTF-8
-service php7.1-fpm restart
+service php7.3-fpm restart
 service nginx restart
 service postgresql restart
 service supervisor restart

@@ -17,8 +17,8 @@ class SiteController extends Controller
     {
         $scanDir = [
             Yii::getAlias('@api/swagger/definitions/'),
-            Yii::getAlias('@api/modules/versions/v1/controllers/BaseController.php'),
-            Yii::getAlias('@api/modules/versions/v1/controllers/UserController.php'),
+            Yii::getAlias('@api/modules/v1/controllers/BaseController.php'),
+            Yii::getAlias('@api/modules/v1/controllers/UserController.php'),
         ];
 
         return [
@@ -42,6 +42,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return Yii::getAlias('@api/modules/versions/v1/controllers');
+        return Yii::getAlias('@api/modules/v1/controllers');
     }
 }
