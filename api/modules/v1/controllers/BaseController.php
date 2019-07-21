@@ -2,7 +2,11 @@
 
 namespace api\modules\v1\controllers;
 
+use api\modules\v1\classes\Api;
 use common\models\user\User;
+use Yii;
+use yii\base\Action;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
 /**
@@ -30,37 +34,86 @@ use yii\web\Controller;
 class BaseController extends Controller
 {
     /**
-     * @var User $user
-     */
-    protected $user;
-
-    /**
-     * Description
+     * Проверка что запрос с методом POST был выполнен на сервере
      *
      * @var bool
      */
     public $enableCsrfValidation = false;
 
     /**
-     * Класс экземпляр которого поместим в $this->classWebApi
-     *  Например ChatWebApi::class
+     * Текущий пользователь
+     *
+     * @var User
      */
-    public $modelName = null;
+    protected $user;
 
     /**
-     * Экземпляр класса из $this->className
+     * Имя модели Api
+     * Например UserApi::class
+     *
+     * @var string
+     */
+    protected $modelName = null;
+
+    /**
+     * Экземпляр класса из $this->modelName
+     *
+     * @var Api
      */
     protected $api;
 
+    /**
+     * Параметры метода POST
+     *
+     * @var array
+     */
+    protected $post;
+
+    /**
+     * Ответ от сервера
+     *
+     * @var array
+     */
+    protected $response;
+
+    /**
+     * @param $action
+     * @return bool
+     * @throws BadRequestHttpException
+     */
     public function beforeAction($action)
     {
+        /**
+         * Выполняем родительский beforeAction()
+         */
+        parent::beforeAction($action);
 
-        if (isset($this->modelName) && !is_null($this->modelName)) {
+        /**
+         * Если имя модели Api не пустое, то создаем модель
+         */
+        if (!is_null($this->modelName)) {
             $this->api = new $this->modelName();
         }
-        parent::beforeAction($action);
+
+        /**
+         * Записываем параметры с метода POST
+         */
+        $this->post = Yii::$app->request->post();
 
         return true;
     }
 
+    /**
+     * Методы который вызывается после методов action*
+     *
+     * @param Action $action
+     * @param mixed  $result
+     * @return array|mixed
+     */
+    public function afterAction($action, $result)
+    {
+        parent::afterAction($action, $result);
+
+        return $this->response ?? [];
+    }
 }

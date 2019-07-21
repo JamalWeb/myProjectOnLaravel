@@ -1,4 +1,7 @@
 <?php
+
+use api\modules\v1\handler\ErrorHandler;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -43,7 +46,7 @@ return [
             'charset' => 'UTF-8',
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'class' => ErrorHandler::class,
         ],
         'urlManager'   => [
             'enablePrettyUrl' => true,
