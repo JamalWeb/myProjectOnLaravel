@@ -11,7 +11,7 @@ use yii\base\Component;
  *
  * @package common\components
  */
-class PassHelper extends Component
+class PassHelper
 {
     /**
      * Соль для пароля
@@ -22,20 +22,13 @@ class PassHelper extends Component
 
     /**
      * PassHelper constructor.
-     *
-     * @param array $config
      */
-    public function __construct($config = [])
+    public function __construct()
     {
         /**
          * Получаем соль по умолчанию
          */
         $this->salt = Yii::$app->params['pass_helper']['hash_salt'];
-
-        /**
-         * Выполняем родительский constructor
-         */
-        parent::__construct($config);
     }
 
     /**

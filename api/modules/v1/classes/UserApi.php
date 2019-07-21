@@ -4,6 +4,7 @@ namespace api\modules\v1\classes;
 
 use api\modules\v1\models\error\ValidationException;
 use api\modules\v1\models\form\UserForm;
+use Exception;
 
 class UserApi extends Api
 {
@@ -13,6 +14,7 @@ class UserApi extends Api
      * @param array $params
      * @return UserForm
      * @throws ValidationException
+     * @throws Exception
      */
     public final function registrationUser(array $params)
     {
@@ -22,7 +24,9 @@ class UserApi extends Api
             throw new ValidationException($userForm->getFirstErrors());
         }
 
-        return $userForm;
+        $result = $userForm->create();
+
+        return $result;
     }
 
     /**

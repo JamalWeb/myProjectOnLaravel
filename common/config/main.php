@@ -5,16 +5,20 @@ return [
         '@npm'   => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'language'       => 'ru-RU',
+    'language'   => 'ru-RU',
     'components' => [
-        'user'       => [
+        'user'  => [
             'class' => 'common\components\User',
         ],
-        'cache'      => [
+        'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'passHelper' => [
-            'class' => 'common\components\PassHelper',
+        'i18n'  => [
+            'translations' => [
+                'api' => [
+                    'class' => 'yii\i18n\DbMessageSource',
+                ],
+            ],
         ],
     ],
     'modules'    => [

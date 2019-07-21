@@ -11,7 +11,7 @@ use yii\base\Component;
  */
 class DateHelper extends Component
 {
-    public function getTimestamp(): string
+    public static final function getTimestamp(): string
     {
         /**
          * Текущая дата в формате
