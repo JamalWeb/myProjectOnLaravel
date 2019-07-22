@@ -30,9 +30,9 @@ return [
             'loginUsername'   => false,
             'modelClasses'    => [
                 'User'         => 'common\models\user\User',
-                'Profile'      => 'common\models\Profile',
-                'Role'         => 'common\models\Role',
-                'Organization' => 'common\models\Organization',
+                'Profile'      => 'common\models\user\Profile',
+                'Role'         => 'common\models\user\Role',
+                'Organization' => 'common\models\user\Organization',
                 'LoginForm'    => 'common\models\LoginForm',
             ],
             'emailViewPath'   => '@common/mail',

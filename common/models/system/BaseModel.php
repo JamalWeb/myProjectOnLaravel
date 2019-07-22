@@ -2,6 +2,7 @@
 
 namespace common\models\system;
 
+use api\modules\v1\models\error\ValidationException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -22,5 +23,18 @@ class BaseModel extends ActiveRecord
                 'value'              => gmdate('Y-m-d H:i:s'),
             ],
         ];
+    }
+
+    /**
+     * @return bool
+     * @throws ValidationException
+     */
+    public final function saveModel(): bool
+    {
+        if (!$this->validate() || !$this->save()) {
+            throw new ValidationException($this->getFirstErrors());
+        }
+
+        return true;
     }
 }

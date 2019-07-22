@@ -2,12 +2,6 @@
 
 namespace api\modules\v1\models\form;
 
-use common\components\ArrayHelper;
-use common\components\PassHelper;
-use common\models\user\Role;
-use common\models\user\User;
-use common\models\user\UserType;
-use Exception;
 use Yii;
 use yii\base\Model;
 
@@ -51,24 +45,5 @@ class UserForm extends Model
             'password' => Yii::t('api', 'password'),
             'children' => Yii::t('api', 'children'),
         ];
-    }
-
-    /**
-     * Создание аккаунта
-     *
-     * @throws Exception
-     */
-    public function create()
-    {
-        if (!empty($this->children)) {
-            $this->children = ArrayHelper::jsonToArray($this->children);
-        }
-
-        $user = new User([
-            'email'        => $this->email,
-            'role_id'      => Role::ROLE_USER,
-            'status'       => User::STATUS_ACTIVE,
-            'password'     => (new PassHelper())->encrypt($this->password)
-        ]);
     }
 }

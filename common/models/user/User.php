@@ -2,7 +2,10 @@
 
 namespace common\models\user;
 
+use common\components\ArrayHelper;
+use common\components\PassHelper;
 use common\models\system\BaseModel;
+use Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
@@ -35,8 +38,20 @@ use yii\db\ActiveQuery;
  */
 class User extends BaseModel
 {
-    const STATUS_ACTIVE = 1;
+    /**
+     * @var int Inactive status
+     */
     const STATUS_INACTIVE = 0;
+
+    /**
+     * @var int Active status
+     */
+    const STATUS_ACTIVE = 1;
+
+    /**
+     * @var int Unconfirmed email status
+     */
+    const STATUS_UNCONFIRMED_EMAIL = 2;
 
     /**
      * {@inheritdoc}
@@ -47,48 +62,21 @@ class User extends BaseModel
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $params
+     * @param bool  $safeOnly
+     * @throws Exception
      */
-    public function rules()
+    public function setAttributes($params, $safeOnly = true): void
     {
-        return [
-            [['role_id', 'status'], 'required'],
-            [['role_id', 'status', 'user_type_id'], 'default', 'value' => null],
-            [['role_id', 'status', 'user_type_id'], 'integer'],
-            [['logged_in_at', 'created_at', 'updated_at', 'banned_at', 'logout_in_at'], 'safe'],
-            [['is_banned'], 'boolean'],
-            [['email', 'username', 'password', 'auth_key', 'access_token', 'logged_in_ip', 'created_ip', 'banned_reason'], 'string', 'max' => 255],
-            [['email'], 'unique'],
-            [['username'], 'unique'],
-            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::class, 'targetAttribute' => ['role_id' => 'id']],
-        ];
-    }
+        $passHelper = new PassHelper();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id'            => Yii::t('api', 'ID'),
-            'role_id'       => Yii::t('api', 'Role ID'),
-            'status'        => Yii::t('api', 'Status'),
-            'email'         => Yii::t('api', 'Email'),
-            'username'      => Yii::t('api', 'Username'),
-            'password'      => Yii::t('api', 'Password'),
-            'auth_key'      => Yii::t('api', 'Auth Key'),
-            'access_token'  => Yii::t('api', 'Access Token'),
-            'logged_in_ip'  => Yii::t('api', 'Logged In Ip'),
-            'logged_in_at'  => Yii::t('api', 'Logged In At'),
-            'created_ip'    => Yii::t('api', 'Created Ip'),
-            'created_at'    => Yii::t('api', 'Created At'),
-            'updated_at'    => Yii::t('api', 'Updated At'),
-            'banned_at'     => Yii::t('api', 'Banned At'),
-            'banned_reason' => Yii::t('api', 'Banned Reason'),
-            'user_type_id'  => Yii::t('api', 'User Type ID'),
-            'is_banned'     => Yii::t('api', 'Is Banned'),
-            'logout_in_at'  => Yii::t('api', 'Logout In At'),
-        ];
+        $params = ArrayHelper::merge($params, [
+            'status'     => User::STATUS_UNCONFIRMED_EMAIL,
+            'created_ip' => Yii::$app->request->remoteIP,
+            'password'   => $passHelper->encrypt($params['password'])
+        ]);
+
+        parent::setAttributes($params, $safeOnly);
     }
 
     /**
@@ -234,5 +222,50 @@ class User extends BaseModel
     public function validatePassword($password)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['role_id', 'status'], 'required'],
+            [['role_id', 'status', 'user_type_id'], 'default', 'value' => null],
+            [['role_id', 'status', 'user_type_id'], 'integer'],
+            [['logged_in_at', 'created_at', 'updated_at', 'banned_at', 'logout_in_at'], 'safe'],
+            [['is_banned'], 'boolean'],
+            [['email', 'username', 'password', 'auth_key', 'access_token', 'logged_in_ip', 'created_ip', 'banned_reason'], 'string', 'max' => 255],
+            [['email'], 'unique'],
+            [['username'], 'unique'],
+            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::class, 'targetAttribute' => ['role_id' => 'id']],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id'            => Yii::t('api', 'ID'),
+            'role_id'       => Yii::t('api', 'Role ID'),
+            'status'        => Yii::t('api', 'Status'),
+            'email'         => Yii::t('api', 'Email'),
+            'username'      => Yii::t('api', 'Username'),
+            'password'      => Yii::t('api', 'Password'),
+            'auth_key'      => Yii::t('api', 'Auth Key'),
+            'access_token'  => Yii::t('api', 'Access Token'),
+            'logged_in_ip'  => Yii::t('api', 'Logged In Ip'),
+            'logged_in_at'  => Yii::t('api', 'Logged In At'),
+            'created_ip'    => Yii::t('api', 'Created Ip'),
+            'created_at'    => Yii::t('api', 'Created At'),
+            'updated_at'    => Yii::t('api', 'Updated At'),
+            'banned_at'     => Yii::t('api', 'Banned At'),
+            'banned_reason' => Yii::t('api', 'Banned Reason'),
+            'user_type_id'  => Yii::t('api', 'User Type ID'),
+            'is_banned'     => Yii::t('api', 'Is Banned'),
+            'logout_in_at'  => Yii::t('api', 'Logout In At'),
+        ];
     }
 }
