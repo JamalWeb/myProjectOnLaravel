@@ -57,7 +57,7 @@ class UserController extends BaseController
      *         in="formData",
      *         required=false,
      *         type="string",
-     *         default="{{age:11, gender: 1}, {age:11, gender: 1}}"
+     *         default="[{age:11, gender: М}, {age:11, gender: Ж}]"
      *     ),
      *     @SWG\Response(
      *         response = 200,

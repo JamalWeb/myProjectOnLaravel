@@ -5,6 +5,7 @@ namespace common\components;
 use common\models\user\User;
 use common\models\user\UserToken;
 use Yii;
+use yii\helpers\Html;
 
 class EmailSendler
 {
@@ -12,12 +13,20 @@ class EmailSendler
     {
         $userToken = UserToken::generate($user->id, UserToken::TYPE_EMAIL_ACTIVATE);
 
-        Yii::$app->mailer->compose()
+        $confirmationLink = Html::a('Подтвердить регистрацию', [
+            'user/registration-confirm',
+            'access_token' => $userToken->token
+        ]);
+
+       Yii::$app->mailer->compose([
+            'html' => 'layouts/html'
+        ], [
+            'content' => $confirmationLink
+        ])
+            ->setCharset('UTF-8')
             ->setFrom('from@domain.com')
-            ->setTo('to@domain.com')
-            ->setSubject('Тема сообщения')
-            ->setTextBody($userToken->token)
-            ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
+            ->setTo($user->email)
+            ->setSubject('Подтверждение регистрации')
             ->send();
     }
 }

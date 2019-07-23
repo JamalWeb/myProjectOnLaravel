@@ -4,6 +4,7 @@ namespace api\modules\v1\classes;
 
 use Yii;
 use common\models\user\User;
+use yii\web\BadRequestHttpException;
 
 /**
  * Class Api
@@ -45,5 +46,26 @@ class Api
         $user = User::findIdentity($userId);
 
         return $user;
+    }
+
+    /**
+     * Проверка параметров
+     *
+     * @param       $request
+     * @param array $params
+     * @param bool  $checkForAvailabilityOnly
+     * @throws BadRequestHttpException
+     */
+    public function validateRequest(array $request, array $params, bool $checkForAvailabilityOnly = false)
+    {
+        foreach ($params as $param) {
+            if ($checkForAvailabilityOnly && !isset($request[$param])) {
+                throw new BadRequestHttpException("empty_param|{$param}");
+            } else {
+                if (!isset($request[$param]) || empty($request[$param])) {
+                    throw new BadRequestHttpException("empty_param|{$param}");
+                }
+            }
+        }
     }
 }
