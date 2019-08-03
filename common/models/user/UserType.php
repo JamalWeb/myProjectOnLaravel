@@ -16,7 +16,7 @@ class UserType extends ActiveRecord
 {
     const TYPE_SYSTEM = 1;
     const TYPE_USER = 2;
-    const TYPE_BUSINESS = 3;
+    const TYPE_BUSINESS_USER = 3;
 
     /**
      * {@inheritdoc}

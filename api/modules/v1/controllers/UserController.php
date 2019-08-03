@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace api\modules\v1\controllers;
 
@@ -11,6 +11,41 @@ use Exception;
 class UserController extends BaseController
 {
     public $modelName = UserApi::class;
+
+    /**
+     * @SWG\POST(path="/v1/user/get-genders",
+     *     tags={"Пользователь | User"},
+     *     summary="Список гендерных принадлежностей",
+     *     description="Список гендерных принадлежностей",
+     *     consumes={"multipart/form-data"},
+     *     produces={"text/plain, application/json"},
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "success",
+     *         @SWG\Schema(
+     *            default={
+     *              {
+     *                  "id": 1,
+     *                  "name": "Male",
+     *              },
+     *              {
+     *                  "id": 2,
+     *                  "name": "Female",
+     *              }
+     *            }
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response = 400,
+     *         description = "BadRequestHttpException"
+     *     )
+     * )
+     * @throws Exception
+     */
+    public function actionGetGenders()
+    {
+        $this->response = $this->api->getGender();
+    }
 
     /**
      * @SWG\POST(path="/v1/user/registration-user",
@@ -57,7 +92,7 @@ class UserController extends BaseController
      *         in="formData",
      *         required=false,
      *         type="string",
-     *         default="[{age:11, gender: М}, {age:11, gender: Ж}]"
+     *         default="[{age:11, gender_id: 1}, {age:11, gender_id: 2}]"
      *     ),
      *     @SWG\Response(
      *         response = 200,

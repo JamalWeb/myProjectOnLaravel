@@ -8,6 +8,7 @@ use common\components\ArrayHelper;
 use common\components\EmailSendler;
 use common\components\StringHelper;
 use common\models\user\Children;
+use common\models\user\Gender;
 use common\models\user\Role;
 use common\models\user\User;
 use common\models\user\UserType;
@@ -18,11 +19,20 @@ use yii\db\Transaction;
 class UserApi extends Api
 {
     /**
-     * Регистрация нового пользователя
+     * @return array
+     */
+    public final function getGender(): array
+    {
+        $genders = Gender::find()->all();
+
+        return $genders;
+    }
+
+    /**
+     * Регистрация обычного пользователя
      *
      * @param array $params - Параметры пользователя
      * @return array
-     * @throws ValidationException
      * @throws Exception
      */
     public final function registrationUser(array $params)
@@ -56,29 +66,52 @@ class UserApi extends Api
             $user = new User();
 
             /**
-             * Заполняем объект пользователя
+             * Подготовка данных для регистрации
+             *
+             * @var array $params
              */
-            $user->setAttributes([
+            $params = $user->prepareRegistration([
                 'email'        => $userForm->email,
+                'password'     => $userForm->password,
                 'role_id'      => Role::ROLE_USER,
                 'user_type_id' => UserType::TYPE_USER,
-                'password'     => $userForm->password
             ]);
 
             /**
-             * Сохраняем объект пользователя
+             * Заполняем объект пользователя
+             */
+            $user->setAttributes($params);
+
+            /**
+             * Валидация и сохранение объекта
              */
             $user->saveModel();
 
             /**
+             * Создание профиля для пользователя
+             */
+            $this->createProfile($user, [
+                'city_id' => $userForm->city_id,
+                'name'    => $userForm->name
+            ]);
+
+            /**
+             * Список детей
+             *
+             * @var array $childList
+             */
+            $childrenList = !empty($userForm->children) ? ArrayHelper::jsonToArray($userForm->children) : [];
+
+            /**
              * Добавляем список детей пользователю
              */
-            $this->childAdd($user, $userForm->children);
+            $this->childAdd($user, $childrenList);
 
             /**
              * Отправляем письмо для подтверждения регистрации
              */
             EmailSendler::registrationConfirm($user);
+
             /**
              * Применяем транзакцию
              */
@@ -98,26 +131,29 @@ class UserApi extends Api
     }
 
     /**
+     * Регистрация нового бизнеса
+     */
+    public function registrationBusiness()
+    {
+    }
+
+    private function createProfile(User $user, array $params)
+    {
+    }
+
+    /**
      * Добавляем детей пользователю
      *
-     * @param User         $user         - Пользователь
-     * @param string|array $childrenList - Список детей в формате JSON
+     * @param User  $user         - Пользователь
+     * @param array $childrenList - Список детей
      * @throws Exception
      */
-    public final function childAdd(User $user, $childrenList): void
+    public final function childAdd(User $user, array $childrenList): void
     {
         /**
          * Если список детей не пустой, то добавляем их пользователю
          */
         if (!empty($childrenList)) {
-            if (is_string($childrenList)) {
-                /**
-                 * Список детей
-                 *
-                 * @var array $childList
-                 */
-                $childrenList = ArrayHelper::jsonToArray($childrenList);
-            }
 
             /**
              * Транзакция
@@ -133,11 +169,18 @@ class UserApi extends Api
                     $this->validateRequest($children, ['age', 'gender']);
 
                     /**
-                     * @var array  $children       - Список данных ребенка
-                     * @var int    $childrenAge    - Возраст ребенка
-                     * @var string $childrenGender - Пол ребенка
+                     * @var array  $children - Список данных ребенка
+                     * @var int    $age      - Возраст ребенка
+                     * @var string $gender   - Пол ребенка
                      */
-                    list('age' => $childrenAge, 'gender' => $childrenGender) = $children;
+                    list('age' => $age, 'gender' => $gender) = $children;
+
+                    /**
+                     * Форматируес строку пол ребенка
+                     *
+                     * @var string $gender
+                     */
+                    $gender = StringHelper::formatGender($gender);
 
                     /**
                      * Объект нового ребенка
@@ -146,9 +189,8 @@ class UserApi extends Api
                      */
                     $children = new Children([
                         'user_id' => $user->id,
-                        'age'     => $childrenAge,
-                        'gender'  => StringHelper::formatGender($childrenGender)
-
+                        'age'     => $age,
+                        'gender'  => $gender
                     ]);
 
                     /**
@@ -156,6 +198,7 @@ class UserApi extends Api
                      */
                     $children->saveModel();
                 }
+
                 /**
                  * Применяем транзакцию
                  */
@@ -168,12 +211,5 @@ class UserApi extends Api
                 throw $e;
             }
         }
-    }
-
-    /**
-     * Регистрация нового бизнеса
-     */
-    public function registrationBusiness()
-    {
     }
 }

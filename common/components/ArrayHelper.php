@@ -8,6 +8,8 @@ use Generator;
 class ArrayHelper extends \yii\helpers\ArrayHelper
 {
     /**
+     * Json в Array
+     *
      * @param string $json
      * @return mixed
      * @throws Exception

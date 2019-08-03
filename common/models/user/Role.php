@@ -17,6 +17,11 @@ use Yii;
 class Role extends \amnah\yii2\user\models\Role
 {
     /**
+     * @var int Default user role
+     */
+    const ROLE_BUSINESS_USER = 3;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()

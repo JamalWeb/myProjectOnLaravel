@@ -2,7 +2,9 @@
 
 namespace common\models\user;
 
+use common\models\system\BaseModel;
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "profile".
@@ -13,7 +15,7 @@ use Yii;
  * @property string $updated_at
  * @property string $full_name
  * @property string $timezone
- * @property string $category_profile_id Идентификатор категории пррофиля
+ * @property string $category_id         Идентификатор категории пррофиля
  * @property string $name                Имя
  * @property string $surname             Фамилия
  * @property string $patronymic          Отчество
@@ -24,9 +26,10 @@ use Yii;
  * @property string $city                Город
  * @property string $longitude           Координаты: долгота
  * @property string $latitude            Координаты: широта
- * @property User   $user
+ * @property User   $user                Пользователь
+ * @property string $gender_id           [integer]
  */
-class Profile extends \amnah\yii2\user\models\Profile
+class Profile extends BaseModel
 {
     /**
      * {@inheritdoc}
@@ -37,13 +40,20 @@ class Profile extends \amnah\yii2\user\models\Profile
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
             [['user_id'], 'required'],
-            [['user_id'], 'default', 'value' => null],
             [['user_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['full_name', 'timezone', 'category_profile_id', 'name', 'surname', 'patronymic', 'lang', 'short_lang', 'about', 'country', 'city', 'longitude', 'latitude'], 'string', 'max' => 255],
