@@ -9,11 +9,13 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "children".
  *
- * @property int    $id      Идентификатор ребенка пользователя
- * @property int    $user_id Идентификатор пользователя
- * @property int    $age     Возраст ребенка
- * @property string $gender  Пол ребенка
- * @property User   $parent  Родитель
+ * @property int  $id              Идентификатор ребенка
+ * @property int  $age             Возраст ребенка
+ * @property int  $user_id         Идентификатор родителя
+ * @property int  $gender_id       Пол ребенка
+ * @property int  $created_at      Дата создания
+ * @property int  $updated_at      Дата последнего обновления
+ * @property User $parent          Родитель
  */
 class Children extends BaseModel
 {
@@ -31,9 +33,15 @@ class Children extends BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'age', 'gender'], 'required'],
-            [['user_id', 'age'], 'integer'],
-            [['gender'], 'string', 'max' => 15],
+            [['user_id', 'age', 'gender_id'], 'required'],
+            [['user_id', 'age', 'gender_id'], 'integer'],
+            [
+                ['gender_id'],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => Gender::class,
+                'targetAttribute' => ['gender_id' => 'id']
+            ],
         ];
     }
 
@@ -43,10 +51,10 @@ class Children extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'      => Yii::t('children', 'ID'),
-            'user_id' => Yii::t('children', 'User ID'),
-            'age'     => Yii::t('children', 'Age'),
-            'gender'  => Yii::t('children', 'Gender'),
+            'id'        => Yii::t('app', 'ID'),
+            'user_id'   => Yii::t('app', 'User ID'),
+            'age'       => Yii::t('app', 'Age'),
+            'gender_id' => Yii::t('app', 'Gender ID'),
         ];
     }
 

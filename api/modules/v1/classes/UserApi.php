@@ -6,19 +6,20 @@ use api\modules\v1\models\error\ValidationException;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
 use common\components\EmailSendler;
-use common\components\StringHelper;
 use common\models\user\Children;
 use common\models\user\Gender;
+use common\models\user\Profile;
 use common\models\user\Role;
 use common\models\user\User;
 use common\models\user\UserType;
 use Exception;
 use Yii;
-use yii\db\Transaction;
 
 class UserApi extends Api
 {
     /**
+     * Список гендерных принадлежностей
+     *
      * @return array
      */
     public final function getGender(): array
@@ -31,90 +32,42 @@ class UserApi extends Api
     /**
      * Регистрация обычного пользователя
      *
-     * @param array $params - Параметры пользователя
+     * @param array $params
      * @return array
      * @throws Exception
      */
     public final function registrationUser(array $params)
     {
-        /**
-         * Форма для создания пользователя
-         *
-         * @var UserForm $userForm
-         */
         $userForm = new UserForm($params);
 
-        /**
-         * Валидация формы
-         */
         if (!$userForm->validate()) {
             throw new ValidationException($userForm->getFirstErrors());
         }
 
-        /**
-         * Транзакция
-         *
-         * @var Transaction $transaction
-         */
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            /**
-             * Объект пользователя
-             *
-             * @var User $user
-             */
             $user = new User();
 
-            /**
-             * Подготовка данных для регистрации
-             *
-             * @var array $params
-             */
             $params = $user->prepareRegistration([
-                'email'        => $userForm->email,
-                'password'     => $userForm->password,
-                'role_id'      => Role::ROLE_USER,
-                'user_type_id' => UserType::TYPE_USER,
+                'email'    => $userForm->email,
+                'password' => $userForm->password,
+                'role_id'  => Role::ROLE_USER,
+                'type_id'  => UserType::TYPE_USER,
             ]);
 
-            /**
-             * Заполняем объект пользователя
-             */
             $user->setAttributes($params);
-
-            /**
-             * Валидация и сохранение объекта
-             */
             $user->saveModel();
 
-            /**
-             * Создание профиля для пользователя
-             */
             $this->createProfile($user, [
                 'city_id' => $userForm->city_id,
                 'name'    => $userForm->name
             ]);
 
-            /**
-             * Список детей
-             *
-             * @var array $childList
-             */
             $childrenList = !empty($userForm->children) ? ArrayHelper::jsonToArray($userForm->children) : [];
-
-            /**
-             * Добавляем список детей пользователю
-             */
             $this->childAdd($user, $childrenList);
 
-            /**
-             * Отправляем письмо для подтверждения регистрации
-             */
             EmailSendler::registrationConfirm($user);
 
-            /**
-             * Применяем транзакцию
-             */
             $transaction->commit();
 
             return [
@@ -122,9 +75,7 @@ class UserApi extends Api
                 'message' => 'Проверьте почту'
             ];
         } catch (Exception $e) {
-            /**
-             * Откатываем транзакцию
-             */
+
             $transaction->rollBack();
             throw $e;
         }
@@ -139,74 +90,35 @@ class UserApi extends Api
 
     private function createProfile(User $user, array $params)
     {
+        $profile = new Profile([
+            'name' => $params['name'],
+            'city' => $params['city_id']
+        ]);
     }
 
     /**
      * Добавляем детей пользователю
      *
-     * @param User  $user         - Пользователь
-     * @param array $childrenList - Список детей
+     * @param User  $user
+     * @param array $childrenParams
      * @throws Exception
      */
-    public final function childAdd(User $user, array $childrenList): void
+    public final function childAdd(User $user, array $childrenParams): void
     {
-        /**
-         * Если список детей не пустой, то добавляем их пользователю
-         */
-        if (!empty($childrenList)) {
-
-            /**
-             * Транзакция
-             *
-             * @var Transaction $transaction
-             */
+        if (!empty($childrenParams)) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
-                foreach (ArrayHelper::generator($childrenList) as $children) {
-                    /**
-                     * Проверка обязательных полей
-                     */
-                    $this->validateRequest($children, ['age', 'gender']);
-
-                    /**
-                     * @var array  $children - Список данных ребенка
-                     * @var int    $age      - Возраст ребенка
-                     * @var string $gender   - Пол ребенка
-                     */
-                    list('age' => $age, 'gender' => $gender) = $children;
-
-                    /**
-                     * Форматируес строку пол ребенка
-                     *
-                     * @var string $gender
-                     */
-                    $gender = StringHelper::formatGender($gender);
-
-                    /**
-                     * Объект нового ребенка
-                     *
-                     * @var Children $children
-                     */
-                    $children = new Children([
+                foreach (ArrayHelper::generator($childrenParams) as $childParam) {
+                    $childParam = ArrayHelper::merge($childParam, [
                         'user_id' => $user->id,
-                        'age'     => $age,
-                        'gender'  => $gender
                     ]);
 
-                    /**
-                     * Сохраняем объект
-                     */
-                    $children->saveModel();
+                    $child = new Children($childParam);
+                    $child->saveModel();
                 }
 
-                /**
-                 * Применяем транзакцию
-                 */
                 $transaction->commit();
             } catch (Exception $e) {
-                /**
-                 * Откатываем транзакцию
-                 */
                 $transaction->rollBack();
                 throw $e;
             }

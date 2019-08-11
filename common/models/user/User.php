@@ -28,30 +28,28 @@ use yii\db\ActiveQuery;
  * @property string      $updated_at
  * @property string      $banned_at
  * @property string      $banned_reason
- * @property int         $user_type_id Идентификатор типа пользователя
+ * @property int         $type_id      Идентификатор типа пользователя
  * @property bool        $is_banned    Бан (1 - вкл. 0 - выкл.) | default = 0
  * @property string      $logout_in_at Дата выхода
  * @property Profile[]   $profiles
  * @property Role        $role
  * @property UserAuth[]  $userAuths
+ * @property string      $authKey
  * @property UserToken[] $userTokens
  */
 class User extends BaseModel
 {
-    /**
-     * @var int Inactive status
-     */
+    /** @var int Inactive status */
     const STATUS_INACTIVE = 0;
 
-    /**
-     * @var int Active status
-     */
+    /** @var int Active status */
     const STATUS_ACTIVE = 1;
 
-    /**
-     * @var int Unconfirmed email status
-     */
+    /** @var int Unconfirmed email status */
     const STATUS_UNCONFIRMED_EMAIL = 2;
+
+    const SCENARIO_CREATE_USER = 'create_user_account';
+    const SCENARIO_CREATE_BUSINESS_USER = 'create_business_account';
 
     /**
      * {@inheritdoc}
@@ -62,21 +60,21 @@ class User extends BaseModel
     }
 
     /**
+     * Подготовка данных для регистрации
+     *
      * @param array $params
-     * @param bool  $safeOnly
+     * @return array
      * @throws Exception
      */
-    public function setAttributes($params, $safeOnly = true): void
+    public function prepareRegistration(array $params): array
     {
         $passHelper = new PassHelper();
 
-        $params = ArrayHelper::merge($params, [
+        return ArrayHelper::merge($params, [
             'status'     => User::STATUS_UNCONFIRMED_EMAIL,
             'created_ip' => Yii::$app->request->remoteIP,
             'password'   => $passHelper->encrypt($params['password'])
         ]);
-
-        parent::setAttributes($params, $safeOnly);
     }
 
     /**
@@ -120,7 +118,9 @@ class User extends BaseModel
     }
 
     /**
-     * {@inheritdoc}
+     * @param      $token
+     * @param null $type
+     * @throws NotSupportedException
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -231,8 +231,9 @@ class User extends BaseModel
     {
         return [
             [['role_id', 'status'], 'required'],
-            [['role_id', 'status', 'user_type_id'], 'default', 'value' => null],
-            [['role_id', 'status', 'user_type_id'], 'integer'],
+            [['email'], 'required', 'on' => self::SCENARIO_CREATE_USER],
+            [['role_id', 'status', 'type_id'], 'default', 'value' => null],
+            [['role_id', 'status', 'type_id'], 'integer'],
             [['logged_in_at', 'created_at', 'updated_at', 'banned_at', 'logout_in_at'], 'safe'],
             [['is_banned'], 'boolean'],
             [['email', 'username', 'password', 'auth_key', 'access_token', 'logged_in_ip', 'created_ip', 'banned_reason'], 'string', 'max' => 255],
@@ -263,7 +264,7 @@ class User extends BaseModel
             'updated_at'    => Yii::t('api', 'Updated At'),
             'banned_at'     => Yii::t('api', 'Banned At'),
             'banned_reason' => Yii::t('api', 'Banned Reason'),
-            'user_type_id'  => Yii::t('api', 'User Type ID'),
+            'type_id'       => Yii::t('api', 'Type ID'),
             'is_banned'     => Yii::t('api', 'Is Banned'),
             'logout_in_at'  => Yii::t('api', 'Logout In At'),
         ];
