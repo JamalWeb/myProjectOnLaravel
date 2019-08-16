@@ -134,6 +134,8 @@ class UserApi extends Api
             throw new ValidationException($loginForm->getFirstErrors(), 401);
         }
 
+        $user = $loginForm->getUser();
+
         return [
             'token' => 'slHuh1vS-P74LGIE54R8qvY52ncL0kRh'
         ];

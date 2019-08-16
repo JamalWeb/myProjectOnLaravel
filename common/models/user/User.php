@@ -220,12 +220,11 @@ class User extends BaseModel implements IdentityInterface
      * Validates password
      *
      * @param string $password password to validate
-     * @return void if password provided is valid for current user
-     * @throws NotSupportedException
+     * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
+    public function validatePassword($password): bool
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return true;
     }
 
     /**

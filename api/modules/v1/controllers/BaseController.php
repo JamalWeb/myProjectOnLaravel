@@ -79,30 +79,6 @@ class BaseController extends Controller
     protected $response;
 
     /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-
-        $my['authenticator'] = [
-            'class'       => CompositeAuth::class,
-            'except'      => [
-                'login'
-            ],
-            'authMethods' => [
-                HttpBearerAuth::class
-            ]
-        ];
-
-        unset($behaviors['rateLimiter']);
-
-        $behaviors = array_merge($behaviors, $my);
-
-        return $behaviors;
-    }
-
-    /**
      * @param $action
      * @return bool
      * @throws BadRequestHttpException

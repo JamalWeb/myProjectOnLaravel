@@ -4,6 +4,7 @@ namespace api\modules\v1\models\form;
 
 use amnah\yii2\user\models\UserToken;
 use amnah\yii2\user\Module;
+use api\modules\v1\models\error\ValidationException;
 use common\models\user\User;
 use Yii;
 use yii\base\Model;
@@ -51,51 +52,40 @@ class LoginForm extends Model
             [['email', 'password'], 'required'],
             [['email', 'password'], 'string'],
             [['email'], 'email'],
-            ['email', 'validateUser'],
-            ['password', 'validatePassword'],
+            ['email', 'validateUser']
         ];
     }
 
-    public function validateUser()
+    /**
+     * @throws ValidationException
+     */
+    public function validateUser(): void
     {
         /** @var User $user */
         $user = $this->getUser();
 
         if (is_null($user)) {
-            $this->addError('email', Yii::t('user', 'Email not found'));
+            throw new ValidationException(['email' => Yii::t('user', 'Email not found')]);
         }
 
-        if (!is_null($user) && $user->is_banned) {
-            $this->addError('email', Yii::t('user', 'User is banned - {banReason}', [
-                'banReason' => $user->banned_reason,
-            ]));
+        if (!$user->validatePassword($this->password)) {
+            throw new ValidationException(['password' => Yii::t('user', 'Incorrect password')]);
         }
 
-        if (!is_null($user) && $user->status == $user::STATUS_UNCONFIRMED_EMAIL) {
+        if ($user->is_banned) {
+            throw new ValidationException([
+                'email' => Yii::t('user', 'User is banned - {banReason}', [
+                    'banReason' => $user->banned_reason,
+                ])
+            ]);
+        }
+
+        if ($user->status !== $user::STATUS_UNCONFIRMED_EMAIL) {
             /** @var UserToken $userToken */
             $userToken = $this->module->model('UserToken');
             $userToken = $userToken::generate($user->id, $userToken::TYPE_EMAIL_ACTIVATE);
             $user->sendEmailConfirmation($userToken);
-            $this->addError("email", Yii::t("user", "Confirmation email resent"));
-        }
-    }
-
-    /**
-     * Validate password
-     */
-    public function validatePassword()
-    {
-        // skip if there are already errors
-        if ($this->hasErrors()) {
-            return;
-        }
-
-        /** @var \amnah\yii2\user\models\User $user */
-
-        // check if password is correct
-        $user = $this->getUser();
-        if (!$user->validatePassword($this->password)) {
-            $this->addError("password", Yii::t("user", "Incorrect password"));
+            throw new ValidationException(["email" => Yii::t("user", "Confirmation email resent")]);
         }
     }
 
