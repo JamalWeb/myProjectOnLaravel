@@ -33,6 +33,7 @@ class UserForm extends Model
             [['city_id'], 'integer'],
             [['name', 'email', 'password', 'children'], 'string'],
             [['email'], 'email'],
+            [['password'], 'string', 'min' => 6, 'max' => 20],
         ];
     }
 

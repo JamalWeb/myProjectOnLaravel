@@ -3,6 +3,7 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\models\error\ValidationException;
+use api\modules\v1\models\form\LoginForm;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
 use common\components\EmailSendler;
@@ -123,5 +124,18 @@ class UserApi extends Api
                 throw $e;
             }
         }
+    }
+
+    public function login(array $post): array
+    {
+        $loginForm = new LoginForm($post);
+
+        if (!$loginForm->validate()) {
+            throw new ValidationException($loginForm->getFirstErrors(), 401);
+        }
+
+        return [
+            'token' => 'slHuh1vS-P74LGIE54R8qvY52ncL0kRh'
+        ];
     }
 }

@@ -31,7 +31,7 @@ class BaseModel extends ActiveRecord
      */
     public final function saveModel(): bool
     {
-        if (!$this->validate() || !$this->save()) {
+        if (!$this->save()) {
             throw new ValidationException($this->getFirstErrors());
         }
 

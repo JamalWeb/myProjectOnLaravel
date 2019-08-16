@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use api\modules\v1\classes\UserApi;
 use Exception;
+use MongoDB\Driver\Exception\AuthenticationException;
 
 /**
  * * @property UserApi $api
@@ -207,5 +208,49 @@ class UserController extends BaseController
     public function actionRegistrationBusiness()
     {
         $this->response = $this->api->registrationBusiness();
+    }
+
+    /**
+     * @SWG\POST(path="/v1/user/login",
+     *     tags={"Пользователь | User"},
+     *     summary="Авторизация",
+     *     description="Авторизация",
+     *     consumes={"multipart/form-data"},
+     *     produces={"text/plain, application/json"},
+     *     @SWG\Parameter(
+     *         name="email",
+     *         description="Почтовый адрес",
+     *         in="formData",
+     *         required=true,
+     *         type="string",
+     *         default="example@ya.ru"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         description="Пароль",
+     *         in="formData",
+     *         required=true,
+     *         type="string",
+     *         default="AZOnwe"
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "success",
+     *         @SWG\Schema(
+     *            default={
+     *              "token": "slHuh1vS-P74LGIE54R8qvY52ncL0kRh"
+     *            }
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response = 401,
+     *         description = "AuthenticationException"
+     *     )
+     * )
+     * @throws Exception
+     */
+    public function actionLogin()
+    {
+        $this->response = $this->api->login($this->post);
     }
 }

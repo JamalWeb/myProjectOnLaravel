@@ -6,6 +6,8 @@ use api\modules\v1\classes\Api;
 use common\models\user\User;
 use Yii;
 use yii\base\Action;
+use yii\filters\auth\CompositeAuth;
+use yii\filters\auth\HttpBearerAuth;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
@@ -75,6 +77,30 @@ class BaseController extends Controller
      * @var array
      */
     protected $response;
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $my['authenticator'] = [
+            'class'       => CompositeAuth::class,
+            'except'      => [
+                'login'
+            ],
+            'authMethods' => [
+                HttpBearerAuth::class
+            ]
+        ];
+
+        unset($behaviors['rateLimiter']);
+
+        $behaviors = array_merge($behaviors, $my);
+
+        return $behaviors;
+    }
 
     /**
      * @param $action

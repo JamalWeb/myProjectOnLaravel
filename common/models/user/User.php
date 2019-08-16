@@ -9,6 +9,7 @@ use Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -37,7 +38,7 @@ use yii\db\ActiveQuery;
  * @property string      $authKey
  * @property UserToken[] $userTokens
  */
-class User extends BaseModel
+class User extends BaseModel implements IdentityInterface
 {
     /** @var int Inactive status */
     const STATUS_INACTIVE = 0;
@@ -120,11 +121,14 @@ class User extends BaseModel
     /**
      * @param      $token
      * @param null $type
-     * @throws NotSupportedException
+     * @return User|null
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne([
+            'access_token' => $token,
+            'status'       => self::STATUS_ACTIVE
+        ]);
     }
 
     /**
@@ -241,6 +245,19 @@ class User extends BaseModel
             [['username'], 'unique'],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::class, 'targetAttribute' => ['role_id' => 'id']],
         ];
+    }
+
+    /**
+     * Update login info (ip and time)
+     *
+     * @return bool
+     */
+    public function updateLoginMeta()
+    {
+        $this->logged_in_ip = Yii::$app->request->userIP;
+        $this->logged_in_at = gmdate("Y-m-d H:i:s");
+
+        return $this->save(false, ["logged_in_ip", "logged_in_at"]);
     }
 
     /**
