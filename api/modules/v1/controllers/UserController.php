@@ -1,13 +1,13 @@
-<?php /** @noinspection PhpUnused */
+<?php
+/** @noinspection PhpUnused */
 
 namespace api\modules\v1\controllers;
 
 use api\modules\v1\classes\UserApi;
 use Exception;
-use MongoDB\Driver\Exception\AuthenticationException;
 
 /**
- * * @property UserApi $api
+ * @property UserApi $api
  */
 class UserController extends BaseController
 {
@@ -244,7 +244,11 @@ class UserController extends BaseController
      *     ),
      *     @SWG\Response(
      *         response = 401,
-     *         description = "AuthenticationException"
+     *         description = "UnauthorizedHttpException"
+     *     ),
+     *     @SWG\Response(
+     *         response = 400,
+     *         description = "BadRequestHttpException"
      *     )
      * )
      * @throws Exception

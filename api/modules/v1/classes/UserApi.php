@@ -2,7 +2,7 @@
 
 namespace api\modules\v1\classes;
 
-use api\modules\v1\models\error\ValidationException;
+use api\modules\v1\models\error\BadRequestHttpException;
 use api\modules\v1\models\form\LoginForm;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
@@ -42,7 +42,7 @@ class UserApi extends Api
         $userForm = new UserForm($params);
 
         if (!$userForm->validate()) {
-            throw new ValidationException($userForm->getFirstErrors());
+            throw new BadRequestHttpException($userForm->getFirstErrors());
         }
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -126,18 +126,23 @@ class UserApi extends Api
         }
     }
 
-    public function login(array $post): array
+    /**
+     * Авторизация
+     *
+     * @param array $post
+     * @return User
+     * @throws BadRequestHttpException
+     */
+    public function login(array $post): User
     {
         $loginForm = new LoginForm($post);
 
         if (!$loginForm->validate()) {
-            throw new ValidationException($loginForm->getFirstErrors(), 401);
+            throw new BadRequestHttpException($loginForm->getFirstErrors());
         }
 
         $user = $loginForm->getUser();
 
-        return [
-            'token' => 'slHuh1vS-P74LGIE54R8qvY52ncL0kRh'
-        ];
+        return $user;
     }
 }

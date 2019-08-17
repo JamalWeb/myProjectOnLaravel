@@ -4,7 +4,7 @@ namespace api\modules\v1\models\form;
 
 use amnah\yii2\user\models\UserToken;
 use amnah\yii2\user\Module;
-use api\modules\v1\models\error\ValidationException;
+use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
 use Yii;
 use yii\base\Model;
@@ -57,7 +57,7 @@ class LoginForm extends Model
     }
 
     /**
-     * @throws ValidationException
+     * @throws UnauthorizedHttpException
      */
     public function validateUser(): void
     {
@@ -65,28 +65,28 @@ class LoginForm extends Model
         $user = $this->getUser();
 
         if (is_null($user)) {
-            throw new ValidationException(['email' => Yii::t('user', 'Email not found')]);
+            throw new UnauthorizedHttpException(['email' => Yii::t('user', 'Email not found')]);
         }
 
         if (!$user->validatePassword($this->password)) {
-            throw new ValidationException(['password' => Yii::t('user', 'Incorrect password')]);
+            throw new UnauthorizedHttpException(['password' => Yii::t('user', 'Incorrect password')]);
         }
 
         if ($user->is_banned) {
-            throw new ValidationException([
+            throw new UnauthorizedHttpException([
                 'email' => Yii::t('user', 'User is banned - {banReason}', [
                     'banReason' => $user->banned_reason,
                 ])
             ]);
         }
 
-        if ($user->status !== $user::STATUS_UNCONFIRMED_EMAIL) {
-            /** @var UserToken $userToken */
-            $userToken = $this->module->model('UserToken');
-            $userToken = $userToken::generate($user->id, $userToken::TYPE_EMAIL_ACTIVATE);
-            $user->sendEmailConfirmation($userToken);
-            throw new ValidationException(["email" => Yii::t("user", "Confirmation email resent")]);
-        }
+//        if ($user->status !== $user::STATUS_UNCONFIRMED_EMAIL) {
+//            /** @var UserToken $userToken */
+//            $userToken = $this->module->model('UserToken');
+//            $userToken = $userToken::generate($user->id, $userToken::TYPE_EMAIL_ACTIVATE);
+//            $user->sendEmailConfirmation($userToken);
+//            throw new UnauthorizedHttpException(["email" => Yii::t("user", "Confirmation email resent")]);
+//        }
     }
 
     /**

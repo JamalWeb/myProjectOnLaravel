@@ -2,7 +2,7 @@
 
 namespace common\models\system;
 
-use api\modules\v1\models\error\ValidationException;
+use api\modules\v1\models\error\BadRequestHttpException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -27,12 +27,12 @@ class BaseModel extends ActiveRecord
 
     /**
      * @return bool
-     * @throws ValidationException
+     * @throws BadRequestHttpException
      */
     public final function saveModel(): bool
     {
         if (!$this->save()) {
-            throw new ValidationException($this->getFirstErrors());
+            throw new BadRequestHttpException($this->getFirstErrors());
         }
 
         return true;

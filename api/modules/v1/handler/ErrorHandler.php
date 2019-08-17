@@ -2,7 +2,7 @@
 
 namespace api\modules\v1\handler;
 
-use api\modules\v1\models\error\ValidationException;
+use api\modules\v1\models\error\HttpException;
 use Error;
 use Exception;
 use yii\web\Response;
@@ -15,10 +15,15 @@ class ErrorHandler extends \yii\web\ErrorHandler
      */
     protected function renderException($exception)
     {
-        $response = new Response();
-        $response->format = Response::FORMAT_JSON;
-        $response->data = $this->convertExceptionToArray($exception);
-        $response->setStatusCode(400);
+        $response = new Response([
+            'format' => Response::FORMAT_JSON,
+            'data'   => $this->convertExceptionToArray($exception),
+        ]);
+
+        if ($exception instanceof HttpException) {
+            $response->setStatusCode($exception->statusCode);
+        }
+
         $response->send();
     }
 
@@ -35,7 +40,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
             'errors'  => []
         ];
 
-        if ($exception instanceof ValidationException) {
+        if ($exception instanceof HttpException) {
             $error['errors'] = $exception->firstErrors;
         }
 
