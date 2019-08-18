@@ -3,11 +3,10 @@
 namespace common\models\user;
 
 use common\components\ArrayHelper;
-use common\components\PassHelper;
+use common\components\PasswordHelper;
 use common\models\system\BaseModel;
 use Exception;
 use Yii;
-use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
@@ -69,12 +68,10 @@ class User extends BaseModel implements IdentityInterface
      */
     public function prepareRegistration(array $params): array
     {
-        $passHelper = new PassHelper();
-
         return ArrayHelper::merge($params, [
             'status'     => User::STATUS_UNCONFIRMED_EMAIL,
             'created_ip' => Yii::$app->request->remoteIP,
-            'password'   => $passHelper->encrypt($params['password'])
+            'password'   => PasswordHelper::encrypt($params['password'])
         ]);
     }
 
@@ -217,14 +214,17 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * Validates password
+     * Валидация пароля
      *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
+     * @param string $password
+     * @return bool
      */
     public function validatePassword($password): bool
     {
-        return true;
+        /** @var string $passwordWithSalt */
+        $passwordWithSalt = PasswordHelper::addSaltInPassword($password);
+
+        return Yii::$app->security->validatePassword($passwordWithSalt, $this->password);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use api\swagger\MySwaggerAction;
 use api\swagger\WebApiSwaggerAction;
+use common\components\PasswordHelper;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -33,15 +34,5 @@ class SiteController extends Controller
                 'cacheKey' => 'api-swagger-cache',
             ],
         ];
-    }
-
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return Yii::getAlias('@api/modules/v1/controllers');
     }
 }

@@ -2,26 +2,22 @@
 
 namespace common\components;
 
-use yii\base\Component;
+use yii\base\BaseObject;
 
 /**
- * Class DateHelper - Хелпер для работы датой
+ * Class DateHelper
  *
  * @package common\components
  */
-class DateHelper extends Component
+class DateHelper extends BaseObject
 {
+    /**
+     *Текущая дата в формате 2019-07-13 18:27:52
+     *
+     * @return string
+     */
     public static final function getTimestamp(): string
     {
-        /**
-         * Текущая дата в формате
-         * 2019-07-13 18:27:52
-         * для базы данных
-         *
-         * @var string $timestamp
-         */
-        $timestamp = gmdate('Y-m-d H:i:s');
-
-        return $timestamp;
+        return gmdate('Y-m-d H:i:s');
     }
 }

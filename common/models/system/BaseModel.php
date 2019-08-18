@@ -3,15 +3,19 @@
 namespace common\models\system;
 
 use api\modules\v1\models\error\BadRequestHttpException;
+use common\components\DateHelper;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
+/**
+ * Class BaseModel
+ *
+ * @package common\models\system
+ */
 class BaseModel extends ActiveRecord
 {
     /**
-     * Автоматическое установление даты и времени при
-     * создании или обновлении пользователя
-     * {@inheritdoc}
+     * Автоматическое установление даты и времени при создании или обновлении пользователя
      */
     public function behaviors(): array
     {
@@ -20,12 +24,14 @@ class BaseModel extends ActiveRecord
                 'class'              => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
-                'value'              => gmdate('Y-m-d H:i:s'),
+                'value'              => DateHelper::getTimestamp(),
             ],
         ];
     }
 
     /**
+     * Сохранение модели
+     *
      * @return bool
      * @throws BadRequestHttpException
      */

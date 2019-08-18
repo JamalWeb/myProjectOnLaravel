@@ -7,6 +7,7 @@ use amnah\yii2\user\Module;
 use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
 use Yii;
+use yii\base\Exception;
 use yii\base\Model;
 
 /**
@@ -58,6 +59,7 @@ class LoginForm extends Model
 
     /**
      * @throws UnauthorizedHttpException
+     * @throws Exception
      */
     public function validateUser(): void
     {
