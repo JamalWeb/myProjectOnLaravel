@@ -142,11 +142,11 @@ class UserApi extends Api
     {
         $loginForm = new LoginForm($post);
 
-        if (!$loginForm->validate()) {
-            throw new UnauthorizedHttpException($loginForm->getFirstErrors());
-        }
+        $loginForm->authenticate();
 
-        return [Yii::$app->user->identity];
+        return [
+            'token' => ''
+        ];
     }
 
     public function resetAuthToken(array $post)

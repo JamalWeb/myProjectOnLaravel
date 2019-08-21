@@ -43,7 +43,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionGetGenders()
+    public function actionGetGenders(): void
     {
         $this->response = $this->api->getGender();
     }
@@ -116,7 +116,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationUser()
+    public function actionRegistrationUser(): void
     {
         $this->response = $this->api->registrationUser($this->post);
     }
@@ -205,7 +205,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationBusiness()
+    public function actionRegistrationBusiness(): void
     {
         $this->response = $this->api->registrationBusiness();
     }
@@ -253,7 +253,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionLogin()
+    public function actionLogin(): void
     {
         $this->response = $this->api->login($this->post);
     }
@@ -301,7 +301,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionResetAuthToken()
+    public function actionResetAuthToken(): void
     {
         $this->response = $this->api->resetAuthToken($this->post);
     }

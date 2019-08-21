@@ -45,13 +45,13 @@ class BaseController extends Controller
     protected $api;
 
     /** @var array */
-    protected $get;
+    protected $get = [];
 
     /** @var array */
-    protected $post;
+    protected $post = [];
 
     /** @var array */
-    protected $headers;
+    protected $headers = [];
 
     /** @var array */
     protected $response = [];
