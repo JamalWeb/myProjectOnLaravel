@@ -32,72 +32,57 @@ use yii\web\Controller;
  */
 class BaseController extends Controller
 {
-    /**
-     * Проверка что запрос с методом POST был выполнен на сервере
-     *
-     * @var bool
-     */
+    /** @var bool */
     public $enableCsrfValidation = false;
 
-    /**
-     * Текущий пользователь
-     *
-     * @var User
-     */
+    /** @var User */
     protected $user;
 
-    /**
-     * Имя модели Api
-     * Например UserApi::class
-     *
-     * @var string
-     */
+    /** @var string */
     protected $modelName = null;
 
-    /**
-     * Экземпляр класса из $this->modelName
-     *
-     * @var Api
-     */
+    /** @var Api */
     protected $api;
 
-    /**
-     * Параметры метода POST
-     *
-     * @var array
-     */
+    /** @var array */
+    protected $get;
+
+    /** @var array */
     protected $post;
 
+    /** @var array */
     protected $headers;
 
-    /**
-     * Ответ от сервера
-     *
-     * @var array
-     */
+    /** @var array */
     protected $response = [];
 
-    public function init()
+    public function init(): void
     {
         if (!is_null($this->modelName)) {
             $this->api = new $this->modelName();
         }
 
-        $this->post = Yii::$app->request->post();
-        $this->headers = Yii::$app->request->getHeaders();
+        $this->requestInit();
     }
 
     /**
-     * Методы который вызывается после методов action*
-     *
      * @param Action $action
      * @param mixed  $result
      * @return array|mixed
      */
-    public function afterAction($action, $result)
+    public function afterAction($action, $result): array
     {
         parent::afterAction($action, $result);
 
         return $this->response;
+    }
+
+    protected function requestInit(): void
+    {
+        $request = Yii::$app->request;
+
+        $this->get = $request->get();
+        $this->post = $request->post();
+        $this->headers = $request->getHeaders();
     }
 }
