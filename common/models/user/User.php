@@ -2,7 +2,9 @@
 
 namespace common\models\user;
 
+use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
+use common\components\DateHelper;
 use common\components\PasswordHelper;
 use common\models\system\BaseModel;
 use Exception;
@@ -284,5 +286,76 @@ class User extends BaseModel implements IdentityInterface
             'is_banned'     => Yii::t('api', 'Is Banned'),
             'logout_in_at'  => Yii::t('api', 'Logout In At'),
         ];
+    }
+
+    /**
+     * Генерация токена
+     *
+     * @param int $type
+     * @throws \yii\base\Exception
+     */
+    public function generateToken(int $type): void
+    {
+        $tokenData = [
+            'user_id' => $this->id,
+            'type'    => $type
+        ];
+
+        $token = UserToken::findOne($tokenData);
+
+        if (is_null($token)) {
+            $token = new UserToken();
+        }
+
+        $tokenData = ArrayHelper::merge($tokenData, [
+            'token' => Yii::$app->security->generateRandomString(34),
+        ]);
+
+        if ($type === UserToken::TYPE_AUTH_TOKEN) {
+            $tokenData['expired_at'] = DateHelper::getTimestamp('+ 1 day');
+            $this->generateToken(UserToken::TYPE_RESET_AUTH_TOKEN);
+        }
+
+        $token->setAttributes($tokenData)->saveModel();
+    }
+
+    /**
+     * Получить токен авторизации
+     *
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function getAuthToken(): string
+    {
+        $authToken = UserToken::findOne([
+            'user_id' => $this->id,
+            'type'    => UserToken::TYPE_AUTH_TOKEN
+        ]);
+
+        if (is_null($authToken)) {
+            throw new BadRequestHttpException($authToken->getFirstErrors());
+        }
+
+        return $authToken->token;
+    }
+
+    /**
+     * Получить токен авторизации
+     *
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public function getResetToken(): string
+    {
+        $authToken = UserToken::findOne([
+            'user_id' => $this->id,
+            'type'    => UserToken::TYPE_RESET_AUTH_TOKEN
+        ]);
+
+        if (is_null($authToken)) {
+            throw new BadRequestHttpException($authToken->getFirstErrors());
+        }
+
+        return $authToken->token;
     }
 }

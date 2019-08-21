@@ -2,22 +2,44 @@
 
 namespace common\models\user;
 
+use common\components\ArrayHelper;
 use Yii;
+use common\components\DateHelper;
+use common\models\system\BaseModel;
+use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "user_token".
+ * Class UserToken
  *
- * @property int    $id
- * @property int    $user_id
- * @property int    $type
- * @property string $token
- * @property string $data
- * @property string $created_at
- * @property string $expired_at
- * @property User   $user
+ * @package common\models\user
+ * @property string $id         [integer]
+ * @property string $user_id    [integer]
+ * @property int    $type       [smallint]
+ * @property string $token      [varchar(255)]
+ * @property string $data       [varchar(255)]
+ * @property int    $created_at [timestamp(0)]
+ * @property int    $expired_at [timestamp(0)]
  */
-class UserToken extends \amnah\yii2\user\models\UserToken
+class UserToken extends BaseModel
 {
+    const TYPE_AUTH_TOKEN = 1;
+    const TYPE_RESET_AUTH_TOKEN = 2;
+    const TYPE_PASSWORD_CHANGE = 3;
+    const TYPE_EMAIL_ACTIVATE = 4;
+    const TYPE_EMAIL_CHANGE = 5;
+
+    public function behaviors(): array
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'timestamp' => [
+                'class'              => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => false,
+                'value'              => DateHelper::getTimestamp(),
+            ],
+        ]);
+    }
+
     /**
      * {@inheritdoc}
      */

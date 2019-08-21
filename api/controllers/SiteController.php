@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use api\swagger\MySwaggerAction;
 use api\swagger\WebApiSwaggerAction;
+use common\components\DateHelper;
 use common\components\PasswordHelper;
 use Yii;
 use yii\helpers\Url;
@@ -34,5 +35,10 @@ class SiteController extends Controller
                 'cacheKey' => 'api-swagger-cache',
             ],
         ];
+    }
+
+    public function actionIndex()
+    {
+        return Yii::$app->request->getRemoteIP();
     }
 }

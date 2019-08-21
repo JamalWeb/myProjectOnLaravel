@@ -6,9 +6,6 @@ use api\modules\v1\classes\Api;
 use common\models\user\User;
 use Yii;
 use yii\base\Action;
-use yii\filters\auth\CompositeAuth;
-use yii\filters\auth\HttpBearerAuth;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
 /**
@@ -71,38 +68,23 @@ class BaseController extends Controller
      */
     protected $post;
 
+    protected $headers;
+
     /**
      * Ответ от сервера
      *
      * @var array
      */
-    protected $response;
+    protected $response = [];
 
-    /**
-     * @param $action
-     * @return bool
-     * @throws BadRequestHttpException
-     */
-    public function beforeAction($action)
+    public function init()
     {
-        /**
-         * Выполняем родительский beforeAction()
-         */
-        parent::beforeAction($action);
-
-        /**
-         * Если имя модели Api не пустое, то создаем модель
-         */
         if (!is_null($this->modelName)) {
             $this->api = new $this->modelName();
         }
 
-        /**
-         * Записываем параметры с метода POST
-         */
         $this->post = Yii::$app->request->post();
-
-        return true;
+        $this->headers = Yii::$app->request->getHeaders();
     }
 
     /**
@@ -116,6 +98,6 @@ class BaseController extends Controller
     {
         parent::afterAction($action, $result);
 
-        return $this->response ?? [];
+        return $this->response;
     }
 }

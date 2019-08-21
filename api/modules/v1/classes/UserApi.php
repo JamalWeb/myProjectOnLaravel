@@ -3,6 +3,7 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\models\error\BadRequestHttpException;
+use api\modules\v1\models\error\UnauthorizedHttpException;
 use api\modules\v1\models\form\LoginForm;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
@@ -12,9 +13,11 @@ use common\models\user\Gender;
 use common\models\user\Profile;
 use common\models\user\Role;
 use common\models\user\User;
+use common\models\user\UserToken;
 use common\models\user\UserType;
 use Exception;
 use Yii;
+use yii\web\IdentityInterface;
 
 class UserApi extends Api
 {
@@ -26,8 +29,10 @@ class UserApi extends Api
     public final function getGender(): array
     {
         $genders = Gender::find()->all();
+        $user = User::findOne(['id' => 1]);
+        Yii::$app->user->logout($user);
 
-        return $genders;
+        return [Yii::$app->user->identity];
     }
 
     /**
@@ -129,20 +134,22 @@ class UserApi extends Api
     /**
      * Авторизация
      *
-     * @param array $post
-     * @return User
-     * @throws BadRequestHttpException
+     * @param $post
+     * @return array
+     * @throws UnauthorizedHttpException
      */
-    public function login(array $post): User
+    public function login(array $post): array
     {
         $loginForm = new LoginForm($post);
 
         if (!$loginForm->validate()) {
-            throw new BadRequestHttpException($loginForm->getFirstErrors());
+            throw new UnauthorizedHttpException($loginForm->getFirstErrors());
         }
 
-        $user = $loginForm->getUser();
+        return [Yii::$app->user->identity];
+    }
 
-        return $user;
+    public function resetAuthToken(array $post)
+    {
     }
 }

@@ -257,4 +257,52 @@ class UserController extends BaseController
     {
         $this->response = $this->api->login($this->post);
     }
+
+    /**
+     * @SWG\POST(path="/v1/user/login",
+     *     tags={"Пользователь | User"},
+     *     summary="Авторизация",
+     *     description="Авторизация",
+     *     consumes={"multipart/form-data"},
+     *     produces={"text/plain, application/json"},
+     *     @SWG\Parameter(
+     *         name="email",
+     *         description="Почтовый адрес",
+     *         in="formData",
+     *         required=true,
+     *         type="string",
+     *         default="example@ya.ru"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         description="Пароль",
+     *         in="formData",
+     *         required=true,
+     *         type="string",
+     *         default="AZOnwe"
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "success",
+     *         @SWG\Schema(
+     *            default={
+     *              "token": "slHuh1vS-P74LGIE54R8qvY52ncL0kRh"
+     *            }
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response = 401,
+     *         description = "UnauthorizedHttpException"
+     *     ),
+     *     @SWG\Response(
+     *         response = 400,
+     *         description = "BadRequestHttpException"
+     *     )
+     * )
+     * @throws Exception
+     */
+    public function actionResetAuthToken()
+    {
+        $this->response = $this->api->resetAuthToken($this->post);
+    }
 }

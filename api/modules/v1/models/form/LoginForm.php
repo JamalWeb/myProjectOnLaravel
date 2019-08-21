@@ -2,12 +2,10 @@
 
 namespace api\modules\v1\models\form;
 
-use amnah\yii2\user\models\UserToken;
 use amnah\yii2\user\Module;
 use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
 use Yii;
-use yii\base\Exception;
 use yii\base\Model;
 
 /**
@@ -17,26 +15,22 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    /**
-     * @var Module
-     */
-    public $module;
+    /** @var Module */
+    private $module;
 
-    /**
-     * @var User $user
-     */
+    /** @var string $keyAttempt */
+    private $keyAttempt;
+
+    /** @var User $user */
     private $user;
 
-    /**
-     * @var string $email
-     */
+    /** @var string $email */
     public $email;
 
-    /**
-     * @var string $password
-     */
+    /** @var string $password */
     public $password;
 
+    /** Инициализация формы */
     public function init(): void
     {
         if (is_null($this->module)) {
@@ -45,6 +39,8 @@ class LoginForm extends Model
     }
 
     /**
+     * Правила для валидации атрибутов
+     *
      * @return array
      */
     public function rules(): array
@@ -58,20 +54,46 @@ class LoginForm extends Model
     }
 
     /**
+     * Наименование атрибутов формы
+     *
+     * @return array
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            'email'    => 'Email',
+            'password' => 'Password'
+        ];
+    }
+
+    /**
      * @throws UnauthorizedHttpException
-     * @throws Exception
      */
     public function validateUser(): void
     {
         /** @var User $user */
         $user = $this->getUser();
 
+        $this->writeAttemptKey();
+        $attempt = Yii::$app->cache->get($this->keyAttempt);
+        if ($attempt >= 2) {
+            throw new UnauthorizedHttpException([
+                'email' => 'Вы превысили лимит попыток авторизации'
+            ]);
+        }
+
         if (is_null($user)) {
-            throw new UnauthorizedHttpException(['email' => Yii::t('user', 'Email not found')]);
+            $this->handleFailure();
+            throw new UnauthorizedHttpException([
+                'email' => Yii::t('user', 'Email not found')
+            ]);
         }
 
         if (!$user->validatePassword($this->password)) {
-            throw new UnauthorizedHttpException(['password' => Yii::t('user', 'Incorrect password')]);
+            $this->handleFailure();
+            throw new UnauthorizedHttpException([
+                'password' => Yii::t('user', 'Incorrect password')
+            ]);
         }
 
         if ($user->is_banned) {
@@ -82,16 +104,35 @@ class LoginForm extends Model
             ]);
         }
 
-//        if ($user->status !== $user::STATUS_UNCONFIRMED_EMAIL) {
-//            /** @var UserToken $userToken */
-//            $userToken = $this->module->model('UserToken');
-//            $userToken = $userToken::generate($user->id, $userToken::TYPE_EMAIL_ACTIVATE);
-//            $user->sendEmailConfirmation($userToken);
-//            throw new UnauthorizedHttpException(["email" => Yii::t("user", "Confirmation email resent")]);
-//        }
+        $this->validateStatus();
+
+        $this->authenticate();
     }
 
     /**
+     * Валидация статуса пользователя
+     *
+     * @throws UnauthorizedHttpException
+     */
+    private function validateStatus(): void
+    {
+        switch ($this->user->status) {
+            case User::STATUS_INACTIVE:
+                $error = ['email' => 'Ваш аккаунт не активирован'];
+                break;
+            case User::STATUS_UNCONFIRMED_EMAIL:
+                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
+                break;
+        }
+
+        if (isset($error)) {
+            throw new UnauthorizedHttpException($error);
+        }
+    }
+
+    /**
+     * Получить пользователя
+     *
      * @return User|null
      */
     public function getUser(): ?User
@@ -107,11 +148,34 @@ class LoginForm extends Model
         return $this->user;
     }
 
-    public function attributeLabels(): array
+    private function writeAttemptKey(): void
     {
-        return [
-            'email'    => 'Email',
-            'password' => 'Password'
-        ];
+        $this->keyAttempt = 'auth_' . md5($this->email);
+    }
+
+    private function handleFailure(): void
+    {
+        $attempt = Yii::$app->cache->get($this->keyAttempt) ? 1 : 0;
+        Yii::$app->cache->set($this->keyAttempt, ($attempt + 1), 600);
+    }
+
+    private function authenticate(): void
+    {
+        //        /**
+//         * Язык системы
+//         */
+//        Yii::$app->language = 'ru';
+//        if (isset($user['language'])) {
+//            Yii::$app->language = mb_strtolower($params['language']);
+//        }
+
+        $identity = $this->getUser();
+
+        $user = Yii::$app->user;
+        $user->switchIdentity($identity);
+        $user->login($identity);
+        $user->setIdentity($identity);
+
+        Yii::$app->cache->delete($this->keyAttempt);
     }
 }

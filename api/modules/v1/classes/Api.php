@@ -23,19 +23,12 @@ class Api
      */
     public function __construct()
     {
-        /**
-         * Получаем текущего пользователя
-         */
         $this->user = $this->getUser();
     }
 
     final private function getUser()
     {
-        /**
-         * Идентификтор аутентифицированного пользователя
-         *
-         * @var int $userId
-         */
+        /** @var int $userId */
         $userId = Yii::$app->user->getId();
 
         /**
