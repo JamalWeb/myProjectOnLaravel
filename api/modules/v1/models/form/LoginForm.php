@@ -123,9 +123,12 @@ class LoginForm extends Model
     }
 
     /**
+     * Авторизация
+     *
+     * @return User
      * @throws UnauthorizedHttpException
      */
-    public final function authenticate(): void
+    public final function authenticate(): User
     {
         if (!$this->validate()) {
             throw new UnauthorizedHttpException($this->getFirstErrors());
@@ -160,6 +163,8 @@ class LoginForm extends Model
         $user->setIdentity($this->user);
 
         Yii::$app->cache->delete($this->keyAttempts);
+
+        return $this->user;
     }
 
     /**

@@ -28,6 +28,14 @@ class UserToken extends BaseModel
     const TYPE_EMAIL_ACTIVATE = 4;
     const TYPE_EMAIL_CHANGE = 5;
 
+    public static $allowedTokens = [
+        self::TYPE_AUTH_TOKEN,
+        self::TYPE_RESET_AUTH_TOKEN,
+        self::TYPE_PASSWORD_CHANGE,
+        self::TYPE_EMAIL_ACTIVATE,
+        self::TYPE_EMAIL_CHANGE,
+    ];
+
     public function behaviors(): array
     {
         return ArrayHelper::merge(parent::behaviors(), [

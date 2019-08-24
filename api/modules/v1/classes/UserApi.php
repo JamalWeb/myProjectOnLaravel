@@ -3,7 +3,6 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\models\error\BadRequestHttpException;
-use api\modules\v1\models\error\UnauthorizedHttpException;
 use api\modules\v1\models\form\LoginForm;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
@@ -17,7 +16,6 @@ use common\models\user\UserToken;
 use common\models\user\UserType;
 use Exception;
 use Yii;
-use yii\web\IdentityInterface;
 
 class UserApi extends Api
 {
@@ -28,11 +26,7 @@ class UserApi extends Api
      */
     public final function getGender(): array
     {
-        $genders = Gender::find()->all();
-        $user = User::findOne(['id' => 1]);
-        Yii::$app->user->logout($user);
-
-        return [Yii::$app->user->identity];
+        return Gender::find()->all();
     }
 
     /**
@@ -134,22 +128,33 @@ class UserApi extends Api
     /**
      * Авторизация
      *
-     * @param $post
+     * @param array $post
      * @return array
-     * @throws UnauthorizedHttpException
+     * @throws Exception
      */
     public function login(array $post): array
     {
-        $loginForm = new LoginForm($post);
+        try {
+            $loginForm = new LoginForm($post);
+            $user = $loginForm->authenticate();
+            $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
 
-        $loginForm->authenticate();
-
-        return [
-            'token' => ''
-        ];
+            return [
+                'auth_token'       => $user->getToken(UserToken::TYPE_AUTH_TOKEN),
+                'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)
+            ];
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     public function resetAuthToken(array $post)
     {
+//        $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
+
+        return [
+            'auth_token'       => '$user->getToken(UserToken::TYPE_AUTH_TOKEN)',
+            'reset_auth_token' => '$user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)'
+        ];
     }
 }

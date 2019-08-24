@@ -41,25 +41,12 @@ use yii\web\IdentityInterface;
  */
 class User extends BaseModel implements IdentityInterface
 {
-    /** @var int Inactive status */
     const STATUS_INACTIVE = 0;
-
-    /** @var int Active status */
     const STATUS_ACTIVE = 1;
-
-    /** @var int Unconfirmed email status */
     const STATUS_UNCONFIRMED_EMAIL = 2;
 
     const SCENARIO_CREATE_USER = 'create_user_account';
     const SCENARIO_CREATE_BUSINESS_USER = 'create_business_account';
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'user';
-    }
 
     /**
      * Подготовка данных для регистрации
@@ -78,35 +65,93 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * @return ActiveQuery
+     * Генерация токена
+     *
+     * @param int  $type
+     * @param bool $expiring
+     * @throws BadRequestHttpException
+     * @throws \yii\base\Exception
      */
-    public function getProfiles()
+    public function generateToken(int $type, bool $expiring = true): void
     {
-        return $this->hasMany(Profile::class, ['user_id' => 'id']);
+        if (!in_array($type, UserToken::$allowedTokens)) {
+            throw new BadRequestHttpException(['token' => 'not found']);
+        }
+
+        $tokenData = [
+            'user_id' => $this->id,
+            'type'    => $type
+        ];
+
+        $token = UserToken::findOne($tokenData);
+
+        if (is_null($token)) {
+            $token = new UserToken();
+        }
+
+        $tokenData['token'] = Yii::$app->security->generateRandomString(34);
+
+        if ($expiring) {
+            $tokenData['expired_at'] = DateHelper::getTimestamp('+ 1 day');
+        }
+
+        $token->setAttributes($tokenData)->saveModel();
+
+        if ($type === UserToken::TYPE_AUTH_TOKEN) {
+            $this->generateToken(UserToken::TYPE_RESET_AUTH_TOKEN);
+        }
     }
 
     /**
-     * @return ActiveQuery
+     * Получить токен
+     *
+     * @param int $type
+     * @return string
+     * @throws BadRequestHttpException
      */
-    public function getRole()
+    public function getToken(int $type): string
     {
-        return $this->hasOne(Role::class, ['id' => 'role_id']);
+        if (!in_array($type, UserToken::$allowedTokens)) {
+            throw new BadRequestHttpException(['token' => 'not found']);
+        }
+
+        $userToken = UserToken::findOne([
+            'user_id' => $this->id,
+            'type'    => $type
+        ]);
+
+        if (is_null($userToken)) {
+            throw new BadRequestHttpException($userToken->getFirstErrors());
+        }
+
+        return $userToken->token;
     }
 
     /**
-     * @return ActiveQuery
+     * Валидация пароля
+     *
+     * @param string $password
+     * @return bool
      */
-    public function getUserAuths()
+    public function validatePassword($password): bool
     {
-        return $this->hasMany(UserAuth::class, ['user_id' => 'id']);
+        /** @var string $passwordWithSalt */
+        $passwordWithSalt = PasswordHelper::addSaltInPassword($password);
+
+        return Yii::$app->security->validatePassword($passwordWithSalt, $this->password);
     }
 
     /**
-     * @return ActiveQuery
+     * Update login info (ip and time)
+     *
+     * @return bool
      */
-    public function getUserTokens()
+    public function updateLoginMeta()
     {
-        return $this->hasMany(UserToken::class, ['user_id' => 'id']);
+        $this->logged_in_ip = Yii::$app->request->userIP;
+        $this->logged_in_at = gmdate('Y-m-d H:i:s');
+
+        return $this->save(false, ['logged_in_ip', 'logged_in_at']);
     }
 
     /**
@@ -118,58 +163,24 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * @param      $token
-     * @param null $type
+     * @param string $token
+     * @param null   $type
      * @return User|null
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public static function findIdentityByAccessToken($token, $type = null): ?User
     {
-        return static::findOne([
-            'access_token' => $token,
-            'status'       => self::STATUS_ACTIVE
+        $userToken = UserToken::findOne([
+            'token' => $token,
+            'type'  => UserToken::TYPE_AUTH_TOKEN
         ]);
-    }
 
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return User|null
-     */
-    public static function findByUsername($username)
-    {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
-    }
-
-    /**
-     * Finds user by password reset token
-     *
-     * @param string $token password reset token
-     * @return static|null
-     */
-    public static function findByPasswordResetToken($token)
-    {
-        if (!static::isPasswordResetTokenValid($token)) {
+        if (is_null($userToken)) {
             return null;
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status'               => self::STATUS_ACTIVE,
-        ]);
-    }
-
-    /**
-     * Finds user by verification email token
-     *
-     * @param string $token verify email token
-     * @return static|null
-     */
-    public static function findByVerificationToken($token)
-    {
-        return static::findOne([
-            'verification_token' => $token,
-            'status'             => self::STATUS_INACTIVE
+            'id'     => $userToken->user_id,
+            'status' => self::STATUS_ACTIVE
         ]);
     }
 
@@ -216,17 +227,11 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * Валидация пароля
-     *
-     * @param string $password
-     * @return bool
+     * {@inheritdoc}
      */
-    public function validatePassword($password): bool
+    public static function tableName()
     {
-        /** @var string $passwordWithSalt */
-        $passwordWithSalt = PasswordHelper::addSaltInPassword($password);
-
-        return Yii::$app->security->validatePassword($passwordWithSalt, $this->password);
+        return 'user';
     }
 
     /**
@@ -246,19 +251,6 @@ class User extends BaseModel implements IdentityInterface
             [['username'], 'unique'],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::class, 'targetAttribute' => ['role_id' => 'id']],
         ];
-    }
-
-    /**
-     * Update login info (ip and time)
-     *
-     * @return bool
-     */
-    public function updateLoginMeta()
-    {
-        $this->logged_in_ip = Yii::$app->request->userIP;
-        $this->logged_in_at = gmdate("Y-m-d H:i:s");
-
-        return $this->save(false, ["logged_in_ip", "logged_in_at"]);
     }
 
     /**
@@ -289,73 +281,34 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * Генерация токена
-     *
-     * @param int $type
-     * @throws \yii\base\Exception
+     * @return ActiveQuery
      */
-    public function generateToken(int $type): void
+    public function getProfiles()
     {
-        $tokenData = [
-            'user_id' => $this->id,
-            'type'    => $type
-        ];
-
-        $token = UserToken::findOne($tokenData);
-
-        if (is_null($token)) {
-            $token = new UserToken();
-        }
-
-        $tokenData = ArrayHelper::merge($tokenData, [
-            'token' => Yii::$app->security->generateRandomString(34),
-        ]);
-
-        if ($type === UserToken::TYPE_AUTH_TOKEN) {
-            $tokenData['expired_at'] = DateHelper::getTimestamp('+ 1 day');
-            $this->generateToken(UserToken::TYPE_RESET_AUTH_TOKEN);
-        }
-
-        $token->setAttributes($tokenData)->saveModel();
+        return $this->hasMany(Profile::class, ['user_id' => 'id']);
     }
 
     /**
-     * Получить токен авторизации
-     *
-     * @return string
-     * @throws BadRequestHttpException
+     * @return ActiveQuery
      */
-    public function getAuthToken(): string
+    public function getRole()
     {
-        $authToken = UserToken::findOne([
-            'user_id' => $this->id,
-            'type'    => UserToken::TYPE_AUTH_TOKEN
-        ]);
-
-        if (is_null($authToken)) {
-            throw new BadRequestHttpException($authToken->getFirstErrors());
-        }
-
-        return $authToken->token;
+        return $this->hasOne(Role::class, ['id' => 'role_id']);
     }
 
     /**
-     * Получить токен авторизации
-     *
-     * @return string
-     * @throws BadRequestHttpException
+     * @return ActiveQuery
      */
-    public function getResetToken(): string
+    public function getUserAuths()
     {
-        $authToken = UserToken::findOne([
-            'user_id' => $this->id,
-            'type'    => UserToken::TYPE_RESET_AUTH_TOKEN
-        ]);
+        return $this->hasMany(UserAuth::class, ['user_id' => 'id']);
+    }
 
-        if (is_null($authToken)) {
-            throw new BadRequestHttpException($authToken->getFirstErrors());
-        }
-
-        return $authToken->token;
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserTokens()
+    {
+        return $this->hasMany(UserToken::class, ['user_id' => 'id']);
     }
 }
