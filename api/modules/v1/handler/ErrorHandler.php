@@ -20,7 +20,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
             'data'   => $this->convertExceptionToArray($exception),
         ]);
 
-        if ($exception instanceof HttpException) {
+        if ($exception instanceof HttpException || $exception instanceof \yii\web\HttpException) {
             $response->setStatusCode($exception->statusCode);
         }
 

@@ -2,32 +2,33 @@
 
 namespace api\modules\v1\controllers;
 
+use Yii;
 use api\modules\v1\classes\Api;
 use common\models\user\User;
-use Yii;
 use yii\base\Action;
 use yii\web\Controller;
 
 /**
- * @SWG\Swagger(
- *     schemes={"https", "http"},
- *     @SWG\SecurityScheme(
- *         securityDefinition="Bearer",
- *         type="apiKey",
- *         name="Authorization",
- *         in="header",
- *         description="Bearer {token}"
- *     ),
- *     basePath="/"
- * )
- * @SWG\Info(
- *     title="Vorchami Project-name - Документация",
- *     description = "Взаимодействие с сервисом project-name",
- *     version="1.0",
- *     contact={
- *          "name": "Arsen",
- *          "email": "arsen-web@yandex.ru"
- *     }
+ * @OA\Info(
+ *   version="1.0",
+ *   title="Документация API",
+ *   description="Vorchami",
+ *   @OA\Contact(
+ *     name="Arsen Abdurashidov",
+ *     email="arsen-web@yandex.ru",
+ *   ),
+ * ),
+ * @OA\SecurityScheme(
+ *      securityScheme="bearerAuth",
+ *      in="header",
+ *      name="bearerAuth",
+ *      type="http",
+ *      scheme="bearer",
+ *      bearerFormat="JWT",
+ * ),
+ * @OA\Server(
+ *   url="http://api.project.loc/v1",
+ *   description="Локальный сервер",
  * )
  */
 class BaseController extends Controller
