@@ -127,9 +127,86 @@ class UserController extends BaseController
         $this->response = $this->api->registrationUser($this->post);
     }
 
-    public function actionRegistrationBusiness(): void
+    /**
+     * @OA\Post(
+     *   path="/user/registration-business-user",
+     *   summary="Регистрация нового бизнес-пользователя",
+     *   tags={"Пользователь | User"},
+     *   @OA\RequestBody(
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="email",
+     *           description="Email",
+     *           type="string",
+     *           example="neo@neo.com"
+     *         ),
+     *         @OA\Property(
+     *           property="password",
+     *           description="Пароль",
+     *           type="string",
+     *           example="vorchami"
+     *         ),
+     *         @OA\Property(
+     *           property="city_id",
+     *           description="Идентификатор города",
+     *           type="integer",
+     *           example=1
+     *         ),
+     *         @OA\Property(
+     *           property="name",
+     *           description="Имя пользователя",
+     *           type="string",
+     *           example="Иван"
+     *         ),
+     *         @OA\Property(
+     *           property="children",
+     *           description="Список детей",
+     *           type="object",
+     *           example={
+     *             {
+     *               "age": 5,
+     *               "gender_id": 1,
+     *             },
+     *             {
+     *               "age": 11,
+     *               "gender_id": 2,
+     *             }
+     *           }
+     *         ),
+     *         required={"email", "password"}
+     *       )
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           "name": 5,
+     *           "email": "mail@yandex.ru",
+     *           "phone": "+79999999999",
+     *           "name": "Годный Старец",
+     *           "role_id": 3,
+     *           "role": "Руководитель"
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=400,
+     *     description="BadRequestHttpException"
+     *   )
+     * )
+     * @throws Exception
+     */
+    public function actionRegistrationBusinessUser(): void
     {
-        $this->response = $this->api->registrationBusiness();
+        $this->response = $this->api->registrationBusinessUser();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace common\components;
 use api\modules\v1\models\error\BadRequestHttpException;
 use Exception;
 use Generator;
+use Yii;
 
 class ArrayHelper extends \yii\helpers\ArrayHelper
 {
@@ -39,11 +40,19 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
     {
         foreach ($keys as $key) {
             if (!key_exists($key, $array)) {
-                throw new BadRequestHttpException([$key => 'param_no_isset']);
+                throw new BadRequestHttpException([
+                    $key => Yii::t('yii', 'Missing required parameters: {params}', [
+                        'params' => "«" . ucfirst($key) . "»"
+                    ])
+                ]);
             }
 
-            if (!$checkForAvailabilityOnly && empty($array[$key])) {
-                throw new BadRequestHttpException([$key => 'empty_param']);
+            if ($checkForAvailabilityOnly && empty($array[$key])) {
+                throw new BadRequestHttpException([
+                    $key => Yii::t('yii', '{attribute} cannot be blank.', [
+                        'attribute' => $key
+                    ])
+                ]);
             }
         }
     }

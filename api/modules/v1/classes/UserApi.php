@@ -84,7 +84,7 @@ class UserApi extends Api
     /**
      * Регистрация нового бизнеса
      */
-    public function registrationBusiness()
+    public function registrationBusinessUser()
     {
     }
 
@@ -134,18 +134,22 @@ class UserApi extends Api
      */
     public function login(array $post): array
     {
-        try {
-            $loginForm = new LoginForm($post);
-            $user = $loginForm->authenticate();
-            $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
+        ArrayHelper::validate($post, ['email', 'password']);
 
-            return [
-                'auth_token'       => $user->getToken(UserToken::TYPE_AUTH_TOKEN),
-                'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)
-            ];
-        } catch (Exception $e) {
-            throw $e;
-        }
+        /** @var LoginForm $loginForm */
+        $loginForm = new LoginForm([
+            'email'    => $post['email'],
+            'password' => $post['password']
+        ]);
+
+        /** @var User $user */
+        $user = $loginForm->authenticate();
+        $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
+
+        return [
+            'auth_token'       => $user->getToken(UserToken::TYPE_AUTH_TOKEN),
+            'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)
+        ];
     }
 
     public function resetAuthToken(array $post)
