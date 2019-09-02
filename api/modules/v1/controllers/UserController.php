@@ -262,6 +262,42 @@ class UserController extends BaseController
         $this->response = $this->api->login($this->post);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/pet/{petId}",
+     *     summary="Deletes a pet",
+     *     description="",
+     *     operationId="deletePet",
+     *     tags={"pet"},
+     *     @OA\Parameter(
+     *         description="Pet id to delete",
+     *         in="path",
+     *         name="petId",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Header(
+     *         header="api_key",
+     *         description="Api key header",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pet not found"
+     *     ),
+     *     security={{"petstore_auth":{"write:pets", "read:pets"}}}
+     * )
+     */
     public function actionResetAuthToken(): void
     {
         $this->response = $this->api->resetAuthToken($this->post);
