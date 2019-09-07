@@ -40,9 +40,9 @@ class UserController extends BaseController
      *   ),
      * )
      */
-    public function actionGetGenders(): void
+    public function actionGetGenders(): array
     {
-        $this->response = $this->api->getGender();
+        return $this->api->getGender();
     }
 
     /**
@@ -122,9 +122,9 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationUser(): void
+    public function actionRegistrationUser(): array
     {
-        $this->response = $this->api->registrationUser($this->post);
+        return $this->api->registrationUser($this->post);
     }
 
     /**
@@ -204,9 +204,9 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationBusinessUser(): void
+    public function actionRegistrationBusinessUser()
     {
-        $this->response = $this->api->registrationBusinessUser();
+        return $this->api->registrationBusinessUser();
     }
 
     /**
@@ -257,13 +257,51 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionLogin(): void
+    public function actionLogin()
     {
-        $this->response = $this->api->login($this->post);
+        return $this->api->login($this->post);
     }
 
-    public function actionResetAuthToken(): void
+    /**
+     * @OA\Post(
+     *   path="/user/reset-auth-token",
+     *   summary="Сброс токена аутентификации",
+     *   tags={"Пользователь | User"},
+     *   @OA\Parameter(
+     *     in="header",
+     *     name="reset-auth-token",
+     *     @OA\Schema(
+     *       type="string",
+     *       example="slHuh1vS-P74LGIE54R8qvY52ncL0kRh"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           "auth_token": "slHuh1vS-P74LGIE54R8qvY52ncL0kRh",
+     *           "reset_auth_token": "slHuh1vS-P74LGIE54R8qvY52ncL0kRh",
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="UnauthorizedHttpException"
+     *   ),
+     *   @OA\Response(
+     *     response=400,
+     *     description="BadRequestHttpException"
+     *   )
+     * )
+     * @throws Exception
+     */
+    public function actionResetAuthToken()
     {
-        $this->response = $this->api->resetAuthToken($this->post);
+        return $this->api->resetAuthToken($this->headers);
     }
 }

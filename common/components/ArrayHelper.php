@@ -36,7 +36,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      * @param bool  $checkForAvailabilityOnly
      * @throws BadRequestHttpException
      */
-    public static final function validate(array $array, array $keys, bool $checkForAvailabilityOnly = false): void
+    public static final function validateRequestParams(array $array, array $keys, bool $checkForAvailabilityOnly = true): void
     {
         foreach ($keys as $key) {
             if (!key_exists($key, $array)) {

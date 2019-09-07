@@ -5,8 +5,8 @@ namespace api\modules\v1\controllers;
 use Yii;
 use api\modules\v1\classes\Api;
 use common\models\user\User;
-use yii\base\Action;
 use yii\web\Controller;
+use yii\web\HeaderCollection;
 
 /**
  * @OA\Info(
@@ -51,11 +51,8 @@ class BaseController extends Controller
     /** @var array */
     protected $post = [];
 
-    /** @var array */
-    protected $headers = [];
-
-    /** @var array */
-    protected $response = [];
+    /** @var HeaderCollection */
+    protected $headers;
 
     public function init(): void
     {
@@ -66,24 +63,12 @@ class BaseController extends Controller
         $this->requestInit();
     }
 
-    /**
-     * @param Action $action
-     * @param mixed  $result
-     * @return array|mixed
-     */
-    public function afterAction($action, $result): array
-    {
-        parent::afterAction($action, $result);
-
-        return $this->response;
-    }
-
     protected function requestInit(): void
     {
         $request = Yii::$app->request;
 
         $this->get = $request->get();
         $this->post = $request->post();
-        $this->headers = $request->getHeaders();
+        $this->headers = $request->headers;
     }
 }

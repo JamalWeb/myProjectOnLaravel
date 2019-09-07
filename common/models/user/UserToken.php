@@ -7,6 +7,7 @@ use Yii;
 use common\components\DateHelper;
 use common\models\system\BaseModel;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 
 /**
  * Class UserToken
@@ -19,6 +20,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $data       [varchar(255)]
  * @property int    $created_at [timestamp(0)]
  * @property int    $expired_at [timestamp(0)]
+ * @property User   $user
  */
 class UserToken extends BaseModel
 {
@@ -86,5 +88,13 @@ class UserToken extends BaseModel
             'created_at' => Yii::t('api', 'Created At'),
             'expired_at' => Yii::t('api', 'Expired At'),
         ];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

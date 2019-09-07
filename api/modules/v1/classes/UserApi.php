@@ -16,6 +16,7 @@ use common\models\user\UserToken;
 use common\models\user\UserType;
 use Exception;
 use Yii;
+use yii\web\HeaderCollection;
 
 class UserApi extends Api
 {
@@ -36,7 +37,7 @@ class UserApi extends Api
      * @return array
      * @throws Exception
      */
-    public final function registrationUser(array $params)
+    public final function registrationUser(array $params): array
     {
         $userForm = new UserForm($params);
 
@@ -75,7 +76,6 @@ class UserApi extends Api
                 'message' => 'Проверьте почту'
             ];
         } catch (Exception $e) {
-
             $transaction->rollBack();
             throw $e;
         }
@@ -84,37 +84,49 @@ class UserApi extends Api
     /**
      * Регистрация нового бизнеса
      */
-    public function registrationBusinessUser()
+    public function registrationBusinessUser(): array
     {
+        return [];
     }
 
-    private function createProfile(User $user, array $params)
+    /**
+     * Создание профиля для пользователя
+     *
+     * @param User  $user
+     * @param array $params
+     * @return Profile
+     */
+    private function createProfile(User $user, array $params): Profile
     {
         $profile = new Profile([
             'name' => $params['name'],
             'city' => $params['city_id']
         ]);
+
+        return $profile;
     }
 
     /**
-     * Добавляем детей пользователю
+     * Добавление детей пользователю
      *
      * @param User  $user
      * @param array $childrenParams
+     * @return array
      * @throws Exception
      */
-    public final function childAdd(User $user, array $childrenParams): void
+    public final function childAdd(User $user, array $childrenParams): array
     {
+        $children = [];
         if (!empty($childrenParams)) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 foreach (ArrayHelper::generator($childrenParams) as $childParam) {
-                    $childParam = ArrayHelper::merge($childParam, [
-                        'user_id' => $user->id,
-                    ]);
+                    $childParam['user_id'] = $user->id;
 
                     $child = new Children($childParam);
                     $child->saveModel();
+
+                    $children[] = $child;
                 }
 
                 $transaction->commit();
@@ -123,6 +135,8 @@ class UserApi extends Api
                 throw $e;
             }
         }
+
+        return $children;
     }
 
     /**
@@ -134,7 +148,7 @@ class UserApi extends Api
      */
     public function login(array $post): array
     {
-        ArrayHelper::validate($post, ['email', 'password']);
+        ArrayHelper::validateRequestParams($post, ['email', 'password'], false);
 
         /** @var LoginForm $loginForm */
         $loginForm = new LoginForm([
@@ -152,13 +166,36 @@ class UserApi extends Api
         ];
     }
 
-    public function resetAuthToken(array $post)
+    /**
+     * Сброс токена аутентификации
+     *
+     * @param HeaderCollection $headers
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws \yii\base\Exception
+     */
+    public function resetAuthToken(HeaderCollection $headers)
     {
-//        $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
+        $headers = ArrayHelper::toArray($headers);
+        ArrayHelper::validateRequestParams($headers, ['reset-auth-token'], false);
+
+        $userToken = UserToken::findOne([
+            'type'  => UserToken::TYPE_RESET_AUTH_TOKEN,
+            'token' => $headers['reset-auth-token']
+        ]);
+
+        if (is_null($userToken)) {
+            throw new BadRequestHttpException([
+                'reset-auth-token' => 'Токен является недействительным'
+            ]);
+        }
+
+        $user = $userToken->user;
+        $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
 
         return [
-            'auth_token'       => '$user->getToken(UserToken::TYPE_AUTH_TOKEN)',
-            'reset_auth_token' => '$user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)'
+            'auth_token'       => $user->getToken(UserToken::TYPE_AUTH_TOKEN),
+            'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)
         ];
     }
 }

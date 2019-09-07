@@ -9,14 +9,14 @@ use yii\web\Controller;
 /**
  * Site controller
  */
-class DocumentationController extends Controller
+class DocController extends Controller
 {
     public function actions()
     {
         return [
             'index' => [
                 'class'      => 'genxoft\swagger\ViewAction',
-                'apiJsonUrl' => Url::to(['/documentation/json'], true),
+                'apiJsonUrl' => Url::to(['/doc/json'], true),
             ],
             'json'  => [
                 'class' => 'genxoft\swagger\JsonAction',
@@ -29,7 +29,7 @@ class DocumentationController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionTest()
     {
 
     }
