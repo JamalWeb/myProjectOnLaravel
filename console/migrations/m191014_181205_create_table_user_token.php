@@ -4,11 +4,11 @@ use yii\db\Expression;
 use yii\db\Migration;
 
 /**
- * Class m190723_171804_create_table_children
+ * Class m191014_181205_create_table_user_token
  */
-class m190723_171804_create_table_children extends Migration
+class m191014_181205_create_table_user_token extends Migration
 {
-    const TABLE_NAME = '{{%user_children}}';
+    const TABLE_NAME = '{{%user_token}}';
 
     /**
      * {@inheritdoc}
@@ -19,19 +19,20 @@ class m190723_171804_create_table_children extends Migration
 
         $this->createTable(self::TABLE_NAME, [
             'id' => $this->primaryKey()
-                ->comment('Идентификатор ребенка пользователя'),
+                ->comment('Идентификатор токена'),
 
             'user_id' => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пользователя'),
 
-            'age' => $this->integer()
-                ->notNull()
-                ->comment('Возраст'),
+            'type' => $this->integer()
+                ->comment('Тип токена'),
 
-            'gender_id' => $this->string()
-                ->notNull()
-                ->comment('Идентификатор пола'),
+            'token' => $this->string()
+                ->comment('Токен'),
+
+            'expired_at' => $this->timestamp()
+                ->comment('Срок действия'),
 
             'created_at' => $this->timestamp()
                 ->defaultValue($defaultDate)
@@ -39,7 +40,7 @@ class m190723_171804_create_table_children extends Migration
 
             'updated_at' => $this->timestamp()
                 ->defaultValue($defaultDate)
-                ->comment('Дата обновления'),
+                ->comment('Дата обновления')
         ]);
     }
 

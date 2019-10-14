@@ -7,22 +7,26 @@ use yii\db\Migration;
  */
 class m190803_192931_create_table_gender extends Migration
 {
+    const TABLE_NAME = '{{%user_gender}}';
+
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%gender}}', [
-            'id'   => $this->primaryKey(),
-            'name' => $this->string()->notNull()
+        $this->createTable(self::TABLE_NAME, [
+            'id' => $this->primaryKey()
+                ->comment('Идентификатор пола'),
+
+            'name' => $this->string()
+                ->notNull()
+                ->comment('Наименование пола')
         ]);
 
-        $this->batchInsert('{{%gender}}', ['name'], [
+        $this->batchInsert(self::TABLE_NAME, ['name'], [
             ['name' => 'Male'],
             ['name' => 'Female'],
         ]);
-
-        $this->renameColumn('{{%children}}', 'gender', 'gender_id');
     }
 
     /**
@@ -30,7 +34,6 @@ class m190803_192931_create_table_gender extends Migration
      */
     public function safeDown()
     {
-        $this->renameColumn('{{%children}}', 'gender_id', 'gender');
-        $this->dropTable('{{%gender}}');
+        $this->dropTable(self::TABLE_NAME);
     }
 }
