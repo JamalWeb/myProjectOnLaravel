@@ -45,9 +45,9 @@ class m191014_173219_create_table_user extends Migration
             'auth_key' => $this->string()
                 ->comment('Ключ необходимый для авторизации'),
 
-            'status' => $this->boolean()
-                ->defaultValue(true)
-                ->comment('Статус активности (1 - вкл. 0 - выкл.) | default = 1'),
+            'status' => $this->integer()
+                ->defaultValue(0)
+                ->comment('Статус'),
 
             'logged_in_ip' => $this->string()
                 ->comment('IP адрес авторизации'),
@@ -83,12 +83,13 @@ class m191014_173219_create_table_user extends Migration
                 ->comment('Дата обновления'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['type_id', 'role_id', 'email', 'password'], [
+        $this->batchInsert(self::TABLE_NAME, ['type_id', 'role_id', 'email', 'password', 'status'], [
             [
                 1,
                 1,
                 'arsen-web@yandex.ru',
-                PasswordHelper::encrypt(123456)
+                PasswordHelper::encrypt(123456),
+                1
             ],
         ]);
     }

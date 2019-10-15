@@ -73,10 +73,16 @@ class UserController extends BaseController
      *           example=1
      *         ),
      *         @OA\Property(
-     *           property="name",
-     *           description="Имя пользователя",
+     *           property="first_name",
+     *           description="Имя",
      *           type="string",
      *           example="Иван"
+     *         ),
+     *         @OA\Property(
+     *           property="last_name",
+     *           description="Фамилия",
+     *           type="string",
+     *           example="Иванов"
      *         ),
      *         @OA\Property(
      *           property="children",

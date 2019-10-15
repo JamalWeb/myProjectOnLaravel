@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\system;
+namespace common\models\base;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
@@ -22,7 +22,7 @@ class BaseModel extends ActiveRecord
                 'class'              => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
-                'value'              => DateHelper::getTimestamp(),
+                'value'              => gmdate('Y-m-d H:i:s'),
             ],
         ]);
     }
@@ -53,11 +53,16 @@ class BaseModel extends ActiveRecord
     /**
      * Сохранение модели
      *
+     * @param array $attributes
      * @return bool
      * @throws BadRequestHttpException
      */
-    public final function saveModel(): bool
+    public final function saveModel(array $attributes = []): bool
     {
+        if (!empty($attributes)) {
+            $this->setAttributes($attributes);
+        }
+
         if (!$this->save()) {
             throw new BadRequestHttpException($this->getFirstErrors());
         }

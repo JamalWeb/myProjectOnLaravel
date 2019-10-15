@@ -3,22 +3,22 @@
 namespace common\models\user;
 
 use Yii;
-use yii\db\ActiveRecord;
+use common\models\base\BaseModel;
 
 /**
- * This is the model class for table "gender".
+ * This is the model class for table "user_gender".
  *
- * @property int    $id
- * @property string $name
+ * @property int    $id   Идентификатор пола
+ * @property string $name Наименование пола
  */
-class Gender extends ActiveRecord
+class UserGender extends BaseModel
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'gender';
+        return 'user_gender';
     }
 
     /**
@@ -38,8 +38,8 @@ class Gender extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'   => Yii::t('children', 'ID'),
-            'name' => Yii::t('children', 'Name'),
+            'id'   => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
         ];
     }
 }

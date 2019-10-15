@@ -28,7 +28,7 @@ class m191014_175740_create_table_user_profile extends Migration
             'first_name' => $this->string()
                 ->comment('Имя'),
 
-            'surname' => $this->string()
+            'last_name' => $this->string()
                 ->comment('Фамилия'),
 
             'patronymic' => $this->string()

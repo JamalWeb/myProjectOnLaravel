@@ -3,29 +3,28 @@
 namespace common\models\user;
 
 use Yii;
-use common\models\base\BaseModel;
 
 /**
- * This is the model class for table "user_type".
+ * This is the model class for table "user_role".
  *
- * @property int    $id         Идентификатор типа
- * @property string $name       Наименование
- * @property string $desc       Описание
+ * @property int    $id         Идентификатор роли
+ * @property string $name       Наименование роли
+ * @property string $desc       Описание роли
  * @property string $created_at Дата создания
  * @property string $updated_at Дата обновления
  */
-class UserType extends BaseModel
+class UserRole extends \yii\db\ActiveRecord
 {
-    const TYPE_SYSTEM = 1;
-    const TYPE_DEFAULT_USER = 2;
-    const TYPE_BUSINESS_USER = 3;
+    const ROLE_ADMIN = 1;
+    const ROLE_DEFAULT_USER = 2;
+    const ROLE_BUSINESS_USER = 3;
 
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'user_type';
+        return 'user_role';
     }
 
     /**
@@ -34,7 +33,7 @@ class UserType extends BaseModel
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name', 'desc'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'desc'], 'string', 'max' => 255],
         ];

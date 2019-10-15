@@ -2,21 +2,21 @@
 
 namespace api\modules\v1\classes;
 
+use common\models\user\UserProfile;
+use common\models\user\UserRole;
+use Yii;
 use api\modules\v1\models\error\BadRequestHttpException;
 use api\modules\v1\models\form\LoginForm;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
 use common\components\EmailSendler;
-use common\models\user\Children;
-use common\models\user\Gender;
-use common\models\user\Profile;
-use common\models\user\Role;
 use common\models\user\User;
+use common\models\user\UserChildren;
+use common\models\user\UserGender;
 use common\models\user\UserToken;
 use common\models\user\UserType;
-use Exception;
-use Yii;
 use yii\web\HeaderCollection;
+use Exception;
 
 class UserApi extends Api
 {
@@ -27,7 +27,7 @@ class UserApi extends Api
      */
     public final function getGender(): array
     {
-        return Gender::find()->all();
+        return UserGender::find()->all();
     }
 
     /**
@@ -50,25 +50,25 @@ class UserApi extends Api
             $user = new User();
 
             $params = $user->prepareRegistration([
+                'type_id'  => UserType::TYPE_DEFAULT_USER,
+                'role_id'  => UserRole::ROLE_DEFAULT_USER,
                 'email'    => $userForm->email,
                 'password' => $userForm->password,
-                'role_id'  => Role::ROLE_USER,
-                'type_id'  => UserType::TYPE_USER,
             ]);
 
-            $user->setAttributes($params);
-            $user->saveModel();
+            $user->saveModel($params);
 
             $this->createProfile($user, [
-                'city_id' => $userForm->city_id,
-                'name'    => $userForm->name
+                'city_id'    => $userForm->city_id,
+                'first_name' => $userForm->first_name,
+                'last_name'  => $userForm->last_name,
             ]);
-
-            $childrenList = !empty($userForm->children) ? ArrayHelper::jsonToArray($userForm->children) : [];
-            $this->childAdd($user, $childrenList);
-
-            EmailSendler::registrationConfirm($user);
-
+//
+//            $childrenList = !empty($userForm->children) ? ArrayHelper::jsonToArray($userForm->children) : [];
+//            $this->childAdd($user, $childrenList);
+//
+//            EmailSendler::registrationConfirm($user);
+//
             $transaction->commit();
 
             return [
@@ -94,13 +94,25 @@ class UserApi extends Api
      *
      * @param User  $user
      * @param array $params
-     * @return Profile
+     * @return UserProfile
      */
-    private function createProfile(User $user, array $params): Profile
+    private function createProfile(User $user, array $params): UserProfile
     {
-        $profile = new Profile([
-            'name' => $params['name'],
-            'city' => $params['city_id']
+        $profile = new UserProfile();
+        $profile->save([
+            'user_id'    => $user->id,
+            'first_name' => $params['first_name'],
+            'last_name'  => $params['last_name'],
+            'patronymic' => $params['patronymic'],
+            'gender_id'  => $params['gender_id'],
+            'about'      => $params['about'],
+            'country'    => $params['country'],
+            'city'       => $params['city'],
+            'longitude'  => $params['longitude'],
+            'latitude'   => $params['latitude'],
+            'language'   => $params['language'],
+            'short_lang' => $params['short_lang'],
+            'timezone'   => $params['timezone'],
         ]);
 
         return $profile;
@@ -123,7 +135,7 @@ class UserApi extends Api
                 foreach (ArrayHelper::generator($childrenParams) as $childParam) {
                     $childParam['user_id'] = $user->id;
 
-                    $child = new Children($childParam);
+                    $child = new UserChildren($childParam);
                     $child->saveModel();
 
                     $children[] = $child;

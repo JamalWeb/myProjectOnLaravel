@@ -6,7 +6,7 @@ use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\DateHelper;
 use common\components\PasswordHelper;
-use common\models\system\BaseModel;
+use common\models\base\BaseModel;
 use Exception;
 use Yii;
 use yii\db\ActiveQuery;
@@ -15,29 +15,27 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "user".
  *
- * @property int         $id
- * @property int         $role_id
- * @property int         $status
- * @property string      $email
- * @property string      $username
- * @property string      $password
- * @property string      $auth_key
- * @property string      $access_token
- * @property string      $logged_in_ip
- * @property string      $logged_in_at
- * @property string      $created_ip
- * @property string      $created_at
- * @property string      $updated_at
- * @property string      $banned_at
- * @property string      $banned_reason
- * @property int         $type_id      Идентификатор типа пользователя
- * @property bool        $is_banned    Бан (1 - вкл. 0 - выкл.) | default = 0
- * @property string      $logout_in_at Дата выхода
- * @property Profile[]   $profiles
- * @property Role        $role
- * @property UserAuth[]  $userAuths
+ * @property int         $id             Идентификатор пользователя
+ * @property int         $type_id        Идентификатор типа
+ * @property int         $role_id        Идентификатор роли
+ * @property string      $email          Электронная почта
+ * @property string      $username       Никнейм
+ * @property string      $password       Пароль
+ * @property string      $auth_key       Ключ необходимый для авторизации
+ * @property bool        $status         Статус активности (1 - вкл. 0 - выкл.) | default = 1
+ * @property string      $logged_in_ip   IP адрес авторизации
+ * @property string      $logged_in_at   Дата авторизации
+ * @property string      $logout_in_ip   IP адрес выхода
+ * @property string      $logout_in_at   Дата выхода
+ * @property string      $created_ip     IP адрес с которого создали
+ * @property bool        $is_banned      Бан (1 - вкл. 0 - выкл.) | default = 0
+ * @property string      $banned_reason  Причина бана
+ * @property string      $banned_at      Дата бана
+ * @property string      $created_at     Дата создания
  * @property string      $authKey
- * @property UserToken[] $userTokens
+ * @property string      $updated_at     Дата обновления
+ * @property ActiveQuery $profile        Профиль
+ * @property ActiveQuery $role           Роль
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -45,8 +43,55 @@ class User extends BaseModel implements IdentityInterface
     const STATUS_ACTIVE = 1;
     const STATUS_UNCONFIRMED_EMAIL = 2;
 
-    const SCENARIO_CREATE_USER = 'create_user_account';
-    const SCENARIO_CREATE_BUSINESS_USER = 'create_business_account';
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'user';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['type_id', 'role_id', 'email', 'password'], 'required'],
+            [['type_id', 'role_id', 'status'], 'default', 'value' => null],
+            [['type_id', 'role_id', 'status'], 'integer'],
+            [['logged_in_at', 'logout_in_at', 'banned_at', 'created_at', 'updated_at'], 'safe'],
+            [['is_banned'], 'boolean'],
+            [['email', 'username', 'password', 'auth_key', 'logged_in_ip', 'logout_in_ip', 'created_ip', 'banned_reason'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id'            => Yii::t('app', 'ID'),
+            'type_id'       => Yii::t('app', 'Type ID'),
+            'role_id'       => Yii::t('app', 'Role ID'),
+            'email'         => Yii::t('app', 'Email'),
+            'username'      => Yii::t('app', 'Username'),
+            'password'      => Yii::t('app', 'Password'),
+            'auth_key'      => Yii::t('app', 'Auth Key'),
+            'status'        => Yii::t('app', 'Status'),
+            'logged_in_ip'  => Yii::t('app', 'Logged In Ip'),
+            'logged_in_at'  => Yii::t('app', 'Logged In At'),
+            'logout_in_ip'  => Yii::t('app', 'Logout In Ip'),
+            'logout_in_at'  => Yii::t('app', 'Logout In At'),
+            'created_ip'    => Yii::t('app', 'Created Ip'),
+            'is_banned'     => Yii::t('app', 'Is Banned'),
+            'banned_reason' => Yii::t('app', 'Banned Reason'),
+            'banned_at'     => Yii::t('app', 'Banned At'),
+            'created_at'    => Yii::t('app', 'Created At'),
+            'updated_at'    => Yii::t('app', 'Updated At'),
+        ];
+    }
 
     /**
      * Подготовка данных для регистрации
@@ -58,7 +103,7 @@ class User extends BaseModel implements IdentityInterface
     public function prepareRegistration(array $params): array
     {
         return ArrayHelper::merge($params, [
-            'status'     => User::STATUS_UNCONFIRMED_EMAIL,
+            'status'     => User::STATUS_ACTIVE,
             'created_ip' => Yii::$app->request->remoteIP,
             'password'   => PasswordHelper::encrypt($params['password'])
         ]);
@@ -95,7 +140,7 @@ class User extends BaseModel implements IdentityInterface
             $tokenData['expired_at'] = DateHelper::getTimestamp('+ 1 day');
         }
 
-        $token->setAttributes($tokenData)->saveModel();
+        $token->saveModel($tokenData);
 
         if ($type === UserToken::TYPE_AUTH_TOKEN) {
             $this->generateToken(UserToken::TYPE_RESET_AUTH_TOKEN);
@@ -106,10 +151,10 @@ class User extends BaseModel implements IdentityInterface
      * Получить токен
      *
      * @param int $type
-     * @return string
+     * @return UserToken
      * @throws BadRequestHttpException
      */
-    public function getToken(int $type): string
+    public function getToken(int $type): UserToken
     {
         if (!in_array($type, UserToken::$allowedTokens)) {
             throw new BadRequestHttpException(['token' => 'not found']);
@@ -124,7 +169,7 @@ class User extends BaseModel implements IdentityInterface
             throw new BadRequestHttpException($userToken->getFirstErrors());
         }
 
-        return $userToken->token;
+        return $userToken;
     }
 
     /**
@@ -146,18 +191,18 @@ class User extends BaseModel implements IdentityInterface
      *
      * @return bool
      */
-    public function updateLoginMeta()
-    {
-        $this->logged_in_ip = Yii::$app->request->userIP;
-        $this->logged_in_at = gmdate('Y-m-d H:i:s');
-
-        return $this->save(false, ['logged_in_ip', 'logged_in_at']);
-    }
+//    public function updateLoginMeta()
+//    {
+//        $this->logged_in_ip = Yii::$app->request->userIP;
+//        $this->logged_in_at = gmdate('Y-m-d H:i:s');
+//
+//        return $this->save(false, ['logged_in_ip', 'logged_in_at']);
+//    }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id)
+    public static function findIdentity($id): ?self
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
@@ -185,29 +230,11 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * Finds out if password reset token is valid
-     *
-     * @param string $token password reset token
-     * @return bool
-     */
-    public static function isPasswordResetTokenValid($token)
-    {
-        if (empty($token)) {
-            return false;
-        }
-
-        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
-
-        return $timestamp + $expire >= time();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getId()
     {
-        return $this->getPrimaryKey();
+        return $this->id;
     }
 
     /**
@@ -227,65 +254,11 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'user';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['role_id', 'status'], 'required'],
-            [['email'], 'required', 'on' => self::SCENARIO_CREATE_USER],
-            [['role_id', 'status', 'type_id'], 'default', 'value' => null],
-            [['role_id', 'status', 'type_id'], 'integer'],
-            [['logged_in_at', 'created_at', 'updated_at', 'banned_at', 'logout_in_at'], 'safe'],
-            [['is_banned'], 'boolean'],
-            [['email', 'username', 'password', 'auth_key', 'access_token', 'logged_in_ip', 'created_ip', 'banned_reason'], 'string', 'max' => 255],
-            [['email'], 'unique'],
-            [['username'], 'unique'],
-            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::class, 'targetAttribute' => ['role_id' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id'            => Yii::t('api', 'ID'),
-            'role_id'       => Yii::t('api', 'Role ID'),
-            'status'        => Yii::t('api', 'Status'),
-            'email'         => Yii::t('api', 'Email'),
-            'username'      => Yii::t('api', 'Username'),
-            'password'      => Yii::t('api', 'Password'),
-            'auth_key'      => Yii::t('api', 'Auth Key'),
-            'access_token'  => Yii::t('api', 'Access Token'),
-            'logged_in_ip'  => Yii::t('api', 'Logged In Ip'),
-            'logged_in_at'  => Yii::t('api', 'Logged In At'),
-            'created_ip'    => Yii::t('api', 'Created Ip'),
-            'created_at'    => Yii::t('api', 'Created At'),
-            'updated_at'    => Yii::t('api', 'Updated At'),
-            'banned_at'     => Yii::t('api', 'Banned At'),
-            'banned_reason' => Yii::t('api', 'Banned Reason'),
-            'type_id'       => Yii::t('api', 'Type ID'),
-            'is_banned'     => Yii::t('api', 'Is Banned'),
-            'logout_in_at'  => Yii::t('api', 'Logout In At'),
-        ];
-    }
-
-    /**
      * @return ActiveQuery
      */
-    public function getProfiles()
+    public function getProfile()
     {
-        return $this->hasMany(Profile::class, ['user_id' => 'id']);
+        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 
     /**
@@ -293,22 +266,6 @@ class User extends BaseModel implements IdentityInterface
      */
     public function getRole()
     {
-        return $this->hasOne(Role::class, ['id' => 'role_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUserAuths()
-    {
-        return $this->hasMany(UserAuth::class, ['user_id' => 'id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUserTokens()
-    {
-        return $this->hasMany(UserToken::class, ['user_id' => 'id']);
+        return $this->hasOne(UserRole::class, ['id' => 'role_id']);
     }
 }

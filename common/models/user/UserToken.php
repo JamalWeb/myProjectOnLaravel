@@ -2,25 +2,21 @@
 
 namespace common\models\user;
 
-use common\components\ArrayHelper;
 use Yii;
-use common\components\DateHelper;
-use common\models\system\BaseModel;
-use yii\behaviors\TimestampBehavior;
+use common\models\base\BaseModel;
 use yii\db\ActiveQuery;
 
 /**
- * Class UserToken
+ * This is the model class for table "user_token".
  *
- * @package common\models\user
- * @property string $id         [integer]
- * @property string $user_id    [integer]
- * @property int    $type       [smallint]
- * @property string $token      [varchar(255)]
- * @property string $data       [varchar(255)]
- * @property int    $created_at [timestamp(0)]
- * @property int    $expired_at [timestamp(0)]
- * @property User   $user
+ * @property int    $id         Идентификатор токена
+ * @property int    $user_id    Идентификатор пользователя
+ * @property int    $type       Тип токена
+ * @property string $token      Токен
+ * @property string $expired_at Срок действия
+ * @property string $created_at Дата создания
+ * @property string $updated_at Дата обновления
+ * @property User   $user       Пользователь
  */
 class UserToken extends BaseModel
 {
@@ -38,18 +34,6 @@ class UserToken extends BaseModel
         self::TYPE_EMAIL_CHANGE,
     ];
 
-    public function behaviors(): array
-    {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'timestamp' => [
-                'class'              => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => false,
-                'value'              => DateHelper::getTimestamp(),
-            ],
-        ]);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -64,13 +48,11 @@ class UserToken extends BaseModel
     public function rules()
     {
         return [
+            [['user_id'], 'required'],
             [['user_id', 'type'], 'default', 'value' => null],
             [['user_id', 'type'], 'integer'],
-            [['type', 'token'], 'required'],
-            [['created_at', 'expired_at'], 'safe'],
-            [['token', 'data'], 'string', 'max' => 255],
-            [['token'], 'unique'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['expired_at', 'created_at', 'updated_at'], 'safe'],
+            [['token'], 'string', 'max' => 255],
         ];
     }
 
@@ -80,13 +62,13 @@ class UserToken extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('api', 'ID'),
-            'user_id'    => Yii::t('api', 'User ID'),
-            'type'       => Yii::t('api', 'Type'),
-            'token'      => Yii::t('api', 'Token'),
-            'data'       => Yii::t('api', 'Data'),
-            'created_at' => Yii::t('api', 'Created At'),
-            'expired_at' => Yii::t('api', 'Expired At'),
+            'id'         => Yii::t('app', 'ID'),
+            'user_id'    => Yii::t('app', 'User ID'),
+            'type'       => Yii::t('app', 'Type'),
+            'token'      => Yii::t('app', 'Token'),
+            'expired_at' => Yii::t('app', 'Expired At'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 
