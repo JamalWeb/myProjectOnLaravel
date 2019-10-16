@@ -268,4 +268,9 @@ class User extends BaseModel implements IdentityInterface
     {
         return $this->hasOne(UserRole::class, ['id' => 'role_id']);
     }
+
+    public function isDefaultUser(): bool
+    {
+        return $this->type_id == UserType::TYPE_DEFAULT_USER;
+    }
 }

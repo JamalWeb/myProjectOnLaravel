@@ -9,7 +9,7 @@ use api\modules\v1\models\error\BadRequestHttpException;
 use api\modules\v1\models\form\LoginForm;
 use api\modules\v1\models\form\UserForm;
 use common\components\ArrayHelper;
-use common\components\EmailSendler;
+//use common\components\EmailSendler;
 use common\models\user\User;
 use common\models\user\UserChildren;
 use common\models\user\UserGender;
@@ -48,27 +48,31 @@ class UserApi extends Api
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-
             $params = $user->prepareRegistration([
                 'type_id'  => UserType::TYPE_DEFAULT_USER,
                 'role_id'  => UserRole::ROLE_DEFAULT_USER,
                 'email'    => $userForm->email,
                 'password' => $userForm->password,
             ]);
-
             $user->saveModel($params);
 
             $this->createProfile($user, [
                 'city_id'    => $userForm->city_id,
+                'country_id' => $userForm->country_id,
                 'first_name' => $userForm->first_name,
                 'last_name'  => $userForm->last_name,
+                'longitude'  => $userForm->longitude,
+                'latitude'   => $userForm->latitude,
+                'language'   => $userForm->language,
+                'short_lang' => $userForm->short_lang,
+                'timezone'   => $userForm->timezone
             ]);
-//
-//            $childrenList = !empty($userForm->children) ? ArrayHelper::jsonToArray($userForm->children) : [];
-//            $this->childAdd($user, $childrenList);
-//
+
+            $childrenList = ArrayHelper::jsonToArray($userForm->children);
+            $this->childAdd($user, $childrenList);
+
 //            EmailSendler::registrationConfirm($user);
-//
+
             $transaction->commit();
 
             return [
@@ -95,24 +99,26 @@ class UserApi extends Api
      * @param User  $user
      * @param array $params
      * @return UserProfile
+     * @throws BadRequestHttpException
      */
     private function createProfile(User $user, array $params): UserProfile
     {
+        $defaultValue = Yii::$app->params['defaultValue'];
         $profile = new UserProfile();
-        $profile->save([
+        $profile->saveModel([
             'user_id'    => $user->id,
             'first_name' => $params['first_name'],
             'last_name'  => $params['last_name'],
-            'patronymic' => $params['patronymic'],
-            'gender_id'  => $params['gender_id'],
-            'about'      => $params['about'],
-            'country'    => $params['country'],
-            'city'       => $params['city'],
+            'patronymic' => $params['patronymic'] ?? null,
+            'gender_id'  => $params['gender_id'] ?? null,
+            'about'      => $params['about'] ?? null,
+            'country_id' => $params['country_id'],
+            'city_id'    => $params['city_id'],
             'longitude'  => $params['longitude'],
             'latitude'   => $params['latitude'],
-            'language'   => $params['language'],
-            'short_lang' => $params['short_lang'],
-            'timezone'   => $params['timezone'],
+            'language'   => $params['language'] ?? $defaultValue['language'],
+            'short_lang' => $params['short_lang'] ?? $defaultValue['short_lang'],
+            'timezone'   => $params['timezone'] ?? $defaultValue['timezone']
         ]);
 
         return $profile;
@@ -129,26 +135,30 @@ class UserApi extends Api
     public final function childAdd(User $user, array $childrenParams): array
     {
         $children = [];
-        if (!empty($childrenParams)) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                foreach (ArrayHelper::generator($childrenParams) as $childParam) {
-                    $childParam['user_id'] = $user->id;
-
-                    $child = new UserChildren($childParam);
-                    $child->saveModel();
-
-                    $children[] = $child;
-                }
-
-                $transaction->commit();
-            } catch (Exception $e) {
-                $transaction->rollBack();
-                throw $e;
-            }
+        if (empty($childrenParams)) {
+            return $children;
         }
 
-        return $children;
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($childrenParams as $childParam) {
+                $childParam = ArrayHelper::merge($childParam, [
+                    'user_id' => $user->id
+                ]);
+
+                $child = new UserChildren();
+                $child->saveModel($childParam);
+
+                $children[] = $child;
+            }
+
+            $transaction->commit();
+
+            return $children;
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
     }
 
     /**

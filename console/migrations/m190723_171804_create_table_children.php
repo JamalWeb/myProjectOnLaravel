@@ -29,7 +29,7 @@ class m190723_171804_create_table_children extends Migration
                 ->notNull()
                 ->comment('Возраст'),
 
-            'gender_id' => $this->string()
+            'gender_id' => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пола'),
 

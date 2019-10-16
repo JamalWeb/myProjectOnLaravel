@@ -9,23 +9,23 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "user_profile".
  *
- * @property int    $id           Идентификатор профиля
- * @property int    $user_id      Идентификатор пользователя
- * @property string $first_name   Имя
- * @property string $last_name    Фамилия
- * @property string $patronymic   Отчество
- * @property string $gender_id    Идентификатор пола
- * @property string $about        Описание бизнес аккаунта
- * @property string $country      Страна
- * @property string $city         Город
- * @property string $longitude    Координаты: долгота
- * @property string $latitude     Координаты: широта
- * @property string $language     Язык
- * @property string $short_lang   Код языка
- * @property string $timezone     Часовой пояс
- * @property string $created_at   Дата создания
- * @property string $updated_at   Дата обновления
- * @property User   $user         Пользователь
+ * @property int    $id         Идентификатор профиля
+ * @property int    $user_id    Идентификатор пользователя
+ * @property string $first_name Имя
+ * @property string $last_name  Фамилия
+ * @property string $patronymic Отчество
+ * @property int    $gender_id  Идентификатор пола
+ * @property string $about      Описание бизнес аккаунта
+ * @property int    $country_id Идентификатор страны
+ * @property int    $city_id    Идентификатор города
+ * @property string $longitude  Координаты: долгота
+ * @property string $latitude   Координаты: широта
+ * @property string $language   Язык
+ * @property string $short_lang Код языка
+ * @property string $timezone   Часовой пояс
+ * @property string $created_at Дата создания
+ * @property string $updated_at Дата обновления
+ * @property User   $user       Пользователь
  */
 class UserProfile extends BaseModel
 {
@@ -44,10 +44,10 @@ class UserProfile extends BaseModel
     {
         return [
             [['user_id'], 'required'],
-            [['user_id'], 'default', 'value' => null],
-            [['user_id'], 'integer'],
+            [['user_id', 'gender_id', 'country_id', 'city_id'], 'default', 'value' => null],
+            [['user_id', 'gender_id', 'country_id', 'city_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['first_name', 'last_name', 'patronymic', 'gender_id', 'about', 'country', 'city', 'longitude', 'latitude', 'language', 'short_lang', 'timezone'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'patronymic', 'about', 'longitude', 'latitude', 'language', 'short_lang', 'timezone'], 'string', 'max' => 255],
         ];
     }
 
@@ -60,12 +60,12 @@ class UserProfile extends BaseModel
             'id'         => Yii::t('app', 'ID'),
             'user_id'    => Yii::t('app', 'User ID'),
             'first_name' => Yii::t('app', 'First Name'),
-            'last_name'  => Yii::t('app', 'last_name'),
+            'last_name'  => Yii::t('app', 'Last Name'),
             'patronymic' => Yii::t('app', 'Patronymic'),
             'gender_id'  => Yii::t('app', 'Gender ID'),
             'about'      => Yii::t('app', 'About'),
-            'country'    => Yii::t('app', 'Country'),
-            'city'       => Yii::t('app', 'City'),
+            'country_id' => Yii::t('app', 'Country ID'),
+            'city_id'    => Yii::t('app', 'City ID'),
             'longitude'  => Yii::t('app', 'Longitude'),
             'latitude'   => Yii::t('app', 'Latitude'),
             'language'   => Yii::t('app', 'Language'),

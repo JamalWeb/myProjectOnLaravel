@@ -67,6 +67,12 @@ class UserController extends BaseController
      *           example="vorchami"
      *         ),
      *         @OA\Property(
+     *           property="country_id",
+     *           description="Идентификатор страны",
+     *           type="integer",
+     *           example=1
+     *         ),
+     *         @OA\Property(
      *           property="city_id",
      *           description="Идентификатор города",
      *           type="integer",
@@ -83,6 +89,36 @@ class UserController extends BaseController
      *           description="Фамилия",
      *           type="string",
      *           example="Иванов"
+     *         ),
+     *         @OA\Property(
+     *           property="language",
+     *           description="Язык",
+     *           type="string",
+     *           example="Russian"
+     *         ),
+     *         @OA\Property(
+     *           property="short_lang",
+     *           description="Код языка",
+     *           type="string",
+     *           example="ru-RU"
+     *         ),
+     *         @OA\Property(
+     *           property="timezone",
+     *           description="Часовой пояс",
+     *           type="string",
+     *           example="Europe/Moscow"
+     *         ),
+     *         @OA\Property(
+     *           property="longitude",
+     *           description="Координаты: широта",
+     *           type="number",
+     *           example="55.7522"
+     *         ),
+     *         @OA\Property(
+     *           property="latitude",
+     *           description="Координаты: долгота",
+     *           type="number",
+     *           example="37.6156"
      *         ),
      *         @OA\Property(
      *           property="children",
@@ -155,6 +191,12 @@ class UserController extends BaseController
      *           example="vorchami"
      *         ),
      *         @OA\Property(
+     *           property="country_id",
+     *           description="Идентификатор страны",
+     *           type="integer",
+     *           example=1
+     *         ),
+     *         @OA\Property(
      *           property="city_id",
      *           description="Идентификатор города",
      *           type="integer",
@@ -165,6 +207,12 @@ class UserController extends BaseController
      *           description="Имя пользователя",
      *           type="string",
      *           example="Иван"
+     *         ),
+     *         @OA\Property(
+     *           property="longitude",
+     *           description="Координаты: широта",
+     *           type="number",
+     *           example="55.7522"
      *         ),
      *         @OA\Property(
      *           property="children",

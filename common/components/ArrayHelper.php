@@ -19,8 +19,11 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
     public static final function jsonToArray(string $json): array
     {
         try {
-            /** @var array $array */
-            $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+            $array = [];
+            if ($json !== '') {
+                /** @var array $array */
+                $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+            }
 
             return $array;
         } catch (Exception $e) {

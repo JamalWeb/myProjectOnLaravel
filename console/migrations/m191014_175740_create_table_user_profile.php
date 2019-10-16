@@ -34,17 +34,17 @@ class m191014_175740_create_table_user_profile extends Migration
             'patronymic' => $this->string()
                 ->comment('Отчество'),
 
-            'gender_id' => $this->string()
+            'gender_id' => $this->integer()
                 ->comment('Идентификатор пола'),
 
             'about' => $this->string()
                 ->comment('Описание бизнес аккаунта'),
 
-            'country' => $this->string()
-                ->comment('Страна'),
+            'country_id' => $this->integer()
+                ->comment('Идентификатор страны'),
 
-            'city' => $this->string()
-                ->comment('Город'),
+            'city_id' => $this->integer()
+                ->comment('Идентификатор города'),
 
             'longitude' => $this->string()
                 ->comment('Координаты: долгота'),
@@ -70,8 +70,22 @@ class m191014_175740_create_table_user_profile extends Migration
                 ->comment('Дата обновления'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['user_id', 'first_name'], [
-            [1, 'Admin']
+        $this->batchInsert(self::TABLE_NAME, [
+            'user_id',
+            'first_name',
+            'gender_id',
+            'language',
+            'short_lang',
+            'timezone',
+        ], [
+            [
+                1,
+                'Admin',
+                1,
+                'Russian',
+                'ru-RU',
+                'Europe/Moscow',
+            ]
         ]);
     }
 

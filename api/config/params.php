@@ -7,5 +7,10 @@ return [
         'user/registration-business',
         'user/login',
         'user/reset-auth-token'
+    ],
+    'defaultValue'     => [
+        'language'   => 'Russian',
+        'short_lang' => 'ru-RU',
+        'timezone'   => 'Europe/Moscow',
     ]
 ];
