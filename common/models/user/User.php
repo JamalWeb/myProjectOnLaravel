@@ -4,7 +4,6 @@ namespace common\models\user;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
-use common\components\DateHelper;
 use common\components\PasswordHelper;
 use common\models\base\BaseModel;
 use Exception;
@@ -34,8 +33,11 @@ use yii\web\IdentityInterface;
  * @property string      $created_at     Дата создания
  * @property string      $authKey
  * @property string      $updated_at     Дата обновления
- * @property ActiveQuery $profile        Профиль
- * @property ActiveQuery $role           Роль
+ * @property array       $defaultData
+ * @property array       $businessData
+ * @property UserType    $type           Тип
+ * @property UserRole    $role           Роль
+ * @property UserProfile $profile        Профиль
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -110,69 +112,6 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * Генерация токена
-     *
-     * @param int  $type
-     * @param bool $expiring
-     * @throws BadRequestHttpException
-     * @throws \yii\base\Exception
-     */
-    public function generateToken(int $type, bool $expiring = true): void
-    {
-        if (!in_array($type, UserToken::$allowedTokens)) {
-            throw new BadRequestHttpException(['token' => 'not found']);
-        }
-
-        $tokenData = [
-            'user_id' => $this->id,
-            'type'    => $type
-        ];
-
-        $token = UserToken::findOne($tokenData);
-
-        if (is_null($token)) {
-            $token = new UserToken();
-        }
-
-        $tokenData['token'] = Yii::$app->security->generateRandomString(34);
-
-        if ($expiring) {
-            $tokenData['expired_at'] = DateHelper::getTimestamp('+ 1 day');
-        }
-
-        $token->saveModel($tokenData);
-
-        if ($type === UserToken::TYPE_AUTH_TOKEN) {
-            $this->generateToken(UserToken::TYPE_RESET_AUTH_TOKEN);
-        }
-    }
-
-    /**
-     * Получить токен
-     *
-     * @param int $type
-     * @return UserToken
-     * @throws BadRequestHttpException
-     */
-    public function getToken(int $type): UserToken
-    {
-        if (!in_array($type, UserToken::$allowedTokens)) {
-            throw new BadRequestHttpException(['token' => 'not found']);
-        }
-
-        $userToken = UserToken::findOne([
-            'user_id' => $this->id,
-            'type'    => $type
-        ]);
-
-        if (is_null($userToken)) {
-            throw new BadRequestHttpException($userToken->getFirstErrors());
-        }
-
-        return $userToken;
-    }
-
-    /**
      * Валидация пароля
      *
      * @param string $password
@@ -216,7 +155,7 @@ class User extends BaseModel implements IdentityInterface
     {
         $userToken = UserToken::findOne([
             'token' => $token,
-            'type'  => UserToken::TYPE_AUTH_TOKEN
+            'type'  => UserToken::TYPE_AUTH
         ]);
 
         if (is_null($userToken)) {
@@ -227,6 +166,104 @@ class User extends BaseModel implements IdentityInterface
             'id'     => $userToken->user_id,
             'status' => self::STATUS_ACTIVE
         ]);
+    }
+
+    /**
+     * Проверка типа пользователя
+     *
+     * @param int $type
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function checkType(int $type): bool
+    {
+        if ($this->type_id == $type) {
+            throw new BadRequestHttpException(['type' => 'Type is invalid']);
+        }
+
+        return true;
+    }
+
+    public function getStatusNameById(int $typeId): string
+    {
+        $statues = [
+            self::STATUS_INACTIVE          => 'Не активен',
+            self::STATUS_ACTIVE            => 'Активен',
+            self::STATUS_UNCONFIRMED_EMAIL => 'Почта не подтверждена',
+        ];
+
+        return $statues[$typeId];
+    }
+
+    public function getDefaultData(): array
+    {
+        return [
+            'email'      => $this->email,
+            'type'       => [
+                'id'   => $this->type->id,
+                'name' => $this->type->name,
+                'desc' => $this->type->desc
+            ],
+            'role'       => [
+                'id'   => $this->role->id,
+                'name' => $this->role->name,
+                'desc' => $this->role->desc
+            ],
+            'status'     => [
+                'id'   => $this->status,
+                'name' => $this->getStatusNameById($this->status)
+            ],
+            'banned'     => [
+                'is_banned'     => $this->is_banned,
+                'banned_reason' => $this->banned_reason,
+                'banned_at'     => $this->banned_at,
+            ],
+            'profile'    => [
+                '' => $this->profile->first_name,
+                '' => $this->profile->last_name,
+                '' => $this->profile->country_id,
+                '' => $this->profile->city_id,
+                '' => $this->profile->longitude,
+                '' => $this->profile->latitude,
+                '' => $this->profile->language,
+                '' => $this->profile->short_lang,
+                '' => $this->profile->timezone,
+            ],
+            'children'   => [
+                // TODO закончить выдачу данных по профилям
+            ],
+            'created_at' => $this->created_at
+        ];
+    }
+
+    public function getBusinessData(): array
+    {
+        return [
+            'email'      => $this->email,
+            'type'       => [
+                'id'   => $this->type->id,
+                'name' => $this->type->name,
+                'desc' => $this->type->desc
+            ],
+            'role'       => [
+                'id'   => $this->role->id,
+                'name' => $this->role->name,
+                'desc' => $this->role->desc
+            ],
+            'status'     => [
+                'id'   => $this->status,
+                'name' => $this->getStatusNameById($this->status)
+            ],
+            'banned'     => [
+                'is_banned'     => $this->is_banned,
+                'banned_reason' => $this->banned_reason,
+                'banned_at'     => $this->banned_at,
+            ],
+            'profile'    => [
+
+            ],
+            'created_at' => $this->created_at
+        ];
     }
 
     /**
@@ -256,6 +293,14 @@ class User extends BaseModel implements IdentityInterface
     /**
      * @return ActiveQuery
      */
+    public function getType()
+    {
+        return $this->hasOne(UserType::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getProfile()
     {
         return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
@@ -267,10 +312,5 @@ class User extends BaseModel implements IdentityInterface
     public function getRole()
     {
         return $this->hasOne(UserRole::class, ['id' => 'role_id']);
-    }
-
-    public function isDefaultUser(): bool
-    {
-        return $this->type_id == UserType::TYPE_DEFAULT_USER;
     }
 }

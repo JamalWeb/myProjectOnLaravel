@@ -2,14 +2,15 @@
 
 namespace api\modules\v1\classes;
 
+use api\modules\v1\models\form\BusinessUserForm;
 use common\models\user\UserProfile;
 use common\models\user\UserRole;
 use Yii;
 use api\modules\v1\models\error\BadRequestHttpException;
 use api\modules\v1\models\form\LoginForm;
-use api\modules\v1\models\form\UserForm;
+use api\modules\v1\models\form\DefaultUserForm;
 use common\components\ArrayHelper;
-//use common\components\EmailSendler;
+use common\components\EmailSendler;
 use common\models\user\User;
 use common\models\user\UserChildren;
 use common\models\user\UserGender;
@@ -37,12 +38,12 @@ class UserApi extends Api
      * @return array
      * @throws Exception
      */
-    public final function registrationUser(array $params): array
+    public final function registrationDefaultUser(array $params): array
     {
-        $userForm = new UserForm($params);
+        $defaultUserForm = new DefaultUserForm($params);
 
-        if (!$userForm->validate()) {
-            throw new BadRequestHttpException($userForm->getFirstErrors());
+        if (!$defaultUserForm->validate()) {
+            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -51,27 +52,27 @@ class UserApi extends Api
             $params = $user->prepareRegistration([
                 'type_id'  => UserType::TYPE_DEFAULT_USER,
                 'role_id'  => UserRole::ROLE_DEFAULT_USER,
-                'email'    => $userForm->email,
-                'password' => $userForm->password,
+                'email'    => $defaultUserForm->email,
+                'password' => $defaultUserForm->password,
             ]);
             $user->saveModel($params);
 
-            $this->createProfile($user, [
-                'city_id'    => $userForm->city_id,
-                'country_id' => $userForm->country_id,
-                'first_name' => $userForm->first_name,
-                'last_name'  => $userForm->last_name,
-                'longitude'  => $userForm->longitude,
-                'latitude'   => $userForm->latitude,
-                'language'   => $userForm->language,
-                'short_lang' => $userForm->short_lang,
-                'timezone'   => $userForm->timezone
+            $this->createUserProfile($user, [
+                'city_id'    => $defaultUserForm->city_id,
+                'country_id' => $defaultUserForm->country_id,
+                'first_name' => $defaultUserForm->first_name,
+                'last_name'  => $defaultUserForm->last_name,
+                'longitude'  => $defaultUserForm->longitude,
+                'latitude'   => $defaultUserForm->latitude,
+                'language'   => $defaultUserForm->language,
+                'short_lang' => $defaultUserForm->short_lang,
+                'timezone'   => $defaultUserForm->timezone
             ]);
 
-            $childrenList = ArrayHelper::jsonToArray($userForm->children);
+            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
             $this->childAdd($user, $childrenList);
 
-//            EmailSendler::registrationConfirm($user);
+            EmailSendler::registrationConfirmDefaultUser($user);
 
             $transaction->commit();
 
@@ -87,10 +88,59 @@ class UserApi extends Api
 
     /**
      * Регистрация нового бизнеса
+     *
+     * @param array $params
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws Exception
      */
-    public function registrationBusinessUser(): array
+    public function registrationBusinessUser(array $params): array
     {
-        return [];
+        $businessUserForm = new BusinessUserForm($params);
+
+        if (!$businessUserForm->validate()) {
+            throw new BadRequestHttpException($businessUserForm->getFirstErrors());
+        }
+
+        $params = [
+            'type_id'  => UserType::TYPE_BUSINESS_USER,
+            'role_id'  => UserRole::ROLE_BUSINESS_USER,
+            'email'    => $businessUserForm->email,
+            'password' => $businessUserForm->password,
+        ];
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user = new User();
+            $user->prepareRegistration($params);
+            $user->saveModel($params);
+
+            $this->createUserProfile($user, [
+                'first_name'   => $businessUserForm->first_name,
+                'phone_number' => $businessUserForm->phone_number,
+                'address'      => $businessUserForm->address,
+                'about'        => $businessUserForm->about,
+                'country_id'   => $businessUserForm->country_id,
+                'city_id'      => $businessUserForm->city_id,
+                'longitude'    => $businessUserForm->longitude,
+                'latitude'     => $businessUserForm->latitude,
+                'language'     => $businessUserForm->language,
+                'short_lang'   => $businessUserForm->short_lang,
+                'timezone'     => $businessUserForm->timezone
+            ]);
+
+            EmailSendler::registrationConfirmBusinessUser($user);
+
+            $transaction->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Проверьте почту'
+            ];
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -101,27 +151,29 @@ class UserApi extends Api
      * @return UserProfile
      * @throws BadRequestHttpException
      */
-    private function createProfile(User $user, array $params): UserProfile
+    public function createUserProfile(User $user, array $params): UserProfile
     {
         $defaultValue = Yii::$app->params['defaultValue'];
-        $profile = new UserProfile();
-        $profile->saveModel([
-            'user_id'    => $user->id,
-            'first_name' => $params['first_name'],
-            'last_name'  => $params['last_name'],
-            'patronymic' => $params['patronymic'] ?? null,
-            'gender_id'  => $params['gender_id'] ?? null,
-            'about'      => $params['about'] ?? null,
-            'country_id' => $params['country_id'],
-            'city_id'    => $params['city_id'],
-            'longitude'  => $params['longitude'],
-            'latitude'   => $params['latitude'],
-            'language'   => $params['language'] ?? $defaultValue['language'],
-            'short_lang' => $params['short_lang'] ?? $defaultValue['short_lang'],
-            'timezone'   => $params['timezone'] ?? $defaultValue['timezone']
+        $userProfile = new UserProfile();
+        $userProfile->saveModel([
+            'user_id'      => $user->id,
+            'first_name'   => $params['first_name'],
+            'last_name'    => $params['last_name'] ?? null,
+            'patronymic'   => $params['patronymic'] ?? null,
+            'phone_number' => $params['phone_number'] ?? null,
+            'address'      => $params['address'] ?? null,
+            'gender_id'    => $params['gender_id'] ?? null,
+            'about'        => $params['about'] ?? null,
+            'country_id'   => $params['country_id'],
+            'city_id'      => $params['city_id'],
+            'longitude'    => $params['longitude'],
+            'latitude'     => $params['latitude'],
+            'language'     => $params['language'] ?? $defaultValue['language'],
+            'short_lang'   => $params['short_lang'] ?? $defaultValue['short_lang'],
+            'timezone'     => $params['timezone'] ?? $defaultValue['timezone']
         ]);
 
-        return $profile;
+        return $userProfile;
     }
 
     /**
@@ -180,11 +232,11 @@ class UserApi extends Api
 
         /** @var User $user */
         $user = $loginForm->authenticate();
-        $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
+        $user->generateToken(UserToken::TYPE_AUTH, true);
 
         return [
-            'auth_token'       => $user->getToken(UserToken::TYPE_AUTH_TOKEN),
-            'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)
+            'auth_token'       => $user->getToken(UserToken::TYPE_AUTH),
+            'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH)
         ];
     }
 
@@ -202,7 +254,7 @@ class UserApi extends Api
         ArrayHelper::validateRequestParams($headers, ['reset-auth-token'], false);
 
         $userToken = UserToken::findOne([
-            'type'  => UserToken::TYPE_RESET_AUTH_TOKEN,
+            'type'  => UserToken::TYPE_RESET_AUTH,
             'token' => $headers['reset-auth-token']
         ]);
 
@@ -213,11 +265,11 @@ class UserApi extends Api
         }
 
         $user = $userToken->user;
-        $user->generateToken(UserToken::TYPE_AUTH_TOKEN, true);
+        UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, true);
 
         return [
-            'auth_token'       => $user->getToken(UserToken::TYPE_AUTH_TOKEN),
-            'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH_TOKEN)
+            'auth_token'       => $userToken->getAccessToken($user, UserToken::TYPE_AUTH),
+            'reset_auth_token' => $userToken->getAccessToken($user, UserToken::TYPE_RESET_AUTH)
         ];
     }
 }

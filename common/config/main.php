@@ -7,18 +7,23 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'language'   => 'ru-RU',
     'components' => [
-        'user'  => [
+        'user'   => [
             'class' => 'common\components\User',
         ],
-        'cache' => [
+        'cache'  => [
             'class' => 'yii\caching\FileCache',
         ],
-        'i18n'  => [
+        'i18n'   => [
             'translations' => [
                 'api' => [
                     'class' => 'yii\i18n\DbMessageSource',
                 ],
             ],
+        ],
+        'mailer' => [
+            'viewPath'         => '@common/mail',
+            'class'            => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => true,
         ],
     ],
     'modules'    => [

@@ -26,10 +26,12 @@ class m191014_181205_create_table_user_token extends Migration
                 ->comment('Идентификатор пользователя'),
 
             'type' => $this->integer()
+                ->notNull()
                 ->comment('Тип токена'),
 
-            'token' => $this->string()
-                ->comment('Токен'),
+            'assess_token' => $this->string()
+                ->notNull()
+                ->comment('Токен доступа'),
 
             'expired_at' => $this->timestamp()
                 ->comment('Срок действия'),

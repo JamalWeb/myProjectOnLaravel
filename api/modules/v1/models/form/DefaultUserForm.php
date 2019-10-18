@@ -8,33 +8,33 @@ use yii\base\Model;
 /**
  * Class UserForm
  *
- * @property string  $first_name    Имя
- * @property string  $last_name     Фамилия
- * @property string  $email         Email
- * @property string  $password      Пароль
- * @property integer $city_id       Идентификатор города
- * @property integer $country_id    Идентификатор страны
- * @property string  $children      Список детей
- * @property float   $longitude     Координаты: Широта
- * @property float   $latitude      Координаты: Долгота
- * @property string  $language      Язык
- * @property string  $short_lang    Код языка
- * @property string  $timezone      Часовой пояс
+ * @property string  $email      Email
+ * @property string  $password   Пароль
+ * @property string  $first_name Имя
+ * @property string  $last_name  Фамилия
+ * @property integer $city_id    Идентификатор города
+ * @property integer $country_id Идентификатор страны
+ * @property float   $longitude  Координаты: Широта
+ * @property float   $latitude   Координаты: Долгота
+ * @property string  $language   Язык
+ * @property string  $short_lang Код языка
+ * @property string  $timezone   Часовой пояс
+ * @property string  $children   Список детей
  */
-class UserForm extends Model
+class DefaultUserForm extends Model
 {
-    public $country_id;
-    public $city_id;
-    public $first_name;
-    public $last_name;
     public $email;
     public $password;
-    public $children;
+    public $first_name;
+    public $last_name;
+    public $country_id;
+    public $city_id;
     public $longitude;
     public $latitude;
     public $language;
     public $short_lang;
     public $timezone;
+    public $children;
 
     /**
      * {@inheritDoc}

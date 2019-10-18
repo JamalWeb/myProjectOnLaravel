@@ -47,8 +47,8 @@ class UserController extends BaseController
 
     /**
      * @OA\Post(
-     *   path="/user/registration-user",
-     *   summary="Регистрация нового пользователя",
+     *   path="/user/registration-default-user",
+     *   summary="Регистрация обычного пользователя",
      *   tags={"Пользователь | User"},
      *   @OA\RequestBody(
      *     @OA\MediaType(
@@ -67,6 +67,18 @@ class UserController extends BaseController
      *           example="vorchami"
      *         ),
      *         @OA\Property(
+     *           property="first_name",
+     *           description="Имя",
+     *           type="string",
+     *           example="Иван"
+     *         ),
+     *         @OA\Property(
+     *           property="last_name",
+     *           description="Фамилия",
+     *           type="string",
+     *           example="Иванов"
+     *         ),
+     *         @OA\Property(
      *           property="country_id",
      *           description="Идентификатор страны",
      *           type="integer",
@@ -79,16 +91,16 @@ class UserController extends BaseController
      *           example=1
      *         ),
      *         @OA\Property(
-     *           property="first_name",
-     *           description="Имя",
-     *           type="string",
-     *           example="Иван"
+     *           property="longitude",
+     *           description="Координаты: широта",
+     *           type="number",
+     *           example="55.7522"
      *         ),
      *         @OA\Property(
-     *           property="last_name",
-     *           description="Фамилия",
-     *           type="string",
-     *           example="Иванов"
+     *           property="latitude",
+     *           description="Координаты: долгота",
+     *           type="number",
+     *           example="37.6156"
      *         ),
      *         @OA\Property(
      *           property="language",
@@ -107,18 +119,6 @@ class UserController extends BaseController
      *           description="Часовой пояс",
      *           type="string",
      *           example="Europe/Moscow"
-     *         ),
-     *         @OA\Property(
-     *           property="longitude",
-     *           description="Координаты: широта",
-     *           type="number",
-     *           example="55.7522"
-     *         ),
-     *         @OA\Property(
-     *           property="latitude",
-     *           description="Координаты: долгота",
-     *           type="number",
-     *           example="37.6156"
      *         ),
      *         @OA\Property(
      *           property="children",
@@ -164,15 +164,15 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationUser(): array
+    public function actionRegistrationDefaultUser(): array
     {
-        return $this->api->registrationUser($this->post);
+        return $this->api->registrationDefaultUser($this->post);
     }
 
     /**
      * @OA\Post(
      *   path="/user/registration-business-user",
-     *   summary="Регистрация нового бизнес-пользователя",
+     *   summary="Регистрация бизнес-пользователя",
      *   tags={"Пользователь | User"},
      *   @OA\RequestBody(
      *     @OA\MediaType(
@@ -191,6 +191,30 @@ class UserController extends BaseController
      *           example="vorchami"
      *         ),
      *         @OA\Property(
+     *           property="first_name",
+     *           description="Название",
+     *           type="string",
+     *           example="vorchami"
+     *         ),
+     *         @OA\Property(
+     *           property="phone_number",
+     *           description="Телефонный номер",
+     *           type="string",
+     *           example="79886337711"
+     *         ),
+     *         @OA\Property(
+     *           property="address",
+     *           description="Адрес",
+     *           type="string",
+     *           example="г.Москва ул.Гурьянова д.5 кв.129"
+     *         ),
+     *         @OA\Property(
+     *           property="about",
+     *           description="Описание",
+     *           type="string",
+     *           example="Бомбочка"
+     *         ),
+     *         @OA\Property(
      *           property="country_id",
      *           description="Идентификатор страны",
      *           type="integer",
@@ -203,33 +227,43 @@ class UserController extends BaseController
      *           example=1
      *         ),
      *         @OA\Property(
-     *           property="name",
-     *           description="Имя пользователя",
-     *           type="string",
-     *           example="Иван"
-     *         ),
-     *         @OA\Property(
      *           property="longitude",
      *           description="Координаты: широта",
      *           type="number",
      *           example="55.7522"
      *         ),
      *         @OA\Property(
-     *           property="children",
-     *           description="Список детей",
-     *           type="object",
-     *           example={
-     *             {
-     *               "age": 5,
-     *               "gender_id": 1,
-     *             },
-     *             {
-     *               "age": 11,
-     *               "gender_id": 2,
-     *             }
-     *           }
+     *           property="latitude",
+     *           description="Координаты: долгота",
+     *           type="number",
+     *           example="55.7522"
      *         ),
-     *         required={"email", "password"}
+     *         @OA\Property(
+     *           property="language",
+     *           description="Язык",
+     *           type="string",
+     *           example="Russian"
+     *         ),
+     *         @OA\Property(
+     *           property="short_lang",
+     *           description="Код языка",
+     *           type="string",
+     *           example="ru-RU"
+     *         ),
+     *         @OA\Property(
+     *           property="timezone",
+     *           description="Часовой пояс",
+     *           type="string",
+     *           example="Europe/Moscow"
+     *         ),
+     *         required={
+     *             "email",
+     *             "password",
+     *             "city_id",
+     *             "first_name",
+     *             "phone_number",
+     *             "about"
+     *         }
      *       )
      *     )
      *   ),
@@ -260,7 +294,7 @@ class UserController extends BaseController
      */
     public function actionRegistrationBusinessUser()
     {
-        return $this->api->registrationBusinessUser();
+        return $this->api->registrationBusinessUser($this->post);
     }
 
     /**

@@ -26,6 +26,7 @@ class m191014_175740_create_table_user_profile extends Migration
                 ->comment('Идентификатор пользователя'),
 
             'first_name' => $this->string()
+                ->notNull()
                 ->comment('Имя'),
 
             'last_name' => $this->string()
@@ -33,6 +34,12 @@ class m191014_175740_create_table_user_profile extends Migration
 
             'patronymic' => $this->string()
                 ->comment('Отчество'),
+
+            'phone_number' => $this->string()
+                ->comment('Телефонный номер'),
+
+            'address' => $this->string()
+                ->comment('Адрес'),
 
             'gender_id' => $this->integer()
                 ->comment('Идентификатор пола'),
@@ -44,6 +51,7 @@ class m191014_175740_create_table_user_profile extends Migration
                 ->comment('Идентификатор страны'),
 
             'city_id' => $this->integer()
+                ->notNull()
                 ->comment('Идентификатор города'),
 
             'longitude' => $this->string()
@@ -73,6 +81,7 @@ class m191014_175740_create_table_user_profile extends Migration
         $this->batchInsert(self::TABLE_NAME, [
             'user_id',
             'first_name',
+            'city_id',
             'gender_id',
             'language',
             'short_lang',
@@ -81,6 +90,7 @@ class m191014_175740_create_table_user_profile extends Migration
             [
                 1,
                 'Admin',
+                1,
                 1,
                 'Russian',
                 'ru-RU',
