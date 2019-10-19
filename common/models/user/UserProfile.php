@@ -49,7 +49,21 @@ class UserProfile extends BaseModel
             [['user_id', 'gender_id', 'country_id', 'city_id'], 'default', 'value' => null],
             [['user_id', 'gender_id', 'country_id', 'city_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['first_name', 'last_name', 'patronymic', 'about', 'longitude', 'latitude', 'language', 'short_lang', 'timezone'], 'string', 'max' => 255],
+            [
+                [
+                    'first_name',
+                    'last_name',
+                    'patronymic',
+                    'phone_number',
+                    'address',
+                    'about',
+                    'longitude',
+                    'latitude',
+                    'language',
+                    'short_lang',
+                    'timezone'
+                ], 'string', 'max' => 255
+            ],
         ];
     }
 

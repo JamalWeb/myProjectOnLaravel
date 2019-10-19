@@ -14,30 +14,30 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "user".
  *
- * @property int         $id             Идентификатор пользователя
- * @property int         $type_id        Идентификатор типа
- * @property int         $role_id        Идентификатор роли
- * @property string      $email          Электронная почта
- * @property string      $username       Никнейм
- * @property string      $password       Пароль
- * @property string      $auth_key       Ключ необходимый для авторизации
- * @property bool        $status         Статус активности (1 - вкл. 0 - выкл.) | default = 1
- * @property string      $logged_in_ip   IP адрес авторизации
- * @property string      $logged_in_at   Дата авторизации
- * @property string      $logout_in_ip   IP адрес выхода
- * @property string      $logout_in_at   Дата выхода
- * @property string      $created_ip     IP адрес с которого создали
- * @property bool        $is_banned      Бан (1 - вкл. 0 - выкл.) | default = 0
- * @property string      $banned_reason  Причина бана
- * @property string      $banned_at      Дата бана
- * @property string      $created_at     Дата создания
- * @property string      $authKey
- * @property string      $updated_at     Дата обновления
- * @property array       $defaultData
- * @property array       $businessData
- * @property UserType    $type           Тип
- * @property UserRole    $role           Роль
- * @property UserProfile $profile        Профиль
+ * @property int            $id             Идентификатор пользователя
+ * @property int            $type_id        Идентификатор типа
+ * @property int            $role_id        Идентификатор роли
+ * @property string         $email          Электронная почта
+ * @property string         $username       Никнейм
+ * @property string         $password       Пароль
+ * @property string         $auth_key       Ключ необходимый для авторизации
+ * @property bool           $status         Статус активности (1 - вкл. 0 - выкл.) | default = 1
+ * @property string         $logged_in_ip   IP адрес авторизации
+ * @property string         $logged_in_at   Дата авторизации
+ * @property string         $logout_in_ip   IP адрес выхода
+ * @property string         $logout_in_at   Дата выхода
+ * @property string         $created_ip     IP адрес с которого создали
+ * @property bool           $is_banned      Бан (1 - вкл. 0 - выкл.) | default = 0
+ * @property string         $banned_reason  Причина бана
+ * @property string         $banned_at      Дата бана
+ * @property string         $created_at     Дата создания
+ * @property string         $authKey
+ * @property string         $updated_at     Дата обновления
+ * @property array          $info           Информация о пользователи
+ * @property UserType       $type           Тип
+ * @property UserRole       $role           Роль
+ * @property UserProfile    $profile        Профиль
+ * @property UserChildren[] $children       Дети
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -99,16 +99,17 @@ class User extends BaseModel implements IdentityInterface
      * Подготовка данных для регистрации
      *
      * @param array $params
-     * @return array
+     * @return void
      * @throws Exception
      */
-    public function prepareRegistration(array $params): array
+    public function prepareRegistration(array $params): void
     {
-        return ArrayHelper::merge($params, [
+        $params = ArrayHelper::merge($params, [
             'status'     => User::STATUS_ACTIVE,
             'created_ip' => Yii::$app->request->remoteIP,
             'password'   => PasswordHelper::encrypt($params['password'])
         ]);
+        $this->setAttributes($params);
     }
 
     /**
@@ -195,9 +196,13 @@ class User extends BaseModel implements IdentityInterface
         return $statues[$typeId];
     }
 
-    public function getDefaultData(): array
+    /**
+     * @return array
+     */
+    public function getInfo(): array
     {
-        return [
+        $defaultUserInfo = [
+            'id'         => $this->id,
             'email'      => $this->email,
             'type'       => [
                 'id'   => $this->type->id,
@@ -214,56 +219,49 @@ class User extends BaseModel implements IdentityInterface
                 'name' => $this->getStatusNameById($this->status)
             ],
             'banned'     => [
-                'is_banned'     => $this->is_banned,
+                'is_banned'     => boolval($this->is_banned),
                 'banned_reason' => $this->banned_reason,
                 'banned_at'     => $this->banned_at,
             ],
             'profile'    => [
-                '' => $this->profile->first_name,
-                '' => $this->profile->last_name,
-                '' => $this->profile->country_id,
-                '' => $this->profile->city_id,
-                '' => $this->profile->longitude,
-                '' => $this->profile->latitude,
-                '' => $this->profile->language,
-                '' => $this->profile->short_lang,
-                '' => $this->profile->timezone,
+                'first_name'   => $this->profile->first_name,
+                'last_name'    => $this->profile->last_name,
+                'phone_number' => $this->profile->phone_number,
+                'address'      => $this->profile->address,
+                'about'        => $this->profile->about,
+                'country_id'   => [
+                    'id'   => $this->profile->country_id,
+                    'name' => 'Russia',
+                ],
+                'city_id'      => [
+                    'id'   => $this->profile->city_id,
+                    'name' => 'Moscow'
+                ],
+                'longitude'    => $this->profile->longitude,
+                'latitude'     => $this->profile->latitude,
+                'language'     => $this->profile->language,
+                'short_lang'   => $this->profile->short_lang,
+                'timezone'     => $this->profile->timezone,
             ],
-            'children'   => [
-                // TODO закончить выдачу данных по профилям
-            ],
+            'children'   => [],
             'created_at' => $this->created_at
         ];
-    }
 
-    public function getBusinessData(): array
-    {
-        return [
-            'email'      => $this->email,
-            'type'       => [
-                'id'   => $this->type->id,
-                'name' => $this->type->name,
-                'desc' => $this->type->desc
-            ],
-            'role'       => [
-                'id'   => $this->role->id,
-                'name' => $this->role->name,
-                'desc' => $this->role->desc
-            ],
-            'status'     => [
-                'id'   => $this->status,
-                'name' => $this->getStatusNameById($this->status)
-            ],
-            'banned'     => [
-                'is_banned'     => $this->is_banned,
-                'banned_reason' => $this->banned_reason,
-                'banned_at'     => $this->banned_at,
-            ],
-            'profile'    => [
+        if (!empty($this->children) && $this->type_id == UserType::TYPE_DEFAULT_USER) {
+            /** @var UserChildren $child */
+            foreach (ArrayHelper::generator($this->children) as $child) {
+                $defaultUserInfo['children'][] = [
+                    'id'     => $child->id,
+                    'age'    => $child->age,
+                    'gender' => [
+                        'id'   => $child->gender->id,
+                        'name' => $child->gender->name
+                    ]
+                ];
+            }
+        }
 
-            ],
-            'created_at' => $this->created_at
-        ];
+        return $defaultUserInfo;
     }
 
     /**
@@ -295,7 +293,15 @@ class User extends BaseModel implements IdentityInterface
      */
     public function getType()
     {
-        return $this->hasOne(UserType::class, ['user_id' => 'id']);
+        return $this->hasOne(UserType::class, ['id' => 'type_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRole()
+    {
+        return $this->hasOne(UserRole::class, ['id' => 'role_id']);
     }
 
     /**
@@ -308,9 +314,14 @@ class User extends BaseModel implements IdentityInterface
 
     /**
      * @return ActiveQuery
+     * @throws BadRequestHttpException
      */
-    public function getRole()
+    public function getChildren()
     {
-        return $this->hasOne(UserRole::class, ['id' => 'role_id']);
+        if ($this->type_id != UserType::TYPE_DEFAULT_USER) {
+            throw new BadRequestHttpException(['type' => 'Type is invalid']);
+        }
+
+        return $this->hasMany(UserChildren::class, ['user_id' => 'id']);
     }
 }

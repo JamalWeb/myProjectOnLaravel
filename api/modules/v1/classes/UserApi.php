@@ -46,16 +46,18 @@ class UserApi extends Api
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
 
+        $params = [
+            'type_id'  => UserType::TYPE_DEFAULT_USER,
+            'role_id'  => UserRole::ROLE_DEFAULT_USER,
+            'email'    => $defaultUserForm->email,
+            'password' => $defaultUserForm->password,
+        ];
+
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-            $params = $user->prepareRegistration([
-                'type_id'  => UserType::TYPE_DEFAULT_USER,
-                'role_id'  => UserRole::ROLE_DEFAULT_USER,
-                'email'    => $defaultUserForm->email,
-                'password' => $defaultUserForm->password,
-            ]);
-            $user->saveModel($params);
+            $user->prepareRegistration($params);
+            $user->saveModel();
 
             $this->createUserProfile($user, [
                 'city_id'    => $defaultUserForm->city_id,
@@ -76,10 +78,7 @@ class UserApi extends Api
 
             $transaction->commit();
 
-            return [
-                'success' => true,
-                'message' => 'Проверьте почту'
-            ];
+            return $user->info;
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -87,7 +86,7 @@ class UserApi extends Api
     }
 
     /**
-     * Регистрация нового бизнеса
+     * Регистрация бизнес пользователя
      *
      * @param array $params
      * @return array
@@ -113,7 +112,7 @@ class UserApi extends Api
         try {
             $user = new User();
             $user->prepareRegistration($params);
-            $user->saveModel($params);
+            $user->saveModel();
 
             $this->createUserProfile($user, [
                 'first_name'   => $businessUserForm->first_name,
@@ -133,10 +132,7 @@ class UserApi extends Api
 
             $transaction->commit();
 
-            return [
-                'success' => true,
-                'message' => 'Проверьте почту'
-            ];
+            return $user->info;
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;

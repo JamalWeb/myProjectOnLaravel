@@ -9,13 +9,14 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "user_children".
  *
- * @property int    $id         Идентификатор ребенка пользователя
- * @property int    $user_id    Идентификатор пользователя
- * @property int    $age        Возраст
- * @property int    $gender_id  Идентификатор пола
- * @property string $created_at Дата создания
- * @property string $updated_at Дата обновления
- * @property User   $parent     Родитель
+ * @property int        $id         Идентификатор ребенка пользователя
+ * @property int        $user_id    Идентификатор пользователя
+ * @property int        $age        Возраст
+ * @property int        $gender_id  Идентификатор пола
+ * @property string     $created_at Дата создания
+ * @property string     $updated_at Дата обновления
+ * @property User       $parent     Родитель
+ * @property UserGender $gender     Пол
  */
 class UserChildren extends BaseModel
 {
@@ -61,5 +62,13 @@ class UserChildren extends BaseModel
     public function getParent()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getGender()
+    {
+        return $this->hasOne(UserGender::class, ['id' => 'gender_id']);
     }
 }

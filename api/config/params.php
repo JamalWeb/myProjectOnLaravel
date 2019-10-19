@@ -3,8 +3,8 @@ return [
     'adminEmail'       => 'admin@example.com',
     'exceptApiMethods' => [
         'user/get-genders',
-        'user/registration-user',
-        'user/registration-business',
+        'user/registration-default-user',
+        'user/registration-business-user',
         'user/login',
         'user/reset-auth-token'
     ],

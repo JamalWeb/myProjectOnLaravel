@@ -147,12 +147,66 @@ class UserController extends BaseController
      *       @OA\Schema(
      *         type="object",
      *         example={
-     *           "name": 5,
-     *           "email": "mail@yandex.ru",
-     *           "phone": "+79999999999",
-     *           "name": "Годный Старец",
-     *           "role_id": 3,
-     *           "role": "Руководитель"
+     *             "id": 8,
+     *             "email": "default_user@mamppa.com",
+     *             "type": {
+     *                 "id": 3,
+     *                 "name": "User",
+     *                 "desc": "Обычный пользователь"
+     *             },
+     *             "role": {
+     *                 "id": 3,
+     *                 "name": "User",
+     *                 "desc": "Обычный пользователь"
+     *             },
+     *             "status": {
+     *                 "id": 1,
+     *                 "name": "Активен"
+     *             },
+     *             "banned": {
+     *                 "is_banned": false,
+     *                 "banned_reason": null,
+     *                 "banned_at": null
+     *             },
+     *             "profile": {
+     *                 "first_name": "Иван",
+     *                 "last_name": "Иванов",
+     *                 "phone_number": null,
+     *                 "address": null,
+     *                 "about": null,
+     *                 "country_id": {
+     *                     "id": 1,
+     *                     "name": "Russia"
+     *                 },
+     *                 "city_id": {
+     *                     "id": 1,
+     *                     "name": "Moscow"
+     *                 },
+     *                 "longitude": "55.7522",
+     *                 "latitude": "55.7522",
+     *                 "language": "Russian",
+     *                 "short_lang": "ru-RU",
+     *                 "timezone": "Europe/Moscow"
+     *             },
+     *             "children": {
+     *                 {
+     *                     "id": 7,
+     *                     "age": 5,
+     *                     "gender": {
+     *                         "id": 1,
+     *                         "name": "Male"
+     *                     }
+     *                 },
+     *                 {
+     *                     "id": 8,
+     *                     "age": 11,
+     *                     "gender": {
+     *                         "id": 2,
+     *                         "name": "Female"
+     *                     }
+     *                 }
+     *              },
+     *             "created_at": "2019-10-19 19:23:40"
      *         }
      *       ),
      *     ),
@@ -275,12 +329,49 @@ class UserController extends BaseController
      *       @OA\Schema(
      *         type="object",
      *         example={
-     *           "name": 5,
-     *           "email": "mail@yandex.ru",
-     *           "phone": "+79999999999",
-     *           "name": "Годный Старец",
-     *           "role_id": 3,
-     *           "role": "Руководитель"
+     *             "id": 9,
+     *             "email": "neo@neo.com",
+     *             "type": {
+     *                 "id": 3,
+     *                 "name": "Business",
+     *                 "desc": "Бизнес пользователь"
+     *             },
+     *             "role": {
+     *                 "id": 3,
+     *                 "name": "Business",
+     *                 "desc": "Бизнес пользователь"
+     *             },
+     *             "status": {
+     *                 "id": 1,
+     *                 "name": "Активен"
+     *             },
+     *             "banned": {
+     *                 "is_banned": false,
+     *                 "banned_reason": null,
+     *                 "banned_at": null
+     *             },
+     *             "profile": {
+     *                 "first_name": "vorchami",
+     *                 "last_name": null,
+     *                 "phone_number": "79886337711",
+     *                 "address": "г.Москва ул.Гурьянова д.5 кв.129",
+     *                 "about": "Бомбочка",
+     *                 "country_id": {
+     *                     "id": 1,
+     *                     "name": "Russia"
+     *                 },
+     *                 "city_id": {
+     *                     "id": 1,
+     *                     "name": "Moscow"
+     *                 },
+     *                 "longitude": "55.7522",
+     *                 "latitude": "55.7522",
+     *                 "language": "Russian",
+     *                 "short_lang": "ru-RU",
+     *                 "timezone": "Europe/Moscow"
+     *             },
+     *             "children": {},
+     *             "created_at": "2019-10-19 19:23:40"
      *         }
      *       ),
      *     ),
