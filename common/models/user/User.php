@@ -33,7 +33,7 @@ use yii\web\IdentityInterface;
  * @property string         $created_at     Дата создания
  * @property string         $authKey
  * @property string         $updated_at     Дата обновления
- * @property array          $info           Информация о пользователи
+ * @property array          $publicInfo    Информация о пользователи
  * @property UserType       $type           Тип
  * @property UserRole       $role           Роль
  * @property UserProfile    $profile        Профиль
@@ -186,7 +186,7 @@ class User extends BaseModel implements IdentityInterface
     /**
      * @return array
      */
-    public function getInfo(): array
+    public function getPublicInfo(): array
     {
         $defaultUserInfo = [
             'id'         => $this->id,
@@ -216,11 +216,11 @@ class User extends BaseModel implements IdentityInterface
                 'phone_number' => $this->profile->phone_number,
                 'address'      => $this->profile->address,
                 'about'        => $this->profile->about,
-                'country_id'   => [
+                'country'      => [
                     'id'   => $this->profile->country_id,
                     'name' => 'Russia',
                 ],
-                'city_id'      => [
+                'city'         => [
                     'id'   => $this->profile->city_id,
                     'name' => 'Moscow'
                 ],
@@ -301,14 +301,9 @@ class User extends BaseModel implements IdentityInterface
 
     /**
      * @return ActiveQuery
-     * @throws BadRequestHttpException
      */
     public function getChildren()
     {
-        if ($this->type_id != UserType::TYPE_DEFAULT_USER) {
-            throw new BadRequestHttpException(['type' => 'Type is invalid']);
-        }
-
         return $this->hasMany(UserChildren::class, ['user_id' => 'id']);
     }
 }

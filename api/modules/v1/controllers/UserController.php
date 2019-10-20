@@ -174,11 +174,11 @@ class UserController extends BaseController
      *                 "phone_number": null,
      *                 "address": null,
      *                 "about": null,
-     *                 "country_id": {
+     *                 "country": {
      *                     "id": 1,
      *                     "name": "Russia"
      *                 },
-     *                 "city_id": {
+     *                 "city": {
      *                     "id": 1,
      *                     "name": "Moscow"
      *                 },
@@ -269,13 +269,13 @@ class UserController extends BaseController
      *           example="Бомбочка"
      *         ),
      *         @OA\Property(
-     *           property="country_id",
+     *           property="country",
      *           description="Идентификатор страны",
      *           type="integer",
      *           example=1
      *         ),
      *         @OA\Property(
-     *           property="city_id",
+     *           property="city",
      *           description="Идентификатор города",
      *           type="integer",
      *           example=1

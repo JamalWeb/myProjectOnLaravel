@@ -3,7 +3,6 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\models\form\BusinessUserForm;
-use common\models\user\UserProfile;
 use common\models\user\UserRole;
 use Yii;
 use api\modules\v1\models\error\BadRequestHttpException;
@@ -12,7 +11,6 @@ use api\modules\v1\models\form\DefaultUserForm;
 use common\components\ArrayHelper;
 use common\components\EmailSendler;
 use common\models\user\User;
-use common\models\user\UserChildren;
 use common\models\user\UserGender;
 use common\models\user\UserToken;
 use common\models\user\UserType;
@@ -34,19 +32,19 @@ class UserApi extends Api
     /**
      * Регистрация обычного пользователя
      *
-     * @param array $params
+     * @param array $post
      * @return array
      * @throws Exception
      */
-    public final function registrationDefaultUser(array $params): array
+    public final function registrationDefaultUser(array $post): array
     {
-        $defaultUserForm = new DefaultUserForm($params);
+        $defaultUserForm = new DefaultUserForm($post);
 
         if (!$defaultUserForm->validate()) {
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
 
-        $params = [
+        $post = [
             'type_id'  => UserType::TYPE_DEFAULT_USER,
             'role_id'  => UserRole::ROLE_DEFAULT_USER,
             'email'    => $defaultUserForm->email,
@@ -56,10 +54,11 @@ class UserApi extends Api
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-            $user->prepareRegistration($params);
+            $user->prepareRegistration($post);
             $user->saveModel();
 
-            $this->createUserProfile($user, [
+            $userProfileApi = new UserProfileApi();
+            $userProfileApi->create($user, [
                 'city_id'    => $defaultUserForm->city_id,
                 'country_id' => $defaultUserForm->country_id,
                 'first_name' => $defaultUserForm->first_name,
@@ -72,13 +71,14 @@ class UserApi extends Api
             ]);
 
             $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
-            $this->childAdd($user, $childrenList);
+            $userChildrenApi = new UserChildrenApi();
+            $userChildrenApi->add($user, $childrenList);
 
             EmailSendler::registrationConfirmDefaultUser($user);
 
             $transaction->commit();
 
-            return $user->info;
+            return $user->publicInfo;
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -88,20 +88,20 @@ class UserApi extends Api
     /**
      * Регистрация бизнес пользователя
      *
-     * @param array $params
+     * @param array $post
      * @return array
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public function registrationBusinessUser(array $params): array
+    public function registrationBusinessUser(array $post): array
     {
-        $businessUserForm = new BusinessUserForm($params);
+        $businessUserForm = new BusinessUserForm($post);
 
         if (!$businessUserForm->validate()) {
             throw new BadRequestHttpException($businessUserForm->getFirstErrors());
         }
 
-        $params = [
+        $post = [
             'type_id'  => UserType::TYPE_BUSINESS_USER,
             'role_id'  => UserRole::ROLE_BUSINESS_USER,
             'email'    => $businessUserForm->email,
@@ -111,10 +111,11 @@ class UserApi extends Api
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-            $user->prepareRegistration($params);
+            $user->prepareRegistration($post);
             $user->saveModel();
 
-            $this->createUserProfile($user, [
+            $userProfileApi = new UserProfileApi();
+            $userProfileApi->create($user, [
                 'first_name'   => $businessUserForm->first_name,
                 'phone_number' => $businessUserForm->phone_number,
                 'address'      => $businessUserForm->address,
@@ -132,77 +133,7 @@ class UserApi extends Api
 
             $transaction->commit();
 
-            return $user->info;
-        } catch (Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        }
-    }
-
-    /**
-     * Создание профиля для пользователя
-     *
-     * @param User  $user
-     * @param array $params
-     * @return UserProfile
-     * @throws BadRequestHttpException
-     */
-    public function createUserProfile(User $user, array $params): UserProfile
-    {
-        $defaultValue = Yii::$app->params['defaultValue'];
-        $userProfile = new UserProfile();
-        $userProfile->saveModel([
-            'user_id'      => $user->id,
-            'first_name'   => $params['first_name'],
-            'last_name'    => $params['last_name'] ?? null,
-            'patronymic'   => $params['patronymic'] ?? null,
-            'phone_number' => $params['phone_number'] ?? null,
-            'address'      => $params['address'] ?? null,
-            'gender_id'    => $params['gender_id'] ?? null,
-            'about'        => $params['about'] ?? null,
-            'country_id'   => $params['country_id'],
-            'city_id'      => $params['city_id'],
-            'longitude'    => $params['longitude'],
-            'latitude'     => $params['latitude'],
-            'language'     => $params['language'] ?? $defaultValue['language'],
-            'short_lang'   => $params['short_lang'] ?? $defaultValue['short_lang'],
-            'timezone'     => $params['timezone'] ?? $defaultValue['timezone']
-        ]);
-
-        return $userProfile;
-    }
-
-    /**
-     * Добавление детей пользователю
-     *
-     * @param User  $user
-     * @param array $childrenParams
-     * @return array
-     * @throws Exception
-     */
-    public final function childAdd(User $user, array $childrenParams): array
-    {
-        $children = [];
-        if (empty($childrenParams)) {
-            return $children;
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            foreach ($childrenParams as $childParam) {
-                $childParam = ArrayHelper::merge($childParam, [
-                    'user_id' => $user->id
-                ]);
-
-                $child = new UserChildren();
-                $child->saveModel($childParam);
-
-                $children[] = $child;
-            }
-
-            $transaction->commit();
-
-            return $children;
+            return $user->publicInfo;
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -274,5 +205,21 @@ class UserApi extends Api
             'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
             'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
         ];
+    }
+
+    /**
+     * Поиск пользователя
+     *
+     * @param int $id
+     * @return User|null
+     */
+    public function findUserById(int $id): ?User
+    {
+        return User::findOne([
+            'id'        => $id,
+            'is_banned' => false,
+            'status'    => User::STATUS_ACTIVE,
+            'type_id'   => UserType::$validTypeSearch
+        ]);
     }
 }

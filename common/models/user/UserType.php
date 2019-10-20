@@ -20,6 +20,11 @@ class UserType extends BaseModel
     const TYPE_DEFAULT_USER = 2;
     const TYPE_BUSINESS_USER = 3;
 
+    public static $validTypeSearch = [
+        self::TYPE_DEFAULT_USER,
+        self::TYPE_BUSINESS_USER,
+    ];
+
     /**
      * {@inheritdoc}
      */
