@@ -27,20 +27,9 @@ return [
         ],
     ],
     'modules'    => [
-        'user' => [
-            'class'           => 'amnah\yii2\user\Module',
-            'loginEmail'      => true,
-            'requireEmail'    => true,
-            'requireUsername' => false,
-            'loginUsername'   => false,
-            'modelClasses'    => [
-                'User'         => 'common\models\user\User',
-                'Profile'      => 'common\models\user\Profile',
-                'Role'         => 'common\models\user\Role',
-                'Organization' => 'common\models\user\Organization',
-                'LoginForm'    => 'common\models\LoginForm',
-            ],
-            'emailViewPath'   => '@common/mail',
+        'user'                  => [
+            'class'         => 'common\components\User',
+            'identityClass' => 'common\models\user\User',
         ],
     ],
 ];

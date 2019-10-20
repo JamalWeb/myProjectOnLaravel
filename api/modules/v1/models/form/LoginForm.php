@@ -3,7 +3,6 @@
 namespace api\modules\v1\models\form;
 
 use Yii;
-use amnah\yii2\user\Module;
 use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
 use yii\base\Model;
@@ -21,9 +20,6 @@ class LoginForm extends Model
     /** @var int */
     const TIME_UNAUTHORIZED_DURATION = 600;
 
-    /** @var Module */
-    private $module;
-
     /** @var string $keyAttempts */
     private $keyAttempts;
 
@@ -36,20 +32,14 @@ class LoginForm extends Model
     /** @var string $password */
     public $password;
 
-    /** Инициализация формы */
-    public function init(): void
-    {
-        if (is_null($this->module)) {
-            $this->module = Yii::$app->getModule('user');
-        }
-    }
-
     /**
      * @return bool
      * @throws UnauthorizedHttpException
      */
     public function beforeValidate(): bool
     {
+        $parent = parent::beforeValidate();
+
         if (!is_null($this->email)) {
             $this->createKeyAttempts();
 
@@ -61,7 +51,7 @@ class LoginForm extends Model
             }
         }
 
-        return parent::beforeValidate();
+        return $parent;
     }
 
     /**
@@ -73,8 +63,24 @@ class LoginForm extends Model
             [['email', 'password'], 'required'],
             [['email', 'password'], 'string'],
             [['email'], 'email'],
-            ['email', 'validateUser']
         ];
+    }
+
+    /**
+     * @throws UnauthorizedHttpException
+     */
+    public function afterValidate(): void
+    {
+        parent::afterValidate();
+
+        $this->getUser();
+
+        if (is_null($this->user)) {
+            $this->handleFailure();
+            throw new UnauthorizedHttpException([
+                'email' => Yii::t('user', 'Email not found')
+            ]);
+        }
     }
 
     /**
@@ -96,30 +102,13 @@ class LoginForm extends Model
     public function getUser(): ?User
     {
         if (is_null($this->user)) {
-            $user = $this->module->model('User');
 
-            $this->user = $user::find()
+            $this->user = User::find()
                 ->where(['email' => $this->email])
                 ->one();
         }
 
         return $this->user;
-    }
-
-    /**
-     * @throws UnauthorizedHttpException
-     */
-    public function validateUser(): void
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if (is_null($user)) {
-            $this->handleFailure();
-            throw new UnauthorizedHttpException([
-                'email' => Yii::t('user', 'Email not found')
-            ]);
-        }
     }
 
     /**
@@ -149,7 +138,18 @@ class LoginForm extends Model
             ]);
         }
 
-        $this->validateStatus();
+        switch ($this->user->status) {
+            case User::STATUS_INACTIVE:
+                $error = ['email' => 'Ваш аккаунт не активирован'];
+                break;
+            case User::STATUS_UNCONFIRMED_EMAIL:
+                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
+                break;
+        }
+
+        if (isset($error)) {
+            throw new UnauthorizedHttpException($error);
+        }
 
 //        Язык системы
 //        Yii::$app->language = 'ru';
@@ -165,27 +165,6 @@ class LoginForm extends Model
         Yii::$app->cache->delete($this->keyAttempts);
 
         return $this->user;
-    }
-
-    /**
-     * Валидация статуса пользователя
-     *
-     * @throws UnauthorizedHttpException
-     */
-    private function validateStatus(): void
-    {
-        switch ($this->user->status) {
-            case User::STATUS_INACTIVE:
-                $error = ['email' => 'Ваш аккаунт не активирован'];
-                break;
-            case User::STATUS_UNCONFIRMED_EMAIL:
-                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
-                break;
-        }
-
-        if (isset($error)) {
-            throw new UnauthorizedHttpException($error);
-        }
     }
 
     private function createKeyAttempts(): void

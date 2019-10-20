@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\models\form;
 
+use common\models\user\User;
 use Yii;
 use yii\base\Model;
 
@@ -48,6 +49,14 @@ class BusinessUserForm extends Model
             [['city_id', 'country_id'], 'integer'],
             [['first_name', 'email', 'password', 'phone_number', 'about', 'address', 'language', 'short_lang', 'timezone'], 'string'],
             [['email'], 'email'],
+            [
+                ['email'], function ($attribute) {
+                $user = User::find()->where(['email' => $this->email])->exists();
+                if ($user) {
+                    $this->addError($attribute, 'This email is already in use.');
+                }
+            }
+            ],
             [['password'], 'string', 'min' => 6, 'max' => 20],
             [['longitude', 'latitude'], 'number']
         ];

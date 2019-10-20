@@ -19,6 +19,12 @@ class DateHelper extends BaseObject
      */
     public static final function getTimestamp(string $changeDate = ''): string
     {
-        return gmdate('Y-m-d H:i:s', strtotime($changeDate));
+        if (empty($changeDate)) {
+            $timestamp = gmdate('Y-m-d H:i:s');
+        } else {
+            $timestamp = gmdate('Y-m-d H:i:s', strtotime($changeDate));
+        }
+
+        return $timestamp;
     }
 }

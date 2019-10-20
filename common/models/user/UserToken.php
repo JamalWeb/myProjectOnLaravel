@@ -51,11 +51,11 @@ class UserToken extends BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'type', 'assess_token'], 'required'],
+            [['user_id', 'type', 'access_token'], 'required'],
             [['user_id', 'type'], 'default', 'value' => null],
             [['user_id', 'type'], 'integer'],
             [['expired_at', 'created_at', 'updated_at'], 'safe'],
-            [['assess_token'], 'string', 'max' => 255],
+            [['access_token'], 'string', 'max' => 255],
         ];
     }
 
@@ -68,7 +68,7 @@ class UserToken extends BaseModel
             'id'           => Yii::t('app', 'ID'),
             'user_id'      => Yii::t('app', 'User ID'),
             'type'         => Yii::t('app', 'Type'),
-            'assess_token' => Yii::t('app', 'Access token'),
+            'access_token' => Yii::t('app', 'Access token'),
             'expired_at'   => Yii::t('app', 'Expired At'),
             'created_at'   => Yii::t('app', 'Created At'),
             'updated_at'   => Yii::t('app', 'Updated At'),
@@ -92,7 +92,7 @@ class UserToken extends BaseModel
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public static function generateAccessToken(User $user, int $type, bool $expiring = true): void
+    public static function generateAccessToken(User $user, int $type, string $expiring = ''): void
     {
         self::checkTypeAccessToken($type);
 
@@ -107,16 +107,16 @@ class UserToken extends BaseModel
             $userToken = new UserToken();
         }
 
-        $dataAccessToken['assess_token'] = Yii::$app->security->generateRandomString(34);
+        $dataAccessToken['access_token'] = Yii::$app->security->generateRandomString(34);
 
-        if ($expiring) {
-            $dataAccessToken['expired_at'] = DateHelper::getTimestamp('+ 1 day');
+        if (!empty($expiring)) {
+            $dataAccessToken['expired_at'] = DateHelper::getTimestamp($expiring);
         }
 
         $userToken->saveModel($dataAccessToken);
 
         if ($type === self::TYPE_AUTH) {
-            self::generateAccessToken($user, self::TYPE_RESET_AUTH);
+            self::generateAccessToken($user, self::TYPE_RESET_AUTH, '');
         }
     }
 
@@ -153,7 +153,7 @@ class UserToken extends BaseModel
     public static function checkTypeAccessToken(int $type): void
     {
         if (!in_array($type, self::$allowedTokens)) {
-            throw new BadRequestHttpException(['assess_token' => 'not found']);
+            throw new BadRequestHttpException(['access_token' => 'not found']);
         }
     }
 }

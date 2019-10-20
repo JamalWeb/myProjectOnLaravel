@@ -226,13 +226,20 @@ class UserApi extends Api
             'password' => $post['password']
         ]);
 
-        /** @var User $user */
-        $user = $loginForm->authenticate();
-        $user->generateToken(UserToken::TYPE_AUTH, true);
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            /** @var User $user */
+            $user = $loginForm->authenticate();
+            UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, '+ 1 day');
+            $transaction->commit();
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
 
         return [
-            'auth_token'       => $user->getToken(UserToken::TYPE_AUTH),
-            'reset_auth_token' => $user->getToken(UserToken::TYPE_RESET_AUTH)
+            'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
+            'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
         ];
     }
 
@@ -250,22 +257,22 @@ class UserApi extends Api
         ArrayHelper::validateRequestParams($headers, ['reset-auth-token'], false);
 
         $userToken = UserToken::findOne([
-            'type'  => UserToken::TYPE_RESET_AUTH,
-            'token' => $headers['reset-auth-token']
+            'type'         => UserToken::TYPE_RESET_AUTH,
+            'access_token' => $headers['reset-auth-token']
         ]);
 
         if (is_null($userToken)) {
             throw new BadRequestHttpException([
-                'reset-auth-token' => 'Токен является недействительным'
+                'reset-auth-token' => 'Токен не является действительным'
             ]);
         }
 
         $user = $userToken->user;
-        UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, true);
+        UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, '+ 1 day');
 
         return [
-            'auth_token'       => $userToken->getAccessToken($user, UserToken::TYPE_AUTH),
-            'reset_auth_token' => $userToken->getAccessToken($user, UserToken::TYPE_RESET_AUTH)
+            'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
+            'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
         ];
     }
 }

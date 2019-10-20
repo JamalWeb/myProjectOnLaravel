@@ -29,7 +29,7 @@ class m191014_181205_create_table_user_token extends Migration
                 ->notNull()
                 ->comment('Тип токена'),
 
-            'assess_token' => $this->string()
+            'access_token' => $this->string()
                 ->notNull()
                 ->comment('Токен доступа'),
 

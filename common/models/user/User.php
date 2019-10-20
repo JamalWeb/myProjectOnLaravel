@@ -127,19 +127,6 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * Update login info (ip and time)
-     *
-     * @return bool
-     */
-//    public function updateLoginMeta()
-//    {
-//        $this->logged_in_ip = Yii::$app->request->userIP;
-//        $this->logged_in_at = gmdate('Y-m-d H:i:s');
-//
-//        return $this->save(false, ['logged_in_ip', 'logged_in_at']);
-//    }
-
-    /**
      * {@inheritdoc}
      */
     public static function findIdentity($id): ?self
@@ -148,15 +135,15 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
-     * @param string $token
-     * @param null   $type
+     * @param      $accessToken
+     * @param null $type
      * @return User|null
      */
-    public static function findIdentityByAccessToken($token, $type = null): ?User
+    public static function findIdentityByAccessToken($accessToken, $type = null): ?User
     {
         $userToken = UserToken::findOne([
-            'token' => $token,
-            'type'  => UserToken::TYPE_AUTH
+            'access_token' => $accessToken,
+            'type'         => UserToken::TYPE_AUTH
         ]);
 
         if (is_null($userToken)) {
@@ -219,7 +206,7 @@ class User extends BaseModel implements IdentityInterface
                 'name' => $this->getStatusNameById($this->status)
             ],
             'banned'     => [
-                'is_banned'     => boolval($this->is_banned),
+                'is_banned'     => $this->is_banned,
                 'banned_reason' => $this->banned_reason,
                 'banned_at'     => $this->banned_at,
             ],
