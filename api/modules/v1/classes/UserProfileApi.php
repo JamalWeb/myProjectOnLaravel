@@ -3,8 +3,6 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\models\error\BadRequestHttpException;
-use api\modules\v1\models\form\DefaultUserForm;
-use common\components\ArrayHelper;
 use common\models\user\User;
 use common\models\user\UserProfile;
 use Yii;
@@ -12,7 +10,7 @@ use Yii;
 class UserProfileApi extends Api
 {
     /**
-     * Создание профиля для пользователя
+     * Создание
      *
      * @param User  $user
      * @param array $params
@@ -22,63 +20,48 @@ class UserProfileApi extends Api
     public function create(User $user, array $params): UserProfile
     {
         $defaultValue = Yii::$app->params['defaultValue'];
-        $userProfile = new UserProfile();
+        $params['user_id'] = $user->id;
+        $userProfile = new UserProfile($params);
         $userProfile->saveModel([
-            'user_id'      => $user->id,
-            'first_name'   => $params['first_name'],
-            'last_name'    => $params['last_name'] ?? null,
-            'patronymic'   => $params['patronymic'] ?? null,
-            'phone_number' => $params['phone_number'] ?? null,
-            'address'      => $params['address'] ?? null,
-            'gender_id'    => $params['gender_id'] ?? null,
-            'about'        => $params['about'] ?? null,
-            'country_id'   => $params['country_id'],
-            'city_id'      => $params['city_id'],
-            'longitude'    => $params['longitude'],
-            'latitude'     => $params['latitude'],
-            'language'     => $params['language'] ?? $defaultValue['language'],
-            'short_lang'   => $params['short_lang'] ?? $defaultValue['short_lang'],
-            'timezone'     => $params['timezone'] ?? $defaultValue['timezone']
+            'language'   => $userProfile->language ?? $defaultValue['language'],
+            'short_lang' => $userProfile->short_lang ?? $defaultValue['short_lang'],
+            'timezone'   => $userProfile->timezone ?? $defaultValue['timezone']
         ]);
 
         return $userProfile;
     }
 
     /**
-     * Получить данные пользователя
+     * Редактирование
      *
-     * @param array $get
-     * @return array
+     * @param User  $user
+     * @param array $params
+     * @return UserProfile
      * @throws BadRequestHttpException
      */
-    public function get(array $get): array
+    public function update(User $user, array $params): UserProfile
     {
-        ArrayHelper::validateRequestParams($get, ['user_id'], false);
+        $userProfile = $this->findUserProfileById($user->id);
 
-        $userApi = new UserApi();
-        $user = $userApi->findUserById($get['user_id']);
-
-        if (is_null($user)) {
-            throw new BadRequestHttpException(['user' => 'User not found']);
+        if (!is_null($userProfile)) {
+            throw new BadRequestHttpException([
+                'userProfile not found!'
+            ]);
         }
 
-        return $user->publicInfo;
+        $userProfile->saveModel($params);
+
+        return $userProfile;
     }
 
     /**
-     * @param User  $user
-     * @param array $post
-     * @return array
-     * @throws BadRequestHttpException
+     * Поиск пользователя
+     *
+     * @param int $id
+     * @return UserProfile|null
      */
-    public function updateDefaultUser(User $user, array $post): array
+    public function findUserProfileById(int $id): ?UserProfile
     {
-        $defaultUserForm = new DefaultUserForm($post);
-
-        if (!$defaultUserForm->validate()) {
-            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
-        }
-
-        return $user->publicInfo;
+        return UserProfile::findOne(['id' => $id]);
     }
 }

@@ -35,6 +35,9 @@ class m191014_175740_create_table_user_profile extends Migration
             'patronymic' => $this->string()
                 ->comment('Отчество'),
 
+            'avatar' => $this->string()
+                ->comment('Аватар'),
+
             'phone_number' => $this->string()
                 ->comment('Телефонный номер'),
 

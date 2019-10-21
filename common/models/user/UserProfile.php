@@ -14,12 +14,15 @@ use yii\db\ActiveQuery;
  * @property string $first_name   Имя
  * @property string $last_name    Фамилия
  * @property string $patronymic   Отчество
+ * @property string $avatar       Аватар
  * @property string $phone_number Телефоный номер
  * @property string $address      Адрес
  * @property int    $gender_id    Идентификатор пола
  * @property string $about        Описание бизнес аккаунта
  * @property int    $country_id   Идентификатор страны
  * @property int    $city_id      Идентификатор города
+ * @property bool   $is_closed    Профиль закрыт
+ * @property bool   $is_notice    Получать уведомления
  * @property string $longitude    Координаты: долгота
  * @property string $latitude     Координаты: широта
  * @property string $language     Язык
@@ -27,8 +30,6 @@ use yii\db\ActiveQuery;
  * @property string $timezone     Часовой пояс
  * @property string $created_at   Дата создания
  * @property string $updated_at   Дата обновления
- * @property bool   $is_closed    Профиль закрыт
- * @property bool   $is_notice    Получать уведомления
  * @property User   $user         Пользователь
  */
 class UserProfile extends BaseModel
@@ -56,6 +57,7 @@ class UserProfile extends BaseModel
                     'first_name',
                     'last_name',
                     'patronymic',
+                    'avatar',
                     'phone_number',
                     'address',
                     'about',
@@ -81,6 +83,7 @@ class UserProfile extends BaseModel
             'first_name'   => Yii::t('app', 'First Name'),
             'last_name'    => Yii::t('app', 'Last Name'),
             'patronymic'   => Yii::t('app', 'Patronymic'),
+            'avatar'       => Yii::t('app', 'Avatar'),
             'phone_number' => Yii::t('app', 'Phone Number'),
             'address'      => Yii::t('app', 'Address'),
             'gender_id'    => Yii::t('app', 'Gender ID'),

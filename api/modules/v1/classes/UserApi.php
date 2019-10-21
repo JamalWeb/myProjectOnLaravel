@@ -21,125 +21,6 @@ use Exception;
 class UserApi extends Api
 {
     /**
-     * Список гендерных принадлежностей
-     *
-     * @return array
-     */
-    public final function getGender(): array
-    {
-        return UserGender::find()->all();
-    }
-
-    /**
-     * Регистрация обычного пользователя
-     *
-     * @param array $post
-     * @return array
-     * @throws Exception
-     */
-    public final function registrationDefaultUser(array $post): array
-    {
-        $defaultUserForm = new DefaultUserForm($post);
-
-        if (!$defaultUserForm->validate()) {
-            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            $user = new User();
-            $user->saveModel([
-                'type_id'    => UserType::TYPE_DEFAULT_USER,
-                'role_id'    => UserRole::ROLE_DEFAULT_USER,
-                'email'      => $defaultUserForm->email,
-                'password'   => PasswordHelper::encrypt($defaultUserForm->password),
-                'status'     => User::STATUS_ACTIVE,
-                'created_ip' => Yii::$app->request->remoteIP,
-            ]);
-
-            $userProfileApi = new UserProfileApi();
-            $userProfileApi->create($user, [
-                'city_id'    => $defaultUserForm->city_id,
-                'country_id' => $defaultUserForm->country_id,
-                'first_name' => $defaultUserForm->first_name,
-                'last_name'  => $defaultUserForm->last_name,
-                'longitude'  => $defaultUserForm->longitude,
-                'latitude'   => $defaultUserForm->latitude,
-                'language'   => $defaultUserForm->language,
-                'short_lang' => $defaultUserForm->short_lang,
-                'timezone'   => $defaultUserForm->timezone
-            ]);
-
-            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
-            $userChildrenApi = new UserChildrenApi();
-            $userChildrenApi->add($user, $childrenList);
-
-            EmailSendler::registrationConfirmDefaultUser($user);
-
-            $transaction->commit();
-
-            return $user->publicInfo;
-        } catch (Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        }
-    }
-
-    /**
-     * Регистрация бизнес пользователя
-     *
-     * @param array $post
-     * @return array
-     * @throws BadRequestHttpException
-     * @throws Exception
-     */
-    public function registrationBusinessUser(array $post): array
-    {
-        $businessUserForm = new BusinessUserForm($post);
-
-        if (!$businessUserForm->validate()) {
-            throw new BadRequestHttpException($businessUserForm->getFirstErrors());
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            $user = new User();
-            $user->saveModel([
-                'type_id'    => UserType::TYPE_BUSINESS_USER,
-                'role_id'    => UserRole::ROLE_BUSINESS_USER,
-                'email'      => $businessUserForm->email,
-                'password'   => PasswordHelper::encrypt($businessUserForm->password),
-                'status'     => User::STATUS_ACTIVE,
-                'created_ip' => Yii::$app->request->remoteIP,
-            ]);
-
-            $userProfileApi = new UserProfileApi();
-            $userProfileApi->create($user, [
-                'first_name'   => $businessUserForm->first_name,
-                'phone_number' => $businessUserForm->phone_number,
-                'address'      => $businessUserForm->address,
-                'about'        => $businessUserForm->about,
-                'country_id'   => $businessUserForm->country_id,
-                'city_id'      => $businessUserForm->city_id,
-                'longitude'    => $businessUserForm->longitude,
-                'latitude'     => $businessUserForm->latitude,
-                'language'     => $businessUserForm->language,
-                'short_lang'   => $businessUserForm->short_lang,
-                'timezone'     => $businessUserForm->timezone
-            ]);
-
-            EmailSendler::registrationConfirmBusinessUser($user);
-
-            $transaction->commit();
-
-            return $user->publicInfo;
-        } catch (Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        }
-    }
-
-    /**
      * Авторизация
      *
      * @param array $post
@@ -204,6 +85,213 @@ class UserApi extends Api
             'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
             'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
         ];
+    }
+
+    /**
+     * Список гендерных принадлежностей
+     *
+     * @return array
+     */
+    public final function getGender(): array
+    {
+        return UserGender::find()->all();
+    }
+
+    /**
+     * Регистрация обычного пользователя
+     *
+     * @param array $post
+     * @return array
+     * @throws Exception
+     */
+    public final function createDefaultUser(array $post): array
+    {
+        $defaultUserForm = new DefaultUserForm($post);
+        $defaultUserForm->setScenario(DefaultUserForm::SCENARIO_CREATE);
+
+        if (!$defaultUserForm->validate()) {
+            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user = new User();
+            $user->saveModel([
+                'type_id'    => UserType::TYPE_DEFAULT_USER,
+                'role_id'    => UserRole::ROLE_DEFAULT_USER,
+                'email'      => $defaultUserForm->email,
+                'password'   => PasswordHelper::encrypt($defaultUserForm->password),
+                'status'     => User::STATUS_ACTIVE,
+                'created_ip' => Yii::$app->request->remoteIP,
+            ]);
+
+            $userProfileApi = new UserProfileApi();
+            $userProfileApi->create($user, [
+                'city_id'    => $defaultUserForm->city_id,
+                'country_id' => $defaultUserForm->country_id,
+                'first_name' => $defaultUserForm->first_name,
+                'last_name'  => $defaultUserForm->last_name,
+                'longitude'  => $defaultUserForm->longitude,
+                'latitude'   => $defaultUserForm->latitude,
+                'language'   => $defaultUserForm->language,
+                'short_lang' => $defaultUserForm->short_lang,
+                'timezone'   => $defaultUserForm->timezone
+            ]);
+
+            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
+            $userChildrenApi = new UserChildrenApi();
+            $userChildrenApi->add($user, $childrenList);
+
+            EmailSendler::registrationConfirmDefaultUser($user);
+
+            $transaction->commit();
+
+            return $user->publicInfo;
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Регистрация бизнес пользователя
+     *
+     * @param array $post
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws Exception
+     */
+    public function createBusinessUser(array $post): array
+    {
+        $businessUserForm = new BusinessUserForm($post);
+
+        if (!$businessUserForm->validate()) {
+            throw new BadRequestHttpException($businessUserForm->getFirstErrors());
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user = new User();
+            $user->saveModel([
+                'type_id'    => UserType::TYPE_BUSINESS_USER,
+                'role_id'    => UserRole::ROLE_BUSINESS_USER,
+                'email'      => $businessUserForm->email,
+                'password'   => PasswordHelper::encrypt($businessUserForm->password),
+                'status'     => User::STATUS_ACTIVE,
+                'created_ip' => Yii::$app->request->remoteIP,
+            ]);
+
+            $userProfileApi = new UserProfileApi();
+            $userProfileApi->create($user, [
+                'first_name'   => $businessUserForm->first_name,
+                'phone_number' => $businessUserForm->phone_number,
+                'address'      => $businessUserForm->address,
+                'about'        => $businessUserForm->about,
+                'country_id'   => $businessUserForm->country_id,
+                'city_id'      => $businessUserForm->city_id,
+                'longitude'    => $businessUserForm->longitude,
+                'latitude'     => $businessUserForm->latitude,
+                'language'     => $businessUserForm->language,
+                'short_lang'   => $businessUserForm->short_lang,
+                'timezone'     => $businessUserForm->timezone
+            ]);
+
+            EmailSendler::registrationConfirmBusinessUser($user);
+
+            $transaction->commit();
+
+            return $user->publicInfo;
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Редактирование
+     *
+     * @param User  $user
+     * @param array $post
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws Exception
+     */
+    public function updateDefaultUser(User $user, array $post): array
+    {
+        // TODO добить редактирование аккаунта
+        $post['is_closed'] = filter_var($post['is_closed'], FILTER_VALIDATE_BOOLEAN);
+        $post['is_notice'] = filter_var($post['is_notice'], FILTER_VALIDATE_BOOLEAN);
+
+        $defaultUserForm = new DefaultUserForm($post);
+//        $defaultUserForm->setScenario(DefaultUserForm::SCENARIO_UPDATE);
+
+        if (!$defaultUserForm->validate()) {
+            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            if (!is_null($defaultUserForm->email)) {
+                $emailExists = User::find()
+                    ->where([
+                        'AND',
+                        ['<>', 'id', $user->id],
+                        ['email' => $defaultUserForm->email],
+                    ])
+                    ->exists();
+
+                if (!$emailExists) {
+                    $user->saveModel(['email' => $defaultUserForm->email]);
+                }
+            }
+
+            $userProfileApi = new UserProfileApi();
+            $userProfileApi->update($user, [
+                'first_name' => $defaultUserForm->first_name,
+                'last_name'  => $defaultUserForm->last_name,
+                'avatar'     => $defaultUserForm->avatar,
+                'country_id' => $defaultUserForm->country_id,
+                'city_id'    => $defaultUserForm->city_id,
+                'is_closed'  => $defaultUserForm->is_closed,
+                'is_notice'  => $defaultUserForm->is_notice,
+                'longitude'  => $defaultUserForm->longitude,
+                'latitude'   => $defaultUserForm->latitude,
+                'language'   => $defaultUserForm->language,
+                'short_lang' => $defaultUserForm->short_lang,
+                'timezone'   => $defaultUserForm->timezone
+            ]);
+
+//            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
+//            $userChildrenApi = new UserChildrenApi();
+//            $userChildrenApi->add($user, $childrenList);
+
+            $transaction->commit();
+
+            return $user->publicInfo;
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Данные пользователя
+     *
+     * @param array $get
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function get(array $get): array
+    {
+        ArrayHelper::validateRequestParams($get, ['user_id'], false);
+
+        $user = $this->findUserById($get['user_id']);
+
+        if (is_null($user)) {
+            throw new BadRequestHttpException(['user' => 'User not found']);
+        }
+
+        return $user->publicInfo;
     }
 
     /**
