@@ -147,7 +147,13 @@ class UserProfileController extends BaseController
      *               "gender_id": 2,
      *             }
      *           }
-     *         )
+     *         ),
+     *         required={
+     *             "email",
+     *             "password",
+     *             "city_id",
+     *             "first_name"
+     *         }
      *       )
      *     )
      *   ),

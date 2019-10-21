@@ -15,7 +15,7 @@ use yii\db\ActiveQuery;
  * @property int    $id           Идентификатор токена
  * @property int    $user_id      Идентификатор пользователя
  * @property int    $type         Тип токена
- * @property string $assess_token Токен доступа
+ * @property string $access_token Токен доступа
  * @property string $expired_at   Срок действия
  * @property string $created_at   Дата создания
  * @property string $updated_at   Дата обновления
@@ -86,9 +86,9 @@ class UserToken extends BaseModel
     /**
      * Генерация токена
      *
-     * @param User $user
-     * @param int  $type
-     * @param bool $expiring
+     * @param User   $user
+     * @param int    $type
+     * @param string $expiring
      * @throws BadRequestHttpException
      * @throws Exception
      */

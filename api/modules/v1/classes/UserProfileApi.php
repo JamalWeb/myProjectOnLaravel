@@ -53,9 +53,7 @@ class UserProfileApi extends Api
      */
     public function get(array $get): array
     {
-        ArrayHelper::validateRequestParams($get, [
-            'user_id'
-        ], false);
+        ArrayHelper::validateRequestParams($get, ['user_id'], false);
 
         $userApi = new UserApi();
         $user = $userApi->findUserById($get['user_id']);

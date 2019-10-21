@@ -27,6 +27,8 @@ use yii\db\ActiveQuery;
  * @property string $timezone     Часовой пояс
  * @property string $created_at   Дата создания
  * @property string $updated_at   Дата обновления
+ * @property bool   $is_closed    Профиль закрыт
+ * @property bool   $is_notice    Получать уведомления
  * @property User   $user         Пользователь
  */
 class UserProfile extends BaseModel
@@ -64,6 +66,7 @@ class UserProfile extends BaseModel
                     'timezone'
                 ], 'string', 'max' => 255
             ],
+            [['is_closed', 'is_notice'], 'boolean']
         ];
     }
 
@@ -84,6 +87,8 @@ class UserProfile extends BaseModel
             'about'        => Yii::t('app', 'About'),
             'country_id'   => Yii::t('app', 'Country ID'),
             'city_id'      => Yii::t('app', 'City ID'),
+            'is_closed'    => Yii::t('app', 'Is Closed'),
+            'is_notice'    => Yii::t('app', 'Is Notice'),
             'longitude'    => Yii::t('app', 'Longitude'),
             'latitude'     => Yii::t('app', 'Latitude'),
             'language'     => Yii::t('app', 'Language'),

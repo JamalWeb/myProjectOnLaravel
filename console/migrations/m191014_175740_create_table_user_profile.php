@@ -54,6 +54,14 @@ class m191014_175740_create_table_user_profile extends Migration
                 ->notNull()
                 ->comment('Идентификатор города'),
 
+            'is_closed' => $this->boolean()
+                ->defaultValue(false)
+                ->comment('Профиль закрыт'),
+
+            'is_notice' => $this->boolean()
+                ->defaultValue(false)
+                ->comment('Получать уведомления'),
+
             'longitude' => $this->string()
                 ->comment('Координаты: долгота'),
 

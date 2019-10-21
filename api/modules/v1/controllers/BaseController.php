@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers;
 use Yii;
 use api\modules\v1\classes\Api;
 use common\models\user\User;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\HeaderCollection;
 
@@ -54,21 +55,33 @@ class BaseController extends Controller
     /** @var HeaderCollection */
     protected $headers;
 
+    /**
+     * @return void
+     */
     public function init(): void
     {
         if (!is_null($this->modelName)) {
             $this->api = new $this->modelName();
         }
 
-        $this->requestInit();
-    }
-
-    protected function requestInit(): void
-    {
         $request = Yii::$app->request;
 
         $this->get = $request->get();
         $this->post = $request->post();
         $this->headers = $request->headers;
+    }
+
+    /**
+     * @param $action
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function beforeAction($action): bool
+    {
+        $parent = parent::beforeAction($action);
+
+        $this->user = Yii::$app->user->identity;
+
+        return $parent;
     }
 }

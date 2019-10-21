@@ -3,6 +3,7 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\models\form\BusinessUserForm;
+use common\components\PasswordHelper;
 use common\models\user\UserRole;
 use Yii;
 use api\modules\v1\models\error\BadRequestHttpException;
@@ -44,18 +45,17 @@ class UserApi extends Api
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
 
-        $post = [
-            'type_id'  => UserType::TYPE_DEFAULT_USER,
-            'role_id'  => UserRole::ROLE_DEFAULT_USER,
-            'email'    => $defaultUserForm->email,
-            'password' => $defaultUserForm->password,
-        ];
-
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-            $user->prepareRegistration($post);
-            $user->saveModel();
+            $user->saveModel([
+                'type_id'    => UserType::TYPE_DEFAULT_USER,
+                'role_id'    => UserRole::ROLE_DEFAULT_USER,
+                'email'      => $defaultUserForm->email,
+                'password'   => PasswordHelper::encrypt($defaultUserForm->password),
+                'status'     => User::STATUS_ACTIVE,
+                'created_ip' => Yii::$app->request->remoteIP,
+            ]);
 
             $userProfileApi = new UserProfileApi();
             $userProfileApi->create($user, [
@@ -101,18 +101,17 @@ class UserApi extends Api
             throw new BadRequestHttpException($businessUserForm->getFirstErrors());
         }
 
-        $post = [
-            'type_id'  => UserType::TYPE_BUSINESS_USER,
-            'role_id'  => UserRole::ROLE_BUSINESS_USER,
-            'email'    => $businessUserForm->email,
-            'password' => $businessUserForm->password,
-        ];
-
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-            $user->prepareRegistration($post);
-            $user->saveModel();
+            $user->saveModel([
+                'type_id'    => UserType::TYPE_BUSINESS_USER,
+                'role_id'    => UserRole::ROLE_BUSINESS_USER,
+                'email'      => $businessUserForm->email,
+                'password'   => PasswordHelper::encrypt($businessUserForm->password),
+                'status'     => User::STATUS_ACTIVE,
+                'created_ip' => Yii::$app->request->remoteIP,
+            ]);
 
             $userProfileApi = new UserProfileApi();
             $userProfileApi->create($user, [

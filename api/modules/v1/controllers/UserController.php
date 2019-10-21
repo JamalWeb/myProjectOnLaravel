@@ -135,7 +135,12 @@ class UserController extends BaseController
      *             }
      *           }
      *         ),
-     *         required={"email", "password"}
+     *         required={
+     *             "email",
+     *             "password",
+     *             "city_id",
+     *             "first_name"
+     *         }
      *       )
      *     )
      *   ),
