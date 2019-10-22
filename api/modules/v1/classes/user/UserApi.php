@@ -41,7 +41,7 @@ class UserApi extends Api
         try {
             /** @var User $user */
             $user = $loginForm->authenticate();
-            UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, '+ 1 day');
+            UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, null, '+ 1 day');
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
@@ -79,7 +79,7 @@ class UserApi extends Api
         }
 
         $user = $userToken->user;
-        UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, '+ 1 day');
+        UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, null, '+ 1 day');
 
         return [
             'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,

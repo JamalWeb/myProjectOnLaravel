@@ -1,10 +1,9 @@
 <?php
 /** @noinspection PhpUnused */
 
-namespace api\modules\v1\controllers\user;
+namespace api\modules\v1\controllers;
 
 use api\modules\v1\classes\user\UserApi;
-use api\modules\v1\controllers\BaseController;
 use api\modules\v1\models\error\BadRequestHttpException;
 use Exception;
 
@@ -340,13 +339,13 @@ class UserController extends BaseController
      *           example="Бомбочка"
      *         ),
      *         @OA\Property(
-     *           property="country",
+     *           property="country_id",
      *           description="Идентификатор страны",
      *           type="integer",
      *           example=1
      *         ),
      *         @OA\Property(
-     *           property="city",
+     *           property="city_id",
      *           description="Идентификатор города",
      *           type="integer",
      *           example=1
@@ -427,11 +426,11 @@ class UserController extends BaseController
      *                 "phone_number": "79886337711",
      *                 "address": "г.Москва ул.Гурьянова д.5 кв.129",
      *                 "about": "Бомбочка",
-     *                 "country_id": {
+     *                 "country": {
      *                     "id": 1,
      *                     "name": "Russia"
      *                 },
-     *                 "city_id": {
+     *                 "city": {
      *                     "id": 1,
      *                     "name": "Moscow"
      *                 },

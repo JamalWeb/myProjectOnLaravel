@@ -16,6 +16,7 @@ use yii\db\ActiveQuery;
  * @property int    $user_id      Идентификатор пользователя
  * @property int    $type         Тип токена
  * @property string $access_token Токен доступа
+ * @property string $data         Временное хранение данных
  * @property string $expired_at   Срок действия
  * @property string $created_at   Дата создания
  * @property string $updated_at   Дата обновления
@@ -54,6 +55,7 @@ class UserToken extends BaseModel
             [['user_id', 'type', 'access_token'], 'required'],
             [['user_id', 'type'], 'default', 'value' => null],
             [['user_id', 'type'], 'integer'],
+            [['data'], 'string'],
             [['expired_at', 'created_at', 'updated_at'], 'safe'],
             [['access_token'], 'string', 'max' => 255],
         ];
@@ -69,6 +71,7 @@ class UserToken extends BaseModel
             'user_id'      => Yii::t('app', 'User ID'),
             'type'         => Yii::t('app', 'Type'),
             'access_token' => Yii::t('app', 'Access token'),
+            'data'         => Yii::t('app', 'Data'),
             'expired_at'   => Yii::t('app', 'Expired At'),
             'created_at'   => Yii::t('app', 'Created At'),
             'updated_at'   => Yii::t('app', 'Updated At'),
@@ -86,37 +89,40 @@ class UserToken extends BaseModel
     /**
      * Генерация токена
      *
-     * @param User   $user
-     * @param int    $type
-     * @param string $expiring
+     * @param User        $user
+     * @param int         $type
+     * @param string|null $data
+     * @param string      $expiring
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public static function generateAccessToken(User $user, int $type, string $expiring = ''): void
+    public static function generateAccessToken(User $user, int $type, ?string $data = null, string $expiring = ''): void
     {
         self::checkTypeAccessToken($type);
 
-        $dataAccessToken = [
+        $userToken = self::findOne([
             'user_id' => $user->id,
             'type'    => $type
-        ];
-
-        $userToken = self::findOne($dataAccessToken);
+        ]);
 
         if (is_null($userToken)) {
-            $userToken = new UserToken();
+            $userToken = new UserToken([
+                'user_id' => $user->id,
+                'type'    => $type,
+                'data'    => $data
+            ]);
         }
 
-        $dataAccessToken['access_token'] = Yii::$app->security->generateRandomString(34);
+        $userToken->access_token = Yii::$app->security->generateRandomString(34);
 
         if (!empty($expiring)) {
-            $dataAccessToken['expired_at'] = DateHelper::getTimestamp($expiring);
+            $userToken->expired_at = DateHelper::getTimestamp($expiring);
         }
 
-        $userToken->saveModel($dataAccessToken);
+        $userToken->saveModel();
 
         if ($type === self::TYPE_AUTH) {
-            self::generateAccessToken($user, self::TYPE_RESET_AUTH, '');
+            self::generateAccessToken($user, self::TYPE_RESET_AUTH, null, '');
         }
     }
 

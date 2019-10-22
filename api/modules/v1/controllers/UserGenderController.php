@@ -1,9 +1,8 @@
 <?php
 
-namespace api\modules\v1\controllers\user;
+namespace api\modules\v1\controllers;
 
 use api\modules\v1\classes\user\UserGenderApi;
-use api\modules\v1\controllers\BaseController;
 
 /**
  * @property UserGenderApi $api

@@ -33,6 +33,9 @@ class m191014_181205_create_table_user_token extends Migration
                 ->notNull()
                 ->comment('Токен доступа'),
 
+            'data' => $this->text()
+                ->comment('Временное хранение данных'),
+
             'expired_at' => $this->timestamp()
                 ->comment('Срок действия'),
 
