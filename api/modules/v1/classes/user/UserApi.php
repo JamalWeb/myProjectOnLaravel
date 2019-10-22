@@ -1,7 +1,8 @@
 <?php
 
-namespace api\modules\v1\classes;
+namespace api\modules\v1\classes\user;
 
+use api\modules\v1\classes\Api;
 use api\modules\v1\models\form\BusinessUserForm;
 use common\components\PasswordHelper;
 use common\models\user\UserRole;
@@ -12,7 +13,6 @@ use api\modules\v1\models\form\DefaultUserForm;
 use common\components\ArrayHelper;
 use common\components\EmailSendler;
 use common\models\user\User;
-use common\models\user\UserGender;
 use common\models\user\UserToken;
 use common\models\user\UserType;
 use yii\web\HeaderCollection;
@@ -85,16 +85,6 @@ class UserApi extends Api
             'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
             'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
         ];
-    }
-
-    /**
-     * Список гендерных принадлежностей
-     *
-     * @return array
-     */
-    public final function getGender(): array
-    {
-        return UserGender::find()->all();
     }
 
     /**
@@ -287,10 +277,6 @@ class UserApi extends Api
 
         $user = $this->findUserById($get['user_id']);
 
-        if (is_null($user)) {
-            throw new BadRequestHttpException(['user' => 'User not found']);
-        }
-
         return $user->publicInfo;
     }
 
@@ -299,14 +285,21 @@ class UserApi extends Api
      *
      * @param int $id
      * @return User|null
+     * @throws BadRequestHttpException
      */
     public function findUserById(int $id): ?User
     {
-        return User::findOne([
+        $user = User::findOne([
             'id'        => $id,
             'is_banned' => false,
             'status'    => User::STATUS_ACTIVE,
             'type_id'   => UserType::$validTypeSearch
         ]);
+
+        if (is_null($user)) {
+            throw new BadRequestHttpException(['user' => 'User not found']);
+        }
+
+        return $user;
     }
 }

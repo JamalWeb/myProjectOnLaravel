@@ -25,6 +25,7 @@ class DocController extends Controller
                     Yii::getAlias('@api/modules/v1/controllers/BaseController.php'),
                     Yii::getAlias('@api/modules/v1/controllers/UserController.php'),
                     Yii::getAlias('@api/modules/v1/controllers/UserProfileController.php'),
+                    Yii::getAlias('@api/modules/v1/controllers/UserGenderController.php'),
                 ],
             ],
         ];

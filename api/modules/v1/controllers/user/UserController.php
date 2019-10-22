@@ -1,9 +1,10 @@
 <?php
 /** @noinspection PhpUnused */
 
-namespace api\modules\v1\controllers;
+namespace api\modules\v1\controllers\user;
 
-use api\modules\v1\classes\UserApi;
+use api\modules\v1\classes\user\UserApi;
+use api\modules\v1\controllers\BaseController;
 use api\modules\v1\models\error\BadRequestHttpException;
 use Exception;
 
@@ -108,38 +109,6 @@ class UserController extends BaseController
     public function actionResetAuthToken()
     {
         return $this->api->resetAuthToken($this->headers);
-    }
-
-    /**
-     * @OA\Get(
-     *   path="/user/get-genders",
-     *   summary="Список гендерных принадлежностей",
-     *   tags={"Пользователь | User"},
-     *   @OA\Response(
-     *     response=200,
-     *     description="success",
-     *     @OA\MediaType(
-     *       mediaType="application/json",
-     *       @OA\Schema(
-     *         type="object",
-     *         example={
-     *           {
-     *              "id": 1,
-     *              "name": "Male"
-     *           },
-     *           {
-     *              "id": 2,
-     *              "name": "Female"
-     *           }
-     *         }
-     *       ),
-     *     ),
-     *   ),
-     * )
-     */
-    public function actionGetGenders(): array
-    {
-        return $this->api->getGender();
     }
 
     /**
