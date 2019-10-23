@@ -33,7 +33,7 @@ use yii\web\IdentityInterface;
  * @property string         $created_at     Дата создания
  * @property string         $authKey
  * @property string         $updated_at     Дата обновления
- * @property array          $publicInfo    Информация о пользователи
+ * @property array          $publicInfo     Информация о пользователи
  * @property UserType       $type           Тип
  * @property UserRole       $role           Роль
  * @property UserProfile    $profile        Профиль
@@ -131,7 +131,11 @@ class User extends BaseModel implements IdentityInterface
      */
     public static function findIdentity($id): ?self
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne([
+            'id'        => $id,
+            'status'    => self::STATUS_ACTIVE,
+            'is_banned' => false
+        ]);
     }
 
     /**

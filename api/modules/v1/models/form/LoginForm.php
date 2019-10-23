@@ -78,7 +78,7 @@ class LoginForm extends Model
         if (is_null($this->user)) {
             $this->handleFailure();
             throw new UnauthorizedHttpException([
-                'email' => Yii::t('user', 'Email not found')
+                'email' => Yii::t('app', 'Email not found')
             ]);
         }
     }
@@ -126,13 +126,13 @@ class LoginForm extends Model
         if (!$this->user->validatePassword($this->password)) {
             $this->handleFailure();
             throw new UnauthorizedHttpException([
-                'password' => Yii::t('user', 'Incorrect password')
+                'password' => Yii::t('app', 'Incorrect password')
             ]);
         }
 
         if ($this->user->is_banned) {
             throw new UnauthorizedHttpException([
-                'email' => Yii::t('user', 'User is banned - {banReason}', [
+                'email' => Yii::t('app', 'User is banned - {banReason}', [
                     'banReason' => $this->user->banned_reason,
                 ])
             ]);

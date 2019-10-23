@@ -25,13 +25,13 @@ class UserController extends BaseController
      *       @OA\Schema(
      *         @OA\Property(
      *           property="email",
-     *           type="string",
+     *           type="email",
      *           example="neo@neo.com"
      *         ),
      *         @OA\Property(
      *           property="password",
      *           type="string",
-     *           example="neo"
+     *           example="vorchami"
      *         ),
      *         required={"email", "password"}
      *       )
@@ -290,7 +290,7 @@ class UserController extends BaseController
      */
     public function actionRegistrationDefaultUser(): array
     {
-        return $this->api->createDefaultUser($this->post);
+        return $this->api->registrationDefaultUser($this->post);
     }
 
     /**
@@ -455,7 +455,7 @@ class UserController extends BaseController
      */
     public function actionRegistrationBusinessUser()
     {
-        return $this->api->createBusinessUser($this->post);
+        return $this->api->registrationBusinessUser($this->post);
     }
 
     /**
@@ -501,14 +501,16 @@ class UserController extends BaseController
      *         @OA\Property(
      *           property="is_closed",
      *           description="Профиль закрыт",
-     *           type="boolean",
-     *           example="false"
+     *           type="integer",
+     *           enum={0, 1},
+     *           example="0"
      *         ),
      *         @OA\Property(
      *           property="is_notice",
      *           description="Пуш уведомления",
-     *           type="boolean",
-     *           example=0
+     *           type="integer",
+     *           enum={0, 1},
+     *           example="0"
      *         ),
      *         @OA\Property(
      *           property="longitude",

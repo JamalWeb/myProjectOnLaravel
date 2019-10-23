@@ -58,4 +58,8 @@ class EmailSendler
 //            ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
 //            ->send();
     }
+
+    public static function confirmChangeEmail(User $user, string $email): void
+    {
+    }
 }

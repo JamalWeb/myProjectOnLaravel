@@ -17,6 +17,7 @@ use common\models\user\UserToken;
 use common\models\user\UserType;
 use yii\web\HeaderCollection;
 use Exception;
+use yii\web\UploadedFile;
 
 class UserApi extends Api
 {
@@ -94,7 +95,7 @@ class UserApi extends Api
      * @return array
      * @throws Exception
      */
-    public final function createDefaultUser(array $post): array
+    public final function registrationDefaultUser(array $post): array
     {
         $defaultUserForm = new DefaultUserForm($post);
         $defaultUserForm->setScenario(DefaultUserForm::SCENARIO_CREATE);
@@ -151,7 +152,7 @@ class UserApi extends Api
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public function createBusinessUser(array $post): array
+    public function registrationBusinessUser(array $post): array
     {
         $businessUserForm = new BusinessUserForm($post);
 
@@ -208,60 +209,60 @@ class UserApi extends Api
      */
     public function updateDefaultUser(User $user, array $post): array
     {
-        // TODO добить редактирование аккаунта
-        $post['is_closed'] = filter_var($post['is_closed'], FILTER_VALIDATE_BOOLEAN);
-        $post['is_notice'] = filter_var($post['is_notice'], FILTER_VALIDATE_BOOLEAN);
-
         $defaultUserForm = new DefaultUserForm($post);
 //        $defaultUserForm->setScenario(DefaultUserForm::SCENARIO_UPDATE);
 
-        if (!$defaultUserForm->validate()) {
+        if ($defaultUserForm->validate()) {
+            $defaultUserForm->avatar = UploadedFile::getInstanceByName('avatar');
+            $defaultUserForm->uploadAvatar($user);
+        } else {
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
 
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            if (!is_null($defaultUserForm->email)) {
-                $emailExists = User::find()
-                    ->where([
-                        'AND',
-                        ['<>', 'id', $user->id],
-                        ['email' => $defaultUserForm->email],
-                    ])
-                    ->exists();
-
-                if (!$emailExists) {
-                    $user->saveModel(['email' => $defaultUserForm->email]);
-                }
-            }
-
-            $userProfileApi = new UserProfileApi();
-            $userProfileApi->update($user, [
-                'first_name' => $defaultUserForm->first_name,
-                'last_name'  => $defaultUserForm->last_name,
-                'avatar'     => $defaultUserForm->avatar,
-                'country_id' => $defaultUserForm->country_id,
-                'city_id'    => $defaultUserForm->city_id,
-                'is_closed'  => $defaultUserForm->is_closed,
-                'is_notice'  => $defaultUserForm->is_notice,
-                'longitude'  => $defaultUserForm->longitude,
-                'latitude'   => $defaultUserForm->latitude,
-                'language'   => $defaultUserForm->language,
-                'short_lang' => $defaultUserForm->short_lang,
-                'timezone'   => $defaultUserForm->timezone
-            ]);
-
+//        $transaction = Yii::$app->db->beginTransaction();
+//        try {
+//            if (!is_null($defaultUserForm->email)) {
+//                $emailExists = User::find()
+//                    ->where([
+//                        'AND',
+//                        ['<>', 'id', $user->id],
+//                        ['email' => $defaultUserForm->email],
+//                    ])
+//                    ->exists();
+//
+//                if (!$emailExists) {
+//                    EmailSendler::confirmChangeEmail($user, $defaultUserForm->email);
+//                }
+//            }
+//
+//            $userProfileApi = new UserProfileApi();
+//            $userProfileApi->update($user, [
+//                'first_name' => $defaultUserForm->first_name,
+//                'last_name'  => $defaultUserForm->last_name,
+//                'avatar'     => $defaultUserForm->avatar,
+//                'country_id' => $defaultUserForm->country_id,
+//                'city_id'    => $defaultUserForm->city_id,
+//                'is_closed'  => $defaultUserForm->is_closed,
+//                'is_notice'  => $defaultUserForm->is_notice,
+//                'longitude'  => $defaultUserForm->longitude,
+//                'latitude'   => $defaultUserForm->latitude,
+//                'language'   => $defaultUserForm->language,
+//                'short_lang' => $defaultUserForm->short_lang,
+//                'timezone'   => $defaultUserForm->timezone
+//            ]);
+//
 //            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
 //            $userChildrenApi = new UserChildrenApi();
 //            $userChildrenApi->add($user, $childrenList);
-
-            $transaction->commit();
-
-            return $user->publicInfo;
-        } catch (Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        }
+//
+//            $transaction->commit();
+//
+//            return $user->publicInfo;
+//        } catch (Exception $e) {
+//            $transaction->rollBack();
+//            throw $e;
+//        }
+        return [];
     }
 
     /**
@@ -284,16 +285,16 @@ class UserApi extends Api
      * Поиск пользователя
      *
      * @param int $id
-     * @return User|null
+     * @return User
      * @throws BadRequestHttpException
      */
-    public function findUserById(int $id): ?User
+    public function findUserById(int $id): User
     {
         $user = User::findOne([
             'id'        => $id,
-            'is_banned' => false,
+            'type_id'   => UserType::$validTypeSearch,
             'status'    => User::STATUS_ACTIVE,
-            'type_id'   => UserType::$validTypeSearch
+            'is_banned' => false
         ]);
 
         if (is_null($user)) {

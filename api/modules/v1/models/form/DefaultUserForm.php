@@ -2,28 +2,30 @@
 
 namespace api\modules\v1\models\form;
 
+use api\modules\v1\models\error\BadRequestHttpException;
 use common\models\user\User;
 use Yii;
 use yii\base\Model;
+use yii\web\UploadedFile;
 
 /**
  * Class UserForm
  *
- * @property string  $email      Email
- * @property string  $password   Пароль
- * @property string  $first_name Имя
- * @property string  $last_name  Фамилия
- * @property string  $avatar     Аватар
- * @property integer $city_id    Идентификатор города
- * @property bool    $is_closed  Профиль закрыт
- * @property bool    $is_notice  Получать уведомления
- * @property integer $country_id Идентификатор страны
- * @property float   $longitude  Координаты: Широта
- * @property float   $latitude   Координаты: Долгота
- * @property string  $language   Язык
- * @property string  $short_lang Код языка
- * @property string  $timezone   Часовой пояс
- * @property string  $children   Список детей
+ * @property string       $email      Email
+ * @property string       $password   Пароль
+ * @property string       $first_name Имя
+ * @property string       $last_name  Фамилия
+ * @property UploadedFile $avatar     Аватар
+ * @property integer      $city_id    Идентификатор города
+ * @property bool         $is_closed  Профиль закрыт
+ * @property bool         $is_notice  Получать уведомления
+ * @property integer      $country_id Идентификатор страны
+ * @property float        $longitude  Координаты: Широта
+ * @property float        $latitude   Координаты: Долгота
+ * @property string       $language   Язык
+ * @property string       $short_lang Код языка
+ * @property string       $timezone   Часовой пояс
+ * @property string       $children   Список детей
  */
 class DefaultUserForm extends Model
 {
@@ -34,7 +36,6 @@ class DefaultUserForm extends Model
     public $password;
     public $first_name;
     public $last_name;
-    public $avatar;
     public $country_id;
     public $city_id;
     public $is_closed;
@@ -47,6 +48,11 @@ class DefaultUserForm extends Model
     public $children;
 
     /**
+     * @var UploadedFile
+     */
+    public $avatar;
+
+    /**
      * {@inheritDoc}
      */
     public function rules()
@@ -55,7 +61,7 @@ class DefaultUserForm extends Model
             [['city_id', 'first_name'], 'required'],
             [['email', 'password'], 'required', 'on' => self::SCENARIO_CREATE],
             [['city_id', 'country_id'], 'integer'],
-            [['first_name', 'last_name', 'avatar', 'email', 'password', 'children', 'language', 'short_lang', 'timezone'], 'string'],
+            [['first_name', 'last_name', 'email', 'password', 'children', 'language', 'short_lang', 'timezone'], 'string'],
             [['email'], 'email'],
             [
                 ['email'], function ($attribute) {
@@ -67,6 +73,15 @@ class DefaultUserForm extends Model
             ],
             [['password'], 'string', 'min' => 6, 'max' => 20],
             [['longitude', 'latitude'], 'number'],
+            [
+                ['avatar'],
+                'image',
+                'skipOnEmpty' => true,
+                'extensions'  => 'png, jpg, jpeg',
+                'maxWidth'    => 500,
+                'maxHeight'   => 500,
+                'maxSize'     => 5120 * 1024
+            ],
             [['is_closed', 'is_notice'], 'boolean']
         ];
     }
@@ -78,7 +93,7 @@ class DefaultUserForm extends Model
             'password'   => Yii::t('api', 'password'),
             'first_name' => Yii::t('api', 'first_name'),
             'last_name'  => Yii::t('api', 'last_name'),
-            'avatar'     => Yii::t('api', 'Avatar'),
+            'avatar'     => Yii::t('api', 'avatar'),
             'country_id' => Yii::t('api', 'country_id'),
             'city_id'    => Yii::t('api', 'city_id'),
             'is_closed'  => Yii::t('app', 'Is Closed'),
@@ -90,5 +105,22 @@ class DefaultUserForm extends Model
             'short_lang' => Yii::t('api', 'short_lang'),
             'timezone'   => Yii::t('api', 'timezone'),
         ];
+    }
+
+    /**
+     * Загрузка аватара
+     *
+     * @param User $user
+     * @throws BadRequestHttpException
+     */
+    public function uploadAvatar(User $user): void
+    {
+        if (!is_null($this->avatar)) {
+            if (!$this->validate('avatar')) {
+                throw new BadRequestHttpException($this->getFirstErrors());
+            }
+            // todo добить загрузку аватарки
+            $this->avatar->saveAs('../upload/avatars/' . $this->avatar->baseName . '.' . $this->avatar->extension);
+        }
     }
 }
