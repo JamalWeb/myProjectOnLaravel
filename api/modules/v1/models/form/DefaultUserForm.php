@@ -2,10 +2,8 @@
 
 namespace api\modules\v1\models\form;
 
-use api\modules\v1\models\error\BadRequestHttpException;
+use api\modules\v1\models\form\base\AbstractUserForm;
 use common\models\user\User;
-use Yii;
-use yii\base\Model;
 use yii\web\UploadedFile;
 
 /**
@@ -27,11 +25,8 @@ use yii\web\UploadedFile;
  * @property string       $timezone   Часовой пояс
  * @property string       $children   Список детей
  */
-class DefaultUserForm extends Model
+class DefaultUserForm extends AbstractUserForm
 {
-    const SCENARIO_CREATE = 'create';
-    const SCENARIO_UPDATE = 'update';
-
     public $email;
     public $password;
     public $first_name;
@@ -46,11 +41,6 @@ class DefaultUserForm extends Model
     public $short_lang;
     public $timezone;
     public $children;
-
-    /**
-     * @var UploadedFile
-     */
-    public $avatar;
 
     /**
      * {@inheritDoc}
@@ -84,43 +74,5 @@ class DefaultUserForm extends Model
             ],
             [['is_closed', 'is_notice'], 'boolean']
         ];
-    }
-
-    public function attributeLabels()
-    {
-        return [
-            'email'      => Yii::t('api', 'email'),
-            'password'   => Yii::t('api', 'password'),
-            'first_name' => Yii::t('api', 'first_name'),
-            'last_name'  => Yii::t('api', 'last_name'),
-            'avatar'     => Yii::t('api', 'avatar'),
-            'country_id' => Yii::t('api', 'country_id'),
-            'city_id'    => Yii::t('api', 'city_id'),
-            'is_closed'  => Yii::t('app', 'Is Closed'),
-            'is_notice'  => Yii::t('app', 'Is Notice'),
-            'children'   => Yii::t('api', 'children'),
-            'longitude'  => Yii::t('api', 'longitude'),
-            'latitude'   => Yii::t('api', 'latitude'),
-            'language'   => Yii::t('api', 'language'),
-            'short_lang' => Yii::t('api', 'short_lang'),
-            'timezone'   => Yii::t('api', 'timezone'),
-        ];
-    }
-
-    /**
-     * Загрузка аватара
-     *
-     * @param User $user
-     * @throws BadRequestHttpException
-     */
-    public function uploadAvatar(User $user): void
-    {
-        if (!is_null($this->avatar)) {
-            if (!$this->validate('avatar')) {
-                throw new BadRequestHttpException($this->getFirstErrors());
-            }
-            // todo добить загрузку аватарки
-            $this->avatar->saveAs('../upload/avatars/' . $this->avatar->baseName . '.' . $this->avatar->extension);
-        }
     }
 }

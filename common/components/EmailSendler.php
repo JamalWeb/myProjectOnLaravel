@@ -4,11 +4,13 @@ namespace common\components;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\models\user\User;
-use common\models\user\UserToken;
-use Yii;
 use yii\base\Exception;
-use yii\helpers\Html;
 
+/**
+ * Class EmailSendler
+ *
+ * @package common\components
+ */
 class EmailSendler
 {
     /**

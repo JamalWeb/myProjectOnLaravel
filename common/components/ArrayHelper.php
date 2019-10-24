@@ -7,6 +7,11 @@ use Exception;
 use Generator;
 use Yii;
 
+/**
+ * Class ArrayHelper
+ *
+ * @package common\components
+ */
 class ArrayHelper extends \yii\helpers\ArrayHelper
 {
     /**

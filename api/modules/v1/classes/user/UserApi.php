@@ -3,6 +3,7 @@
 namespace api\modules\v1\classes\user;
 
 use api\modules\v1\classes\Api;
+use api\modules\v1\models\form\base\AbstractUserForm;
 use api\modules\v1\models\form\BusinessUserForm;
 use common\components\PasswordHelper;
 use common\models\user\UserRole;
@@ -98,7 +99,7 @@ class UserApi extends Api
     public final function registrationDefaultUser(array $post): array
     {
         $defaultUserForm = new DefaultUserForm($post);
-        $defaultUserForm->setScenario(DefaultUserForm::SCENARIO_CREATE);
+        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_CREATE);
 
         if (!$defaultUserForm->validate()) {
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
@@ -210,10 +211,10 @@ class UserApi extends Api
     public function updateDefaultUser(User $user, array $post): array
     {
         $defaultUserForm = new DefaultUserForm($post);
-//        $defaultUserForm->setScenario(DefaultUserForm::SCENARIO_UPDATE);
+//        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_UPDATE);
 
+        $defaultUserForm->avatar = UploadedFile::getInstanceByName('avatar');
         if ($defaultUserForm->validate()) {
-            $defaultUserForm->avatar = UploadedFile::getInstanceByName('avatar');
             $defaultUserForm->uploadAvatar($user);
         } else {
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
