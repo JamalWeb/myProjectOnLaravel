@@ -7,7 +7,7 @@ return [
         'db'     => [
             'class'               => 'yii\db\Connection',
             'dsn'                 => "pgsql:host=206.54.170.70;port=5432;dbname=db_mappa",
-            'username'            => 'wAcGgDFInG',
+            'username'            => 'wacggdfing',
             'password'            => 'IzhX9wHdVY~@uc*m',
             'charset'             => 'utf8',
             'enableSchemaCache'   => false,
