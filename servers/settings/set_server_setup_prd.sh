@@ -44,8 +44,8 @@ apt install -y php7.3-curl php7.3-cli php7.3-intl php7.3-pgsql php7.3-gd php7.3-
 apt install -y postgresql-10 postgresql-contrib-10
 
 info "Configure PostgreSQL"
-sudo -u postgres psql -c "CREATE USER wAcGgDFInG WITH SUPERUSER CREATEDB ENCRYPTED PASSWORD 'IzhX9wHdVY~@uc*m'"
-sudo -u postgres psql -c "CREATE DATABASE vorchami"
+sudo -u postgres psql -c "CREATE USER wacggdfing WITH SUPERUSER CREATEDB ENCRYPTED PASSWORD 'IzhX9wHdVY~@uc*m'"
+sudo -u postgres psql -c "CREATE DATABASE db_mappa"
 sudo /etc/init.d/postgresql restart
 echo "Done!"
 
