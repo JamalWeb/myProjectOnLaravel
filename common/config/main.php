@@ -1,8 +1,9 @@
 <?php
 return [
     'aliases'    => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@bower'        => '@vendor/bower-asset',
+        '@npm'          => '@vendor/npm-asset',
+        '@interestPath' => 'upload/system/interest',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'language'   => 'ru-RU',
@@ -27,7 +28,7 @@ return [
         ],
     ],
     'modules'    => [
-        'user'                  => [
+        'user' => [
             'class'         => 'common\components\User',
             'identityClass' => 'common\models\user\User',
         ],

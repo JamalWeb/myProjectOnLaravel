@@ -2,7 +2,7 @@
 
 namespace api\modules\v1\controllers;
 
-use api\modules\v1\classes\user\UserGenderApi;
+use api\modules\v1\classes\UserGenderApi;
 
 /**
  * @property UserGenderApi $api

@@ -1,6 +1,6 @@
 <?php
 
-namespace api\modules\v1\classes;
+namespace api\modules\v1\classes\base;
 
 /**
  * Class Api

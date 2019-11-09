@@ -1,8 +1,8 @@
 <?php
 
-namespace api\modules\v1\classes\user;
+namespace api\modules\v1\classes;
 
-use api\modules\v1\classes\Api;
+use api\modules\v1\classes\base\Api;
 use common\components\ArrayHelper;
 use common\models\user\User;
 use common\models\user\UserChildren;

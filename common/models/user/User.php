@@ -6,7 +6,6 @@ use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\PasswordHelper;
 use common\models\base\BaseModel;
-use Exception;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
@@ -93,23 +92,6 @@ class User extends BaseModel implements IdentityInterface
             'created_at'    => Yii::t('app', 'Created At'),
             'updated_at'    => Yii::t('app', 'Updated At'),
         ];
-    }
-
-    /**
-     * Подготовка данных для регистрации
-     *
-     * @param array $params
-     * @return void
-     * @throws Exception
-     */
-    public function prepareRegistration(array $params): void
-    {
-        $params = ArrayHelper::merge($params, [
-            'status'     => User::STATUS_ACTIVE,
-            'created_ip' => Yii::$app->request->remoteIP,
-            'password'   => PasswordHelper::encrypt($params['password'])
-        ]);
-        $this->setAttributes($params);
     }
 
     /**

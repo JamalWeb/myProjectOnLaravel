@@ -3,7 +3,7 @@
 namespace api\modules\v1\controllers;
 
 use Yii;
-use api\modules\v1\classes\Api;
+use api\modules\v1\classes\base\Api;
 use common\models\user\User;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;

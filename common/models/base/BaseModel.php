@@ -4,7 +4,6 @@ namespace common\models\base;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
-use common\components\DateHelper;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -17,37 +16,19 @@ class BaseModel extends ActiveRecord
 {
     public function behaviors(): array
     {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'timestamp' => [
-                'class'              => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
-                'value'              => gmdate('Y-m-d H:i:s'),
-            ],
-        ]);
-    }
-
-    /**
-     * Запись атрибутов
-     *
-     * @param array $values
-     * @param bool  $safeOnly
-     * @return BaseModel
-     */
-    public function setAttributes($values, $safeOnly = true): self
-    {
-        if (is_array($values)) {
-            $attributes = array_flip($safeOnly ? $this->safeAttributes() : $this->attributes());
-            foreach ($values as $name => $value) {
-                if (isset($attributes[$name])) {
-                    $this->$name = $value;
-                } elseif ($safeOnly) {
-                    $this->onUnsafeAttribute($name, $value);
-                }
-            }
+        $behaviors = parent::behaviors();
+        if (isset($this->created_at) && isset($this->updated_at)) {
+            $behaviors = ArrayHelper::merge($behaviors, [
+                'timestamp' => [
+                    'class'              => TimestampBehavior::class,
+                    'createdAtAttribute' => 'created_at',
+                    'updatedAtAttribute' => 'updated_at',
+                    'value'              => gmdate('Y-m-d H:i:s'),
+                ],
+            ]);
         }
 
-        return $this;
+        return $behaviors;
     }
 
     /**

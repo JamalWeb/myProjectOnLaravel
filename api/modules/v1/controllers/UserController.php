@@ -3,7 +3,7 @@
 
 namespace api\modules\v1\controllers;
 
-use api\modules\v1\classes\user\UserApi;
+use api\modules\v1\classes\UserApi;
 use api\modules\v1\models\error\BadRequestHttpException;
 use Exception;
 
