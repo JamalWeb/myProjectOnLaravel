@@ -30,6 +30,10 @@ use yii\web\HeaderCollection;
  * @OA\Server(
  *   url="http://api.project.loc/v1",
  *   description="Локальный сервер",
+ * ),
+ * @OA\Server(
+ *   url="http://api.mappa.one/v1",
+ *   description="Боевой сервер",
  * )
  */
 class BaseController extends Controller
