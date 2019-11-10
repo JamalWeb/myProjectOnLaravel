@@ -22,10 +22,7 @@ class DocController extends Controller
                 'class' => 'genxoft\swagger\JsonAction',
                 'dirs'  => [
 //                    Yii::getAlias('@api/swagger/definitions/'),
-                    Yii::getAlias('@api/modules/v1/controllers/BaseController.php'),
-                    Yii::getAlias('@api/modules/v1/controllers/UserController.php'),
-                    Yii::getAlias('@api/modules/v1/controllers/UserGenderController.php'),
-                    Yii::getAlias('@api/modules/v1/controllers/InterestController.php'),
+                    Yii::getAlias('@api/modules/v1/controllers'),
                 ],
             ],
         ];

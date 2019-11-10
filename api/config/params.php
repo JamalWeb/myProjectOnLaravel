@@ -6,7 +6,8 @@ return [
         'user/registration-default-user',
         'user/registration-business-user',
         'user/login',
-        'user/reset-auth-token'
+        'user/reset-auth-token',
+        'city/get',
     ],
     'defaultValue'     => [
         'language'   => 'Russian',
