@@ -16,19 +16,14 @@ class BaseModel extends ActiveRecord
 {
     public function behaviors(): array
     {
-        $behaviors = parent::behaviors();
-        if (isset($this->created_at) && isset($this->updated_at)) {
-            $behaviors = ArrayHelper::merge($behaviors, [
-                'timestamp' => [
-                    'class'              => TimestampBehavior::class,
-                    'createdAtAttribute' => 'created_at',
-                    'updatedAtAttribute' => 'updated_at',
-                    'value'              => gmdate('Y-m-d H:i:s'),
-                ],
-            ]);
-        }
-
-        return $behaviors;
+        return ArrayHelper::merge(parent::behaviors(), [
+            'timestamp' => [
+                'class'              => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value'              => gmdate('Y-m-d H:i:s'),
+            ],
+        ]);
     }
 
     /**

@@ -202,13 +202,10 @@ class User extends BaseModel implements IdentityInterface
                 'phone_number' => $this->profile->phone_number,
                 'address'      => $this->profile->address,
                 'about'        => $this->profile->about,
-                'country'      => [
-                    'id'   => $this->profile->country_id,
-                    'name' => 'Russia',
-                ],
+                'country'      => null,
                 'city'         => [
-                    'id'   => $this->profile->city_id,
-                    'name' => 'Moscow'
+                    'id'   => $this->profile->city->id,
+                    'name' => $this->profile->city->name
                 ],
                 'longitude'    => $this->profile->longitude,
                 'latitude'     => $this->profile->latitude,

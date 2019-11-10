@@ -269,15 +269,16 @@ class UserApi extends Api
     /**
      * Данные пользователя
      *
-     * @param array $get
+     * @param array     $get
+     * @param User|null $user
      * @return array
      * @throws BadRequestHttpException
      */
-    public function get(array $get): array
+    public function get(array $get, User $user = null): array
     {
-        ArrayHelper::validateRequestParams($get, ['user_id'], false);
-
-        $user = $this->findUserById($get['user_id']);
+        if (!empty($get['user_id'])) {
+            $user = $this->findUserById($get['user_id']);
+        }
 
         return $user->publicInfo;
     }

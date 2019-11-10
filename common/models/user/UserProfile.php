@@ -2,6 +2,7 @@
 
 namespace common\models\user;
 
+use common\models\City;
 use Yii;
 use common\models\base\BaseModel;
 use yii\db\ActiveQuery;
@@ -31,6 +32,7 @@ use yii\db\ActiveQuery;
  * @property string $created_at   Дата создания
  * @property string $updated_at   Дата обновления
  * @property User   $user         Пользователь
+ * @property City   $city         Город
  */
 class UserProfile extends BaseModel
 {
@@ -108,5 +110,13 @@ class UserProfile extends BaseModel
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['id' => 'city_id']);
     }
 }

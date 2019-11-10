@@ -217,66 +217,63 @@ class UserController extends BaseController
      *       @OA\Schema(
      *         type="object",
      *         example={
-     *             "id": 8,
-     *             "email": "default_user@mamppa.com",
-     *             "type": {
-     *                 "id": 3,
-     *                 "name": "User",
-     *                 "desc": "Обычный пользователь"
+     *           "id": 4,
+     *           "email": "neo4@neo.com",
+     *           "type": {
+     *             "id": 2,
+     *             "name": "User",
+     *             "desc": "Обычный пользователь"
+     *           },
+     *           "role": {
+     *             "id": 2,
+     *             "name": "User",
+     *             "desc": "Обычный пользователь"
+     *           },
+     *           "status": {
+     *             "id": 1,
+     *             "name": "Активен"
+     *           },
+     *           "banned": {
+     *             "is_banned": false,
+     *             "banned_reason": null,
+     *             "banned_at": null
+     *           },
+     *           "profile": {
+     *             "first_name": "Иван",
+     *             "last_name": "Иванов",
+     *             "phone_number": null,
+     *             "address": null,
+     *             "about": null,
+     *             "country": null,
+     *             "city": {
+     *               "id": 1,
+     *               "name": "Moscow"
      *             },
-     *             "role": {
-     *                 "id": 3,
-     *                 "name": "User",
-     *                 "desc": "Обычный пользователь"
-     *             },
-     *             "status": {
+     *             "longitude": "55.7522",
+     *             "latitude": "37.6156",
+     *             "language": "Russian",
+     *             "short_lang": "ru-RU",
+     *             "timezone": "Europe/Moscow"
+     *           },
+     *           "children": {
+     *             {
+     *               "id": 5,
+     *               "age": 5,
+     *               "gender": {
      *                 "id": 1,
-     *                 "name": "Активен"
+     *                 "name": "Male"
+     *               }
      *             },
-     *             "banned": {
-     *                 "is_banned": false,
-     *                 "banned_reason": null,
-     *                 "banned_at": null
-     *             },
-     *             "profile": {
-     *                 "first_name": "Иван",
-     *                 "last_name": "Иванов",
-     *                 "phone_number": null,
-     *                 "address": null,
-     *                 "about": null,
-     *                 "country": {
-     *                     "id": 1,
-     *                     "name": "Russia"
-     *                 },
-     *                 "city": {
-     *                     "id": 1,
-     *                     "name": "Moscow"
-     *                 },
-     *                 "longitude": "55.7522",
-     *                 "latitude": "55.7522",
-     *                 "language": "Russian",
-     *                 "short_lang": "ru-RU",
-     *                 "timezone": "Europe/Moscow"
-     *             },
-     *             "children": {
-     *                 {
-     *                     "id": 7,
-     *                     "age": 5,
-     *                     "gender": {
-     *                         "id": 1,
-     *                         "name": "Male"
-     *                     }
-     *                 },
-     *                 {
-     *                     "id": 8,
-     *                     "age": 11,
-     *                     "gender": {
-     *                         "id": 2,
-     *                         "name": "Female"
-     *                     }
-     *                 }
-     *              },
-     *             "created_at": "2019-10-19 19:23:40"
+     *             {
+     *               "id": 6,
+     *               "age": 11,
+     *               "gender": {
+     *                 "id": 2,
+     *                 "name": "Female"
+     *               }
+     *             }
+     *           },
+     *           "created_at": "2019-11-10 14:06:20"
      *         }
      *       ),
      *     ),
@@ -399,49 +396,46 @@ class UserController extends BaseController
      *       @OA\Schema(
      *         type="object",
      *         example={
-     *             "id": 9,
-     *             "email": "neo@neo.com",
-     *             "type": {
-     *                 "id": 3,
-     *                 "name": "Business",
-     *                 "desc": "Бизнес пользователь"
-     *             },
-     *             "role": {
-     *                 "id": 3,
-     *                 "name": "Business",
-     *                 "desc": "Бизнес пользователь"
-     *             },
-     *             "status": {
-     *                 "id": 1,
-     *                 "name": "Активен"
-     *             },
-     *             "banned": {
-     *                 "is_banned": false,
-     *                 "banned_reason": null,
-     *                 "banned_at": null
-     *             },
-     *             "profile": {
-     *                 "first_name": "vorchami",
-     *                 "last_name": null,
-     *                 "phone_number": "79886337711",
-     *                 "address": "г.Москва ул.Гурьянова д.5 кв.129",
-     *                 "about": "Бомбочка",
-     *                 "country": {
-     *                     "id": 1,
-     *                     "name": "Russia"
-     *                 },
-     *                 "city": {
-     *                     "id": 1,
-     *                     "name": "Moscow"
-     *                 },
-     *                 "longitude": "55.7522",
-     *                 "latitude": "55.7522",
-     *                 "language": "Russian",
-     *                 "short_lang": "ru-RU",
-     *                 "timezone": "Europe/Moscow"
-     *             },
-     *             "children": {},
-     *             "created_at": "2019-10-19 19:23:40"
+     *           "id": 9,
+     *           "email": "neo@neo.com",
+     *           "type": {
+     *               "id": 3,
+     *               "name": "Business",
+     *               "desc": "Бизнес пользователь"
+     *           },
+     *           "role": {
+     *               "id": 3,
+     *               "name": "Business",
+     *               "desc": "Бизнес пользователь"
+     *           },
+     *           "status": {
+     *               "id": 1,
+     *               "name": "Активен"
+     *           },
+     *           "banned": {
+     *               "is_banned": false,
+     *               "banned_reason": null,
+     *               "banned_at": null
+     *           },
+     *           "profile": {
+     *               "first_name": "vorchami",
+     *               "last_name": null,
+     *               "phone_number": "79886337711",
+     *               "address": "г.Москва ул.Гурьянова д.5 кв.129",
+     *               "about": "Бомбочка",
+     *               "country": null,
+     *               "city": {
+     *                   "id": 1,
+     *                   "name": "Moscow"
+     *               },
+     *               "longitude": "55.7522",
+     *               "latitude": "55.7522",
+     *               "language": "Russian",
+     *               "short_lang": "ru-RU",
+     *               "timezone": "Europe/Moscow"
+     *           },
+     *           "children": {},
+     *           "created_at": "2019-10-19 19:23:40"
      *         }
      *       ),
      *     ),
@@ -657,10 +651,9 @@ class UserController extends BaseController
      *   tags={"Пользователь | User"},
      *   security={{"bearerAuth":{}}},
      *   @OA\Parameter(
-     *       description="Идентификатор пользователя",
+     *       description="ID пользователя (если ID не установлен, то вернется профиль текущего пользователя)",
      *       in="query",
      *       name="user_id",
-     *       required=true,
      *       @OA\Schema(
      *           type="integer",
      *           format="int64"
@@ -674,14 +667,63 @@ class UserController extends BaseController
      *       @OA\Schema(
      *         type="object",
      *         example={
-     *           {
-     *              "id": 1,
-     *              "name": "Male"
+     *           "id": 4,
+     *           "email": "neo4@neo.com",
+     *           "type": {
+     *             "id": 2,
+     *             "name": "User",
+     *             "desc": "Обычный пользователь"
      *           },
-     *           {
-     *              "id": 2,
-     *              "name": "Female"
-     *           }
+     *           "role": {
+     *             "id": 2,
+     *             "name": "User",
+     *             "desc": "Обычный пользователь"
+     *           },
+     *           "status": {
+     *             "id": 1,
+     *             "name": "Активен"
+     *           },
+     *           "banned": {
+     *             "is_banned": false,
+     *             "banned_reason": null,
+     *             "banned_at": null
+     *           },
+     *           "profile": {
+     *             "first_name": "Иван",
+     *             "last_name": "Иванов",
+     *             "phone_number": null,
+     *             "address": null,
+     *             "about": null,
+     *             "country": null,
+     *             "city": {
+     *               "id": 1,
+     *               "name": "Moscow"
+     *             },
+     *             "longitude": "55.7522",
+     *             "latitude": "37.6156",
+     *             "language": "Russian",
+     *             "short_lang": "ru-RU",
+     *             "timezone": "Europe/Moscow"
+     *           },
+     *           "children": {
+     *             {
+     *               "id": 5,
+     *               "age": 5,
+     *               "gender": {
+     *                 "id": 1,
+     *                 "name": "Male"
+     *               }
+     *             },
+     *             {
+     *               "id": 6,
+     *               "age": 11,
+     *               "gender": {
+     *                 "id": 2,
+     *                 "name": "Female"
+     *               }
+     *             }
+     *           },
+     *           "created_at": "2019-11-10 14:06:20"
      *         }
      *       ),
      *     ),
@@ -691,6 +733,6 @@ class UserController extends BaseController
      */
     public function actionGet(): array
     {
-        return $this->api->get($this->get);
+        return $this->api->get($this->get, $this->user);
     }
 }
