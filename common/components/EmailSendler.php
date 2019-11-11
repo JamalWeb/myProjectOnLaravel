@@ -33,7 +33,7 @@ class EmailSendler
 
         Yii::$app->mailer->compose()
             ->setFrom('from@domain.com')
-            ->setTo('to@domain.com')
+            ->setTo($user->email)
             ->setSubject('Тема сообщения')
             ->setTextBody('Текст сообщения')
             ->setHtmlBody($confirmationLink)

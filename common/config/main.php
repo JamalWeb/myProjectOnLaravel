@@ -21,11 +21,6 @@ return [
                 ],
             ],
         ],
-        'mailer' => [
-            'viewPath'         => '@common/mail',
-            'class'            => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => true,
-        ],
     ],
     'modules'    => [
         'user' => [
