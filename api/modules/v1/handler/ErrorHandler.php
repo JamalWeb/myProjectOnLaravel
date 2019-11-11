@@ -41,7 +41,12 @@ class ErrorHandler extends \yii\web\ErrorHandler
         ];
 
         if ($exception instanceof HttpException) {
-            $error['errors'] = $exception->firstErrors;
+            foreach ($exception->firstErrors as $name => $message) {
+                $error['errors'][] = [
+                    'name'    => $name,
+                    'message' => $message
+                ];
+            }
         }
 
         if (YII_DEBUG === true) {
