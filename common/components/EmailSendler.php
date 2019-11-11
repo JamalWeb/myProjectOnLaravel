@@ -23,7 +23,7 @@ class EmailSendler
      */
     public static final function registrationConfirmDefaultUser(User $user): void
     {
-        UserToken::getAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
+        UserToken::generateAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
         $userToken = UserToken::getAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
 
         $confirmationLink = Html::a('Подтвердить регистрацию', [
