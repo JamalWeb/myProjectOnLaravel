@@ -28,7 +28,7 @@ class EmailSendler
 
         Yii::$app->mailer->compose('confirmEmail-html.php', [
             'user'       => $user,
-            'user_token' => $userToken
+            'userToken' => $userToken
         ])
             ->setFrom('info@mappa.one')
             ->setTo($user->email)
