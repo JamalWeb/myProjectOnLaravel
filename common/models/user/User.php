@@ -37,6 +37,7 @@ use yii\web\IdentityInterface;
  * @property UserRole       $role           Роль
  * @property UserProfile    $profile        Профиль
  * @property UserChildren[] $children       Дети
+ * @property string         $fullName       Полное имя
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -232,6 +233,11 @@ class User extends BaseModel implements IdentityInterface
         }
 
         return $defaultUserInfo;
+    }
+
+    public function getFullName(): string
+    {
+        return "{$this->profile->first_name} {$this->profile->last_name}";
     }
 
     /**

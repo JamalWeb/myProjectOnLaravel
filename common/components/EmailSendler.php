@@ -26,17 +26,13 @@ class EmailSendler
         UserToken::generateAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
         $userToken = UserToken::getAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
 
-        $confirmationLink = Html::a('Подтвердить регистрацию', [
-            'user/registration-confirm',
-            'access_token' => $userToken->access_token
-        ]);
-
-        Yii::$app->mailer->compose()
-            ->setFrom('from@domain.com')
+        Yii::$app->mailer->compose('confirmEmail-html.php', [
+            'user'       => $user,
+            'user_token' => $userToken
+        ])
+            ->setFrom('info@mappa.one')
             ->setTo($user->email)
-            ->setSubject('Тема сообщения')
-            ->setTextBody('Текст сообщения')
-            ->setHtmlBody($confirmationLink)
+            ->setSubject('Подтверждение регистрации')
             ->send();
     }
 
