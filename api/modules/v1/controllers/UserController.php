@@ -144,28 +144,10 @@ class UserController extends BaseController
      *           example="Иванов"
      *         ),
      *         @OA\Property(
-     *           property="country_id",
-     *           description="Идентификатор страны",
-     *           type="integer",
-     *           example=null
-     *         ),
-     *         @OA\Property(
      *           property="city_id",
      *           description="Идентификатор города",
      *           type="integer",
      *           example=1
-     *         ),
-     *         @OA\Property(
-     *           property="longitude",
-     *           description="Координаты: широта",
-     *           type="number",
-     *           example="55.7522"
-     *         ),
-     *         @OA\Property(
-     *           property="latitude",
-     *           description="Координаты: долгота",
-     *           type="number",
-     *           example="37.6156"
      *         ),
      *         @OA\Property(
      *           property="language",
@@ -336,28 +318,10 @@ class UserController extends BaseController
      *           example="Бомбочка"
      *         ),
      *         @OA\Property(
-     *           property="country_id",
-     *           description="Идентификатор страны",
-     *           type="integer",
-     *           example=1
-     *         ),
-     *         @OA\Property(
      *           property="city_id",
      *           description="Идентификатор города",
      *           type="integer",
      *           example=1
-     *         ),
-     *         @OA\Property(
-     *           property="longitude",
-     *           description="Координаты: широта",
-     *           type="number",
-     *           example="55.7522"
-     *         ),
-     *         @OA\Property(
-     *           property="latitude",
-     *           description="Координаты: долгота",
-     *           type="number",
-     *           example="55.7522"
      *         ),
      *         @OA\Property(
      *           property="language",

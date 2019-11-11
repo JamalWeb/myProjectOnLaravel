@@ -113,25 +113,22 @@ class UserApi extends Api
                 'role_id'    => UserRole::ROLE_DEFAULT_USER,
                 'email'      => $defaultUserForm->email,
                 'password'   => PasswordHelper::encrypt($defaultUserForm->password),
-                'status'     => User::STATUS_ACTIVE,
+                'status'     => User::STATUS_UNCONFIRMED_EMAIL,
                 'created_ip' => Yii::$app->request->remoteIP,
             ]);
 
             $userProfileApi = new UserProfileApi();
             $userProfileApi->create($user, [
                 'city_id'    => $defaultUserForm->city_id,
-                'country_id' => $defaultUserForm->country_id,
                 'first_name' => $defaultUserForm->first_name,
                 'last_name'  => $defaultUserForm->last_name,
-                'longitude'  => $defaultUserForm->longitude,
-                'latitude'   => $defaultUserForm->latitude,
                 'language'   => $defaultUserForm->language,
                 'short_lang' => $defaultUserForm->short_lang,
                 'timezone'   => $defaultUserForm->timezone
             ]);
 
-            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
             $userChildrenApi = new UserChildrenApi();
+            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
             $userChildrenApi->add($user, $childrenList);
 
             EmailSendler::registrationConfirmDefaultUser($user);
@@ -169,7 +166,7 @@ class UserApi extends Api
                 'role_id'    => UserRole::ROLE_BUSINESS_USER,
                 'email'      => $businessUserForm->email,
                 'password'   => PasswordHelper::encrypt($businessUserForm->password),
-                'status'     => User::STATUS_ACTIVE,
+                'status'     => User::STATUS_UNCONFIRMED_EMAIL,
                 'created_ip' => Yii::$app->request->remoteIP,
             ]);
 
@@ -179,10 +176,7 @@ class UserApi extends Api
                 'phone_number' => $businessUserForm->phone_number,
                 'address'      => $businessUserForm->address,
                 'about'        => $businessUserForm->about,
-                'country_id'   => $businessUserForm->country_id,
                 'city_id'      => $businessUserForm->city_id,
-                'longitude'    => $businessUserForm->longitude,
-                'latitude'     => $businessUserForm->latitude,
                 'language'     => $businessUserForm->language,
                 'short_lang'   => $businessUserForm->short_lang,
                 'timezone'     => $businessUserForm->timezone

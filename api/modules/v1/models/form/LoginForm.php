@@ -140,11 +140,11 @@ class LoginForm extends Model
 
         switch ($this->user->status) {
             case User::STATUS_INACTIVE:
-                $error = ['email' => 'Ваш аккаунт не активирован'];
+                $error = ['email' => 'Ваш аккаунт отключен'];
                 break;
-            case User::STATUS_UNCONFIRMED_EMAIL:
-                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
-                break;
+//            case User::STATUS_UNCONFIRMED_EMAIL:
+//                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
+//                break;
         }
 
         if (isset($error)) {
