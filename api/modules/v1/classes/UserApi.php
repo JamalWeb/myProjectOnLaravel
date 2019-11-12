@@ -133,9 +133,13 @@ class UserApi extends Api
 
             EmailSendler::registrationConfirmDefaultUser($user);
 
+            $access['access'] = $this->login([
+                'email'    => $defaultUserForm->email,
+                'password' => $defaultUserForm->password,
+            ]);
             $transaction->commit();
 
-            return $user->publicInfo;
+            return ArrayHelper::merge($access, $user->publicInfo);
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -184,9 +188,13 @@ class UserApi extends Api
 
             EmailSendler::registrationConfirmBusinessUser($user);
 
+            $access['access'] = $this->login([
+                'email'    => $businessUserForm->email,
+                'password' => $businessUserForm->password,
+            ]);
             $transaction->commit();
 
-            return $user->publicInfo;
+            return ArrayHelper::merge($access, $user->publicInfo);
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -298,5 +306,30 @@ class UserApi extends Api
         }
 
         return $user;
+    }
+
+    /**
+     * Воостановление аккаунта
+     *
+     * @param array $post
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws \yii\base\Exception
+     */
+    public function recovery(array $post): array
+    {
+        ArrayHelper::validateRequestParams($post, ['email']);
+
+        $user = User::findOne(['email' => $post['email']]);
+
+        if (is_null($user)) {
+            throw new BadRequestHttpException(['email' => 'Email is not found']);
+        }
+
+        $result = EmailSendler::userRecovery($user);
+
+        return [
+            'success' => $result
+        ];
     }
 }

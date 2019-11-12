@@ -699,4 +699,52 @@ class UserController extends BaseController
     {
         return $this->api->get($this->get, $this->user);
     }
+
+    /**
+     * @OA\Post(
+     *   path="/user/recovery",
+     *   summary="Восстановление профиля",
+     *   tags={"Пользователь | User"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\RequestBody(
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="email",
+     *           description="Email",
+     *           type="string",
+     *           example="neo@neo.com"
+     *         ),
+     *         required={
+     *             "email"
+     *         }
+     *       )
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           "success": true
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=400,
+     *     description="BadRequestHttpException"
+     *   )
+     * )
+     * @throws BadRequestHttpException
+     * @throws \yii\base\Exception
+     */
+    public function actionRecovery(): array
+    {
+        return $this->api->recovery($this->post);
+    }
 }

@@ -8,6 +8,7 @@ return [
         'user/login',
         'user/reset-auth-token',
         'city/get',
+        'user/recovery',
     ],
     'defaultValue'     => [
         'language'   => 'Russian',

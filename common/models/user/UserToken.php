@@ -27,15 +27,17 @@ class UserToken extends BaseModel
     const TYPE_AUTH = 1;
     const TYPE_RESET_AUTH = 2;
     const TYPE_PASSWORD_CHANGE = 3;
-    const TYPE_EMAIL_ACTIVATE = 4;
+    const TYPE_EMAIL_CONFIRM = 4;
     const TYPE_EMAIL_CHANGE = 5;
+    const TYPE_USER_RECOVERY = 6;
 
     public static $allowedTokens = [
         self::TYPE_AUTH,
         self::TYPE_RESET_AUTH,
         self::TYPE_PASSWORD_CHANGE,
-        self::TYPE_EMAIL_ACTIVATE,
+        self::TYPE_EMAIL_CONFIRM,
         self::TYPE_EMAIL_CHANGE,
+        self::TYPE_USER_RECOVERY,
     ];
 
     /**

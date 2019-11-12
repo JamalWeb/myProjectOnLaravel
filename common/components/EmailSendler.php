@@ -7,7 +7,6 @@ use common\models\user\User;
 use common\models\user\UserToken;
 use Yii;
 use yii\base\Exception;
-use yii\helpers\Html;
 
 /**
  * Class EmailSendler
@@ -18,16 +17,17 @@ class EmailSendler
 {
     /**
      * @param User $user
+     * @return bool
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public static final function registrationConfirmDefaultUser(User $user): void
+    public static final function registrationConfirmDefaultUser(User $user): bool
     {
-        UserToken::generateAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
-        $userToken = UserToken::getAccessToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
+        UserToken::generateAccessToken($user, UserToken::TYPE_EMAIL_CONFIRM);
+        $userToken = UserToken::getAccessToken($user, UserToken::TYPE_EMAIL_CONFIRM);
 
-        Yii::$app->mailer->compose('confirmEmail-html.php', [
-            'user'       => $user,
+        return Yii::$app->mailer->compose('confirmEmail-html.php', [
+            'user'      => $user,
             'userToken' => $userToken
         ])
             ->setFrom('info@mappa.one')
@@ -62,5 +62,26 @@ class EmailSendler
 
     public static function confirmChangeEmail(User $user, string $email): void
     {
+    }
+
+    /**
+     * @param $user
+     * @return bool
+     * @throws BadRequestHttpException
+     * @throws Exception
+     */
+    public static function userRecovery($user): bool
+    {
+        UserToken::generateAccessToken($user, UserToken::TYPE_USER_RECOVERY);
+        $userToken = UserToken::getAccessToken($user, UserToken::TYPE_USER_RECOVERY);
+
+        return Yii::$app->mailer->compose('userRecovery-html.php', [
+            'user'      => $user,
+            'userToken' => $userToken
+        ])
+            ->setFrom('info@mappa.one')
+            ->setTo($user->email)
+            ->setSubject('Восстановление аккаунта')
+            ->send();
     }
 }

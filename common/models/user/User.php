@@ -139,7 +139,10 @@ class User extends BaseModel implements IdentityInterface
 
         return static::findOne([
             'id'     => $userToken->user_id,
-            'status' => self::STATUS_ACTIVE
+            'status' => [
+                self::STATUS_ACTIVE,
+                self::STATUS_UNCONFIRMED_EMAIL
+            ]
         ]);
     }
 
@@ -178,16 +181,6 @@ class User extends BaseModel implements IdentityInterface
         $defaultUserInfo = [
             'id'         => $this->id,
             'email'      => $this->email,
-            'type'       => [
-                'id'   => $this->type->id,
-                'name' => $this->type->name,
-                'desc' => $this->type->desc
-            ],
-            'role'       => [
-                'id'   => $this->role->id,
-                'name' => $this->role->name,
-                'desc' => $this->role->desc
-            ],
             'status'     => [
                 'id'   => $this->status,
                 'name' => $this->getStatusNameById($this->status)
@@ -208,20 +201,25 @@ class User extends BaseModel implements IdentityInterface
                     'id'   => $this->profile->city->id,
                     'name' => $this->profile->city->name
                 ],
+                'children'     => [],
+                'type'         => [
+                    'id'   => $this->type->id,
+                    'name' => $this->type->name,
+                    'desc' => $this->type->desc
+                ],
                 'longitude'    => $this->profile->longitude,
                 'latitude'     => $this->profile->latitude,
                 'language'     => $this->profile->language,
                 'short_lang'   => $this->profile->short_lang,
                 'timezone'     => $this->profile->timezone,
             ],
-            'children'   => [],
             'created_at' => $this->created_at
         ];
 
         if (!empty($this->children) && $this->type_id == UserType::TYPE_DEFAULT_USER) {
             /** @var UserChildren $child */
             foreach (ArrayHelper::generator($this->children) as $child) {
-                $defaultUserInfo['children'][] = [
+                $defaultUserInfo['profile']['children'][] = [
                     'id'     => $child->id,
                     'age'    => $child->age,
                     'gender' => [
