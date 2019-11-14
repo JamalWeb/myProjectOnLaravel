@@ -12,8 +12,6 @@ use common\models\user\User;
 use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\db\Expression;
-use yii\db\Query;
 use yii\web\UrlManager;
 
 class InterestApi extends Api
@@ -21,27 +19,13 @@ class InterestApi extends Api
     /**
      * Список интересов
      *
-     * @param User $user
      * @return Interest[]
      * @throws InvalidConfigException
      */
-    public function get(User $user): array
+    public function get(): array
     {
         /** @var Interest[] $interests */
-        $interests = (new Query())
-            ->from(['i' => Interest::tableName()])
-            ->select([
-                'id'       => 'i.id',
-                'name'     => 'i.name',
-                'img'      => 'i.img',
-                'selected' => new Expression('CASE WHEN "rui"."id" IS NOT NULL THEN true ELSE false END')
-            ])
-            ->leftJoin([
-                'rui' => RelationUserInterest::tableName()
-            ], 'i.id = rui.interest_id AND rui.user_id = :user_id', [
-                ':user_id' => $user->id
-            ])
-            ->all();
+        $interests = Interest::find()->all();
 
         /** @var UrlManager $urlManagerFront */
         $urlManagerFront = Yii::$app->get('urlManagerFront');
@@ -96,6 +80,6 @@ class InterestApi extends Api
             ], $interests)
             ->execute();
 
-        return $this->get($user);
+        return $this->get();
     }
 }

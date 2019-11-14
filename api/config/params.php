@@ -9,6 +9,7 @@ return [
         'user/reset-auth-token',
         'city/get',
         'user/recovery',
+        'interest/get',
     ],
     'defaultValue'     => [
         'language'   => 'Russian',

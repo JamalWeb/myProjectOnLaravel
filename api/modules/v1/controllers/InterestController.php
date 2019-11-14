@@ -18,7 +18,6 @@ class InterestController extends BaseController
      *   path="/interest/get",
      *   summary="Получить список интересов",
      *   tags={"Интересы | Interest"},
-     *   security={{"bearerAuth":{}}},
      *   @OA\Response(
      *     response=200,
      *     description="success",
@@ -30,31 +29,27 @@ class InterestController extends BaseController
      *           {
      *             "id": 1,
      *             "name": "Entertainment",
-     *             "img": "http://mappa.one/upload/system/interest/entertainment.png",
-     *             "selected": true
+     *             "img": "http://mappa.one/upload/system/interest/entertainment.png"
      *           },
      *           {
      *             "id": 2,
      *             "name": "Art",
-     *             "img": "http://mappa.one/upload/system/interest/art.png",
-     *             "selected": true
+     *             "img": "http://mappa.one/upload/system/interest/art.png"
      *           },
      *           {
      *             "id": 3,
      *             "name": "Sport",
-     *             "img": "http://mappa.one/upload/system/interest/sport.png",
-     *             "selected": false
+     *             "img": "http://mappa.one/upload/system/interest/sport.png"
      *           },
      *           {
      *             "id": 4,
      *             "name": "Music",
-     *             "img": "http://mappa.one/upload/system/interest/music.png",
-     *             "selected": true
+     *             "img": "http://mappa.one/upload/system/interest/music.png"
      *           },
      *           {
      *             "id": 5,
      *             "name": "Education",
-     *             "selected": false
+     *             "img": "http://mappa.one/upload/system/interest/education.png"
      *           }
      *         }
      *       ),
@@ -65,7 +60,7 @@ class InterestController extends BaseController
      */
     public function actionGet(): array
     {
-        return $this->api->get($this->user);
+        return $this->api->get();
     }
 
     /**
