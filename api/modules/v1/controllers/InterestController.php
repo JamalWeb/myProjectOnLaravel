@@ -185,7 +185,7 @@ class InterestController extends BaseController
      *     ),
      *   ),
      * )
-     * @throws InvalidConfigException
+     * @return array
      * @throws BadRequestHttpException
      */
     public function actionSetInterestUser(): array

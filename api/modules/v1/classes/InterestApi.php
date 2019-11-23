@@ -81,13 +81,12 @@ class InterestApi extends Api
     }
 
     /**
-     * Изменить интересы пользователя
+     * Записать интересы пользователя
      *
      * @param User  $user
      * @param array $post
      * @return array
      * @throws BadRequestHttpException
-     * @throws InvalidConfigException
      * @throws Exception
      */
     public function setInterestUser(User $user, array $post): array
@@ -99,27 +98,34 @@ class InterestApi extends Api
             throw new BadRequestHttpException(['interest_ids' => 'Empty']);
         }
 
-        RelationUserInterest::deleteAll(['user_id' => $user->id]);
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            RelationUserInterest::deleteAll(['user_id' => $user->id]);
 
-        $interests = [];
-        foreach ($interestIds as $interestId) {
-            $interests[] = [
-                'user_id'     => $user->id,
-                'interest_id' => $interestId,
-                'created_at'  => DateHelper::getTimestamp(),
-                'updated_at'  => DateHelper::getTimestamp()
-            ];
+            $interests = [];
+            foreach ($interestIds as $interestId) {
+                $interests[] = [
+                    'user_id'     => $user->id,
+                    'interest_id' => $interestId,
+                    'created_at'  => DateHelper::getTimestamp(),
+                    'updated_at'  => DateHelper::getTimestamp()
+                ];
+            }
+
+            Yii::$app->db->createCommand()
+                ->batchInsert(RelationUserInterest::tableName(), [
+                    'user_id',
+                    'interest_id',
+                    'created_at',
+                    'updated_at'
+                ], $interests)
+                ->execute();
+            $transaction->commit();
+
+            return $this->getInterestUser($user);
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            throw $ex;
         }
-
-        Yii::$app->db->createCommand()
-            ->batchInsert(RelationUserInterest::tableName(), [
-                'user_id',
-                'interest_id',
-                'created_at',
-                'updated_at'
-            ], $interests)
-            ->execute();
-
-        return $this->getInterestUser($user);
     }
 }
