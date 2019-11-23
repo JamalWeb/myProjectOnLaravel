@@ -64,9 +64,64 @@ class InterestController extends BaseController
     }
 
     /**
+     * @OA\Get(
+     *   path="/interest/get-interest-user",
+     *   summary="Получить список интересов пользователя",
+     *   tags={"Интересы | Interest"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           {
+     *             "id": 1,
+     *             "name": "Entertainment",
+     *             "img": "http://mappa.one/upload/system/interest/entertainment.png",
+     *             "selected": true
+     *           },
+     *           {
+     *             "id": 2,
+     *             "name": "Art",
+     *             "img": "http://mappa.one/upload/system/interest/art.png",
+     *             "selected": true
+     *           },
+     *           {
+     *             "id": 3,
+     *             "name": "Sport",
+     *             "img": "http://mappa.one/upload/system/interest/sport.png",
+     *             "selected": false
+     *           },
+     *           {
+     *             "id": 4,
+     *             "name": "Music",
+     *             "img": "http://mappa.one/upload/system/interest/music.png",
+     *             "selected": true
+     *           },
+     *           {
+     *             "id": 5,
+     *             "name": "Education",
+     *             "selected": false
+     *           }
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     * )
+     * @throws InvalidConfigException
+     */
+    public function actionGetInterestUser(): array
+    {
+        return $this->api->getInterestUser($this->user);
+    }
+
+    /**
      * @OA\Post(
-     *   path="/interest/update-user-interests",
-     *   summary="Изменить интересы пользователя",
+     *   path="/interest/set-interest-user",
+     *   summary="Записать интересы пользователю",
      *   tags={"Интересы | Interest"},
      *   security={{"bearerAuth":{}}},
      *   @OA\RequestBody(
@@ -133,8 +188,8 @@ class InterestController extends BaseController
      * @throws InvalidConfigException
      * @throws BadRequestHttpException
      */
-    public function actionUpdateUserInterests(): array
+    public function actionSetInterestUser(): array
     {
-        return $this->api->updateUserInterests($this->user, $this->post);
+        return $this->api->setInterestUser($this->user, $this->post);
     }
 }

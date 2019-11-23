@@ -12,6 +12,8 @@ use common\models\user\User;
 use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\web\UrlManager;
 
 class InterestApi extends Api
@@ -41,6 +43,44 @@ class InterestApi extends Api
     }
 
     /**
+     * Список интересов
+     *
+     * @param User $user
+     * @return Interest[]
+     * @throws InvalidConfigException
+     */
+    public function getInterestUser(User $user): array
+    {
+        /** @var Interest[] $interests */
+        $interests = (new Query())
+            ->from(['i' => Interest::tableName()])
+            ->select([
+                'id'       => 'i.id',
+                'name'     => 'i.name',
+                'img'      => 'i.img',
+                'selected' => new Expression('CASE WHEN "rui"."id" IS NOT NULL THEN true ELSE false END')
+            ])
+            ->leftJoin([
+                'rui' => RelationUserInterest::tableName()
+            ], 'i.id = rui.interest_id AND rui.user_id = :user_id', [
+                ':user_id' => $user->id
+            ])
+            ->all();
+
+        /** @var UrlManager $urlManagerFront */
+        $urlManagerFront = Yii::$app->get('urlManagerFront');
+
+        /** @var string $interestPath */
+        $interestPath = Yii::getAlias('@interestPath');
+
+        foreach (ArrayHelper::generator($interests) as $interest) {
+            $interest['img'] = "{$urlManagerFront->baseUrl}/$interestPath/{$interest['img']}";
+        }
+
+        return $interests;
+    }
+
+    /**
      * Изменить интересы пользователя
      *
      * @param User  $user
@@ -50,7 +90,7 @@ class InterestApi extends Api
      * @throws InvalidConfigException
      * @throws Exception
      */
-    public function updateUserInterests(User $user, array $post): array
+    public function setInterestUser(User $user, array $post): array
     {
         ArrayHelper::validateRequestParams($post, ['interest_ids']);
         $interestIds = ArrayHelper::jsonToArray($post['interest_ids']);
@@ -80,6 +120,6 @@ class InterestApi extends Api
             ], $interests)
             ->execute();
 
-        return $this->get();
+        return $this->getInterestUser($user);
     }
 }
