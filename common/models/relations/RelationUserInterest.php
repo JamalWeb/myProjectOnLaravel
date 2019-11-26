@@ -3,7 +3,7 @@
 namespace common\models\relations;
 
 use common\models\base\BaseModel;
-use common\models\Interest;
+use common\models\InterestCategory;
 use common\models\user\User;
 use Yii;
 use yii\db\ActiveQuery;
@@ -11,13 +11,13 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "relation_user_interest".
  *
- * @property int      $id          Идентификатор связи пользователя с его интересами
- * @property int      $user_id     Идентификатор пользователя
- * @property int      $interest_id Идентификатор интереса
- * @property string   $created_at  Дата создания
- * @property string   $updated_at  Дата обновления
- * @property Interest $interest
- * @property User     $user
+ * @property int              $id                   Идентификатор связи пользователя с его интересами
+ * @property int              $user_id              Идентификатор пользователя
+ * @property int              $interest_category_id Идентификатор интереса
+ * @property string           $created_at           Дата создания
+ * @property string           $updated_at           Дата обновления
+ * @property InterestCategory $interest
+ * @property User             $user
  */
 class RelationUserInterest extends BaseModel
 {
@@ -35,11 +35,11 @@ class RelationUserInterest extends BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'interest_id'], 'required'],
-            [['user_id', 'interest_id'], 'default', 'value' => null],
-            [['user_id', 'interest_id'], 'integer'],
+            [['user_id', 'interest_category_id'], 'required'],
+            [['user_id', 'interest_category_id'], 'default', 'value' => null],
+            [['user_id', 'interest_category_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['interest_id'], 'exist', 'skipOnError' => true, 'targetClass' => Interest::class, 'targetAttribute' => ['interest_id' => 'id']],
+            [['interest_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => InterestCategory::class, 'targetAttribute' => ['interest_category_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -50,11 +50,11 @@ class RelationUserInterest extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'          => Yii::t('app', 'ID'),
-            'user_id'     => Yii::t('app', 'User ID'),
-            'interest_id' => Yii::t('app', 'Interest ID'),
-            'created_at'  => Yii::t('app', 'Created At'),
-            'updated_at'  => Yii::t('app', 'Updated At'),
+            'id'                   => Yii::t('app', 'ID'),
+            'user_id'              => Yii::t('app', 'User ID'),
+            'interest_category_id' => Yii::t('app', 'Interest Category ID'),
+            'created_at'           => Yii::t('app', 'Created At'),
+            'updated_at'           => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -63,7 +63,7 @@ class RelationUserInterest extends BaseModel
      */
     public function getInterest()
     {
-        return $this->hasOne(Interest::class, ['id' => 'interest_id']);
+        return $this->hasOne(InterestCategory::class, ['id' => 'interest_category_id']);
     }
 
     /**

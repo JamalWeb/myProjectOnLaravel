@@ -12,14 +12,14 @@ use Yii;
  * @property string $name Наименование интереса
  * @property string $img  Наименование картинки
  */
-class Interest extends BaseModel
+class InterestCategory extends BaseModel
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'interest';
+        return 'interest_category';
     }
 
     /**

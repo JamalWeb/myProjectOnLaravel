@@ -6,7 +6,7 @@ use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\DateHelper;
-use common\models\Interest;
+use common\models\InterestCategory;
 use common\models\relations\RelationUserInterest;
 use common\models\user\User;
 use Exception;
@@ -21,13 +21,13 @@ class InterestApi extends Api
     /**
      * Список интересов
      *
-     * @return Interest[]
+     * @return InterestCategory[]
      * @throws InvalidConfigException
      */
     public function get(): array
     {
-        /** @var Interest[] $interests */
-        $interests = Interest::find()->all();
+        /** @var InterestCategory[] $interests */
+        $interests = InterestCategory::find()->all();
 
         /** @var UrlManager $urlManagerFront */
         $urlManagerFront = Yii::$app->get('urlManagerFront');
@@ -46,14 +46,14 @@ class InterestApi extends Api
      * Список интересов
      *
      * @param User $user
-     * @return Interest[]
+     * @return InterestCategory[]
      * @throws InvalidConfigException
      */
     public function getInterestUser(User $user): array
     {
-        /** @var Interest[] $interests */
+        /** @var InterestCategory[] $interests */
         $interests = (new Query())
-            ->from(['i' => Interest::tableName()])
+            ->from(['i' => InterestCategory::tableName()])
             ->select([
                 'id'       => 'i.id',
                 'name'     => 'i.name',

@@ -22,7 +22,7 @@ class m191109_151600_create_table_relation_user_interest extends Migration
                 ->notNull()
                 ->comment('Идентификатор пользователя'),
 
-            'interest_id' => $this->integer()
+            'interest_category_id' => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор интереса'),
 
@@ -42,10 +42,10 @@ class m191109_151600_create_table_relation_user_interest extends Migration
         );
 
         $this->addForeignKey(
-            'FGK-interest_id-relation_user_interest',
+            'FGK-interest_category_id-relation_user_interest',
             self::TABLE_NAME_RELATION_USER_INTEREST,
-            'interest_id',
-            '{{%interest}}',
+            'interest_category_id',
+            '{{%interest_category}}',
             'id'
         );
     }
@@ -56,7 +56,7 @@ class m191109_151600_create_table_relation_user_interest extends Migration
     public function safeDown()
     {
         $this->dropForeignKey(
-            'FGK-interest_id-relation_user_interest',
+            'FGK-interest_category_id-relation_user_interest',
             self::TABLE_NAME_RELATION_USER_INTEREST
         );
 
