@@ -8,7 +8,6 @@ use yii\db\Migration;
 class m191126_082701_create_table_event extends Migration
 {
     const TABLE_NAME_EVENT = '{{%event}}';
-    const TABLE_NAME_EVENT_TYPE = '{{%event_type}}';
 
     /**
      * {@inheritdoc}
@@ -27,44 +26,59 @@ class m191126_082701_create_table_event extends Migration
                 ->notNull()
                 ->comment('Тип события'),
 
-            'name' => $this->string()
+            'name' => $this->string(20)
                 ->notNull()
-                ->comment('Наименование события'),
+                ->comment('Наименование'),
 
-            'about' => $this->string()
+            'about' => $this->string(60)
                 ->notNull()
-                ->comment('Описание события'),
+                ->comment('Описание'),
+
+            'interest_category_id' => $this->integer()
+                ->notNull()
+                ->comment('Идентификатор категории интереса'),
+
+            'city_id' => $this->integer()
+                ->notNull()
+                ->comment('Идентификатор города'),
+
+            'address' => $this->string()
+                ->notNull()
+                ->comment('Адрес где будет происходить'),
 
             'age_limit' => $this->integer()
                 ->notNull()
                 ->comment('Возростное ограничение'),
 
-            'address' => $this->string()
-                ->notNull()
-                ->comment('Адрес где будет происходить событие'),
-
-            'interest_category_id' => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор категории интереса события'),
-
             'ticket_price' => $this->decimal(10, 2)
                 ->comment('Цена за один билет'),
 
+            'number_tickets' => $this->integer()
+                ->comment('Доступные билеты'),
+
+            'additional_information' => $this->string(200)
+                ->comment('Дополнительная информация'),
+
             'is_free' => $this->boolean()
                 ->defaultValue(false)
-                ->comment('Флаг событие беслатное или нет'),
+                ->comment('Флаг бесплатно или нет (если да то цена не учитывается)'),
 
             'wallpaper' => $this->string()
                 ->notNull()
-                ->comment('Изображение события'),
+                ->comment('Фоновое изображение'),
 
+            'created_at' => $this->timestamp()
+                ->comment('Дата создания'),
+
+            'updated_at' => $this->timestamp()
+                ->comment('Дата обновления')
         ]);
 
         $this->addForeignKey(
             'FGK-user_id-event',
             self::TABLE_NAME_EVENT,
             'user_id',
-            'user',
+            '{{%user}}',
             'id'
         );
 
@@ -72,7 +86,7 @@ class m191126_082701_create_table_event extends Migration
             'FGK-type_id-event',
             self::TABLE_NAME_EVENT,
             'type_id',
-            self::TABLE_NAME_EVENT_TYPE,
+            '{{%event_type}}',
             'id'
         );
 
@@ -80,7 +94,15 @@ class m191126_082701_create_table_event extends Migration
             'FGK-interest_category_id-event',
             self::TABLE_NAME_EVENT,
             'interest_category_id',
-            'interest_category',
+            '{{%interest_category}}',
+            'id'
+        );
+
+        $this->addForeignKey(
+            'FGK-city_id-event',
+            self::TABLE_NAME_EVENT,
+            'city_id',
+            '{{%city}}',
             'id'
         );
     }
@@ -90,6 +112,7 @@ class m191126_082701_create_table_event extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('FGK-city_id-event', self::TABLE_NAME_EVENT);
         $this->dropForeignKey('FGK-user_id-event', self::TABLE_NAME_EVENT);
         $this->dropForeignKey('FGK-type_id-event', self::TABLE_NAME_EVENT);
         $this->dropForeignKey('FGK-interest_category_id-event', self::TABLE_NAME_EVENT);
