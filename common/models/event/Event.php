@@ -22,7 +22,7 @@ use yii\db\ActiveQuery;
  * @property string              $address                Адрес где будет происходить
  * @property int                 $age_limit              Возростное ограничение
  * @property string              $ticket_price           Цена за один билет
- * @property int                 $number_tickets         Доступные билеты
+ * @property int                 $tickets_number         Кол-во доступных билетов
  * @property string              $additional_information Дополнительная информация
  * @property bool                $is_free                Флаг бесплатно или нет (если да то цена не учитывается)
  * @property string              $wallpaper              Фоновое изображение
@@ -51,8 +51,8 @@ class Event extends BaseModel
     {
         return [
             [['user_id', 'type_id', 'name', 'about', 'interest_category_id', 'city_id', 'address', 'age_limit', 'wallpaper'], 'required'],
-            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'number_tickets'], 'default', 'value' => null],
-            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'number_tickets'], 'integer'],
+            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'tickets_number'], 'default', 'value' => null],
+            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'tickets_number'], 'integer'],
             [['ticket_price'], 'number'],
             [['is_free'], 'boolean'],
             [['created_at', 'updated_at'], 'safe'],
@@ -83,7 +83,7 @@ class Event extends BaseModel
             'address'                => Yii::t('app', 'Address'),
             'age_limit'              => Yii::t('app', 'Age Limit'),
             'ticket_price'           => Yii::t('app', 'Ticket Price'),
-            'number_tickets'         => Yii::t('app', 'Number Tickets'),
+            'tickets_number'         => Yii::t('app', 'Tickets Number'),
             'additional_information' => Yii::t('app', 'Additional Information'),
             'is_free'                => Yii::t('app', 'Is Free'),
             'wallpaper'              => Yii::t('app', 'Wallpaper'),

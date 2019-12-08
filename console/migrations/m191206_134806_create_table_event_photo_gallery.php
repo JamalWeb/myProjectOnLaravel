@@ -20,7 +20,7 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
 
             'name' => $this->string()
                 ->notNull()
-                ->comment('Наименование картинки'),
+                ->comment('Наименование фотографии'),
 
             'event_id' => $this->integer()
                 ->notNull()

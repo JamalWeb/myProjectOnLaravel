@@ -53,8 +53,8 @@ class m191126_082701_create_table_event extends Migration
             'ticket_price' => $this->decimal(10, 2)
                 ->comment('Цена за один билет'),
 
-            'number_tickets' => $this->integer()
-                ->comment('Доступные билеты'),
+            'tickets_number' => $this->integer()
+                ->comment('Кол-во доступных билетов'),
 
             'additional_information' => $this->string(200)
                 ->comment('Дополнительная информация'),

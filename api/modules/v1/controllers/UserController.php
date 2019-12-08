@@ -174,11 +174,11 @@ class UserController extends BaseController
      *           example={
      *             {
      *               "age": 5,
-     *               "gender_id": 1,
+     *               "gender_id": 1
      *             },
      *             {
      *               "age": 11,
-     *               "gender_id": 2,
+     *               "gender_id": 2
      *             }
      *           }
      *         ),
@@ -507,11 +507,11 @@ class UserController extends BaseController
      *           example={
      *             {
      *               "age": 5,
-     *               "gender_id": 1,
+     *               "gender_id": 1
      *             },
      *             {
      *               "age": 11,
-     *               "gender_id": 2,
+     *               "gender_id": 2
      *             }
      *           }
      *         ),

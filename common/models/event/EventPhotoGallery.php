@@ -10,7 +10,7 @@ use yii\db\ActiveQuery;
  * This is the model class for table "event_photo_gallery".
  *
  * @property int    $id         Идентификатор фотографии
- * @property string $name       Наименование картинки
+ * @property string $name       Наименование фотографии
  * @property int    $event_id   Идентификатор события
  * @property string $created_at Дата создания
  * @property string $updated_at Дата обновления

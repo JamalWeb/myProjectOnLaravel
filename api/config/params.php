@@ -7,9 +7,11 @@ return [
         'user/registration-business-user',
         'user/login',
         'user/reset-auth-token',
-        'city/get',
         'user/recovery',
+        'city/get',
         'interest/get',
+        'event/get-type-list',
+        'event/create',
     ],
     'defaultValue'     => [
         'language'   => 'Russian',
