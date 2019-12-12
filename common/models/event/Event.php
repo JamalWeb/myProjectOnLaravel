@@ -15,6 +15,7 @@ use yii\db\ActiveQuery;
  * @property int                 $id                     Идентификатор события
  * @property int                 $user_id                Идентификатор пользователя который создал событие
  * @property int                 $type_id                Тип события
+ * @property int                 $status_id              Статус события
  * @property string              $name                   Наименование
  * @property string              $about                  Описание
  * @property int                 $interest_category_id   Идентификатор категории интереса
@@ -50,9 +51,8 @@ class Event extends BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'type_id', 'name', 'about', 'interest_category_id', 'city_id', 'address', 'age_limit', 'wallpaper'], 'required'],
-            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'tickets_number'], 'default', 'value' => null],
-            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'tickets_number'], 'integer'],
+            [['user_id', 'type_id', 'name', 'about', 'interest_category_id', 'city_id', 'address', 'age_limit', 'wallpaper', 'status_id'], 'required'],
+            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'tickets_number', 'status_id'], 'integer'],
             [['ticket_price'], 'number'],
             [['is_free'], 'boolean'],
             [['created_at', 'updated_at'], 'safe'],
@@ -76,6 +76,7 @@ class Event extends BaseModel
             'id'                     => Yii::t('app', 'ID'),
             'user_id'                => Yii::t('app', 'User ID'),
             'type_id'                => Yii::t('app', 'Type ID'),
+            'status_id'              => Yii::t('app', 'Status ID'),
             'name'                   => Yii::t('app', 'Name'),
             'about'                  => Yii::t('app', 'About'),
             'interest_category_id'   => Yii::t('app', 'Interest Category ID'),

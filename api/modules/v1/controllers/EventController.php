@@ -12,6 +12,45 @@ class EventController extends BaseController
     protected $modelName = EventApi::class;
 
     /**
+     * @OA\Get(
+     *   path="/event/get-type-list",
+     *   summary="Получить список типов",
+     *   tags={"Событие | Event"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           {
+     *              "id": 1,
+     *              "name": "One-day event",
+     *              "desc": "Событие на один день"
+     *           },
+     *           {
+     *              "id": 2,
+     *              "name": "Multiple-days event",
+     *              "desc": "Событие на несколько дней"
+     *           },
+     *           {
+     *              "id": 3,
+     *              "name": "Regular event",
+     *              "desc": "Повторяющееся событие"
+     *           }
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     * )
+     */
+    public function actionGetTypeList(): array
+    {
+        return $this->api->getTypeList();
+    }
+
+    /**
      * @OA\Post(
      *   path="/event/create",
      *   summary="Создать",
@@ -94,6 +133,12 @@ class EventController extends BaseController
      *             format="file",
      *         ),
      *         @OA\Property(
+     *             property="photo_gallery[]",
+     *             description="Фотогалерея",
+     *             type="file",
+     *             format="file"
+     *         ),
+     *         @OA\Property(
      *           property="carrying_date",
      *           description="Список дат проведения мероприятий с продолжительностью",
      *           type="object",
@@ -134,44 +179,5 @@ class EventController extends BaseController
     public function actionCreate()
     {
         return $this->api->create($this->post);
-    }
-
-    /**
-     * @OA\Get(
-     *   path="/event/get-type-list",
-     *   summary="Получить список типов",
-     *   tags={"Событие | Event"},
-     *   @OA\Response(
-     *     response=200,
-     *     description="success",
-     *     @OA\MediaType(
-     *       mediaType="application/json",
-     *       @OA\Schema(
-     *         type="object",
-     *         example={
-     *           {
-     *              "id": 1,
-     *              "name": "One-day event",
-     *              "desc": "Событие на один день"
-     *           },
-     *           {
-     *              "id": 2,
-     *              "name": "Multiple-days event",
-     *              "desc": "Событие на несколько дней"
-     *           },
-     *           {
-     *              "id": 3,
-     *              "name": "Regular event",
-     *              "desc": "Повторяющееся событие"
-     *           }
-     *         }
-     *       ),
-     *     ),
-     *   ),
-     * )
-     */
-    public function actionGetTypeList(): array
-    {
-        return $this->api->getTypeList();
     }
 }

@@ -15,7 +15,7 @@ class InterestController extends BaseController
 
     /**
      * @OA\Get(
-     *   path="/interest/get",
+     *   path="/interest/get-list",
      *   summary="Получить список интересов",
      *   tags={"Интересы | Interest"},
      *   @OA\Response(
@@ -58,9 +58,9 @@ class InterestController extends BaseController
      * )
      * @throws InvalidConfigException
      */
-    public function actionGet(): array
+    public function actionGetList(): array
     {
-        return $this->api->get();
+        return $this->api->getList();
     }
 
     /**

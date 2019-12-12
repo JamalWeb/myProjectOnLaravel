@@ -111,8 +111,40 @@ class UserController extends BaseController
     }
 
     /**
+     * @OA\Get(
+     *   path="/user/get-gender-list",
+     *   summary="Список гендерных принадлежностей",
+     *   tags={"Пользователь | User"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           {
+     *              "id": 1,
+     *              "name": "Male"
+     *           },
+     *           {
+     *              "id": 2,
+     *              "name": "Female"
+     *           }
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     * )
+     */
+    public function actionGetGenderList(): array
+    {
+        return $this->api->getGenderList();
+    }
+
+    /**
      * @OA\Post(
-     *   path="/user/registration-default-user",
+     *   path="/user/registration-default",
      *   summary="Регистрация обычного пользователя",
      *   tags={"Пользователь | User"},
      *   @OA\RequestBody(
@@ -267,14 +299,14 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationDefaultUser(): array
+    public function actionRegistrationDefault(): array
     {
-        return $this->api->registrationDefaultUser($this->post);
+        return $this->api->registrationDefault($this->post);
     }
 
     /**
      * @OA\Post(
-     *   path="/user/registration-business-user",
+     *   path="/user/registration-business",
      *   summary="Регистрация бизнес-пользователя",
      *   tags={"Пользователь | User"},
      *   @OA\RequestBody(
@@ -411,16 +443,17 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationBusinessUser()
+    public function actionRegistrationBusiness()
     {
-        return $this->api->registrationBusinessUser($this->post);
+        return $this->api->registrationBusiness($this->post);
     }
 
     /**
      * @OA\Post(
-     *   path="/user/update-default-user",
+     *   path="/user/update-default",
      *   summary="Редактирование профиля обычного пользователя",
      *   tags={"Пользователь | User"},
+     *   deprecated=true,
      *   security={{"bearerAuth":{}}},
      *   @OA\RequestBody(
      *     @OA\MediaType(
@@ -603,14 +636,14 @@ class UserController extends BaseController
      * )
      * @throws BadRequestHttpException
      */
-    public function actionUpdateDefaultUser(): array
+    public function actionUpdateDefault(): array
     {
-        return $this->api->updateDefaultUser($this->user, $this->post);
+        return $this->api->updateDefault($this->user, $this->post);
     }
 
     /**
      * @OA\Get(
-     *   path="/user/get",
+     *   path="/user/get/",
      *   summary="Получить информацию о пользователе",
      *   tags={"Пользователь | User"},
      *   security={{"bearerAuth":{}}},

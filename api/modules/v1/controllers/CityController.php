@@ -13,8 +13,8 @@ class CityController extends BaseController
 
     /**
      * @OA\Get(
-     *   path="/city/get",
-     *   summary="Список городов",
+     *   path="/city/get-list",
+     *   summary="Получить список городов",
      *   tags={"Город | City"},
      *   @OA\Response(
      *     response=200,
@@ -38,8 +38,8 @@ class CityController extends BaseController
      *   ),
      * )
      */
-    public function actionGet(): array
+    public function actionGetList(): array
     {
-        return $this->api->get();
+        return $this->api->getList();
     }
 }

@@ -26,6 +26,10 @@ class m191126_082701_create_table_event extends Migration
                 ->notNull()
                 ->comment('Тип события'),
 
+            'status_id' => $this->integer()
+                ->notNull()
+                ->comment('Статус события'),
+
             'name' => $this->string(20)
                 ->notNull()
                 ->comment('Наименование'),

@@ -7,7 +7,7 @@ use common\models\City;
 
 class CityApi extends Api
 {
-    public function get()
+    public function getList()
     {
         return City::find()->all();
     }

@@ -6,6 +6,7 @@ use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\form\base\AbstractUserForm;
 use api\modules\v1\models\form\BusinessUserForm;
 use common\components\PasswordHelper;
+use common\models\user\UserGender;
 use common\models\user\UserRole;
 use Yii;
 use api\modules\v1\models\error\BadRequestHttpException;
@@ -90,13 +91,23 @@ class UserApi extends Api
     }
 
     /**
+     * Список гендерных принадлежностей
+     *
+     * @return array
+     */
+    public final function getGenderList(): array
+    {
+        return UserGender::find()->all();
+    }
+
+    /**
      * Регистрация обычного пользователя
      *
      * @param array $post
      * @return array
      * @throws Exception
      */
-    public final function registrationDefaultUser(array $post): array
+    public final function registrationDefault(array $post): array
     {
         $defaultUserForm = new DefaultUserForm($post);
         $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_CREATE);
@@ -154,7 +165,7 @@ class UserApi extends Api
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public function registrationBusinessUser(array $post): array
+    public function registrationBusiness(array $post): array
     {
         $businessUserForm = new BusinessUserForm($post);
 
@@ -210,7 +221,7 @@ class UserApi extends Api
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public function updateDefaultUser(User $user, array $post): array
+    public function updateDefault(User $user, array $post): array
     {
         $defaultUserForm = new DefaultUserForm($post);
 //        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_UPDATE);

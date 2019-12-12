@@ -24,7 +24,7 @@ class InterestApi extends Api
      * @return InterestCategory[]
      * @throws InvalidConfigException
      */
-    public function get(): array
+    public function getList(): array
     {
         /** @var InterestCategory[] $interests */
         $interests = InterestCategory::find()->all();
