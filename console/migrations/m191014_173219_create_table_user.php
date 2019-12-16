@@ -1,6 +1,7 @@
 <?php
 
 use common\components\PasswordHelper;
+use common\components\registry\Constants;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -9,8 +10,6 @@ use yii\db\Migration;
  */
 class m191014_173219_create_table_user extends Migration
 {
-    const TABLE_NAME = '{{%user}}';
-
     /**
      * {@inheritdoc}
      * @throws Exception
@@ -19,7 +18,7 @@ class m191014_173219_create_table_user extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_USER, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор пользователя'),
 
@@ -83,14 +82,12 @@ class m191014_173219_create_table_user extends Migration
                 ->comment('Дата обновления'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['type_id', 'role_id', 'email', 'password', 'status'], [
-            [
-                1,
-                1,
-                'arsen-web@yandex.ru',
-                PasswordHelper::encrypt(123456),
-                1
-            ],
+        $this->insert(Constants::TABLE_NAME_USER, [
+            'type_id'  => 1,
+            'role_id'  => 1,
+            'email'    => 'arsen-web@yandex.ru',
+            'password' => PasswordHelper::encrypt(123456),
+            'status'   => 1
         ]);
     }
 
@@ -99,6 +96,6 @@ class m191014_173219_create_table_user extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_USER);
     }
 }

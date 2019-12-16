@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191109_151600_create_table_relation_user_interest extends Migration
 {
-    const TABLE_NAME_RELATION_USER_INTEREST = '{{%relation_user_interest}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME_RELATION_USER_INTEREST, [
+        $this->createTable(Constants::TABLE_NAME_RELATION_USER_INTEREST, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор связи пользователя с его интересами'),
 
@@ -35,17 +34,17 @@ class m191109_151600_create_table_relation_user_interest extends Migration
 
         $this->addForeignKey(
             'FGK-user_id-relation_user_interest',
-            self::TABLE_NAME_RELATION_USER_INTEREST,
+            Constants::TABLE_NAME_RELATION_USER_INTEREST,
             'user_id',
-            '{{%user}}',
+            Constants::TABLE_NAME_USER,
             'id'
         );
 
         $this->addForeignKey(
             'FGK-interest_category_id-relation_user_interest',
-            self::TABLE_NAME_RELATION_USER_INTEREST,
+            Constants::TABLE_NAME_RELATION_USER_INTEREST,
             'interest_category_id',
-            '{{%interest_category}}',
+            Constants::TABLE_NAME_INTEREST_CATEGORY,
             'id'
         );
     }
@@ -57,14 +56,14 @@ class m191109_151600_create_table_relation_user_interest extends Migration
     {
         $this->dropForeignKey(
             'FGK-interest_category_id-relation_user_interest',
-            self::TABLE_NAME_RELATION_USER_INTEREST
+            Constants::TABLE_NAME_RELATION_USER_INTEREST
         );
 
         $this->dropForeignKey(
             'FGK-user_id-relation_user_interest',
-            self::TABLE_NAME_RELATION_USER_INTEREST
+            Constants::TABLE_NAME_RELATION_USER_INTEREST
         );
 
-        $this->dropTable(self::TABLE_NAME_RELATION_USER_INTEREST);
+        $this->dropTable(Constants::TABLE_NAME_RELATION_USER_INTEREST);
     }
 }

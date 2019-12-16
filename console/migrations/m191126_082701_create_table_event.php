@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191126_082701_create_table_event extends Migration
 {
-    const TABLE_NAME_EVENT = '{{%event}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME_EVENT, [
+        $this->createTable(Constants::TABLE_NAME_EVENT, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор события'),
 
@@ -80,33 +79,33 @@ class m191126_082701_create_table_event extends Migration
 
         $this->addForeignKey(
             'FGK-user_id-event',
-            self::TABLE_NAME_EVENT,
+            Constants::TABLE_NAME_EVENT,
             'user_id',
-            '{{%user}}',
+            Constants::TABLE_NAME_USER,
             'id'
         );
 
         $this->addForeignKey(
             'FGK-type_id-event',
-            self::TABLE_NAME_EVENT,
+            Constants::TABLE_NAME_EVENT,
             'type_id',
-            '{{%event_type}}',
+            Constants::TABLE_NAME_EVENT_TYPE,
             'id'
         );
 
         $this->addForeignKey(
             'FGK-interest_category_id-event',
-            self::TABLE_NAME_EVENT,
+            Constants::TABLE_NAME_EVENT,
             'interest_category_id',
-            '{{%interest_category}}',
+            Constants::TABLE_NAME_INTEREST_CATEGORY,
             'id'
         );
 
         $this->addForeignKey(
             'FGK-city_id-event',
-            self::TABLE_NAME_EVENT,
+            Constants::TABLE_NAME_EVENT,
             'city_id',
-            '{{%city}}',
+            Constants::TABLE_NAME_CITY,
             'id'
         );
     }
@@ -116,10 +115,10 @@ class m191126_082701_create_table_event extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-city_id-event', self::TABLE_NAME_EVENT);
-        $this->dropForeignKey('FGK-user_id-event', self::TABLE_NAME_EVENT);
-        $this->dropForeignKey('FGK-type_id-event', self::TABLE_NAME_EVENT);
-        $this->dropForeignKey('FGK-interest_category_id-event', self::TABLE_NAME_EVENT);
-        $this->dropTable(self::TABLE_NAME_EVENT);
+        $this->dropForeignKey('FGK-city_id-event', Constants::TABLE_NAME_EVENT);
+        $this->dropForeignKey('FGK-user_id-event', Constants::TABLE_NAME_EVENT);
+        $this->dropForeignKey('FGK-type_id-event', Constants::TABLE_NAME_EVENT);
+        $this->dropForeignKey('FGK-interest_category_id-event', Constants::TABLE_NAME_EVENT);
+        $this->dropTable(Constants::TABLE_NAME_EVENT);
     }
 }

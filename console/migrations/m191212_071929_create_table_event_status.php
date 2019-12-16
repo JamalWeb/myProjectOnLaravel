@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191212_071929_create_table_event_status extends Migration
 {
-    const TABLE_NAME = '{{%event_status}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_EVENT_STATUS, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор статуса события'),
 
@@ -25,7 +24,7 @@ class m191212_071929_create_table_event_status extends Migration
                 ->comment('Описание статуса события'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['name', 'desc'], [
+        $this->batchInsert(Constants::TABLE_NAME_EVENT_STATUS, ['name', 'desc'], [
             [
                 'name' => 'Новое',
                 'desc' => 'Новое событие'
@@ -46,9 +45,9 @@ class m191212_071929_create_table_event_status extends Migration
 
         $this->addForeignKey(
             'FGK-status_id-event',
-            '{{%event}}',
+            Constants::TABLE_NAME_EVENT,
             'status_id',
-            self::TABLE_NAME,
+            Constants::TABLE_NAME_EVENT_STATUS,
             'id'
         );
     }
@@ -58,7 +57,7 @@ class m191212_071929_create_table_event_status extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-status_id-event', '{{%event}}');
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropForeignKey('FGK-status_id-event', Constants::TABLE_NAME_EVENT);
+        $this->dropTable(Constants::TABLE_NAME_EVENT_STATUS);
     }
 }

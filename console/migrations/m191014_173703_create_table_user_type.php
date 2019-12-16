@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -8,8 +9,6 @@ use yii\db\Migration;
  */
 class m191014_173703_create_table_user_type extends Migration
 {
-    const TABLE_NAME = '{{%user_type}}';
-
     /**
      * {@inheritdoc}
      */
@@ -17,7 +16,7 @@ class m191014_173703_create_table_user_type extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_USER_TYPE, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор типа'),
 
@@ -37,7 +36,7 @@ class m191014_173703_create_table_user_type extends Migration
                 ->comment('Дата обновления')
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['name', 'desc'], [
+        $this->batchInsert(Constants::TABLE_NAME_USER_TYPE, ['name', 'desc'], [
             [
                 'name' => 'System',
                 'desc' => 'Системный пользователь'
@@ -58,6 +57,6 @@ class m191014_173703_create_table_user_type extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_USER_TYPE);
     }
 }

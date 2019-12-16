@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\models\form;
 
+use common\components\registry\Constants;
 use Yii;
 use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
@@ -139,7 +140,7 @@ class LoginForm extends Model
         }
 
         switch ($this->user->status) {
-            case User::STATUS_INACTIVE:
+            case Constants::USER_STATUS_INACTIVE:
                 $error = ['email' => 'Ваш аккаунт отключен'];
                 break;
 //            case User::STATUS_UNCONFIRMED_EMAIL:

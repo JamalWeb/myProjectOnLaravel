@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -8,8 +9,6 @@ use yii\db\Migration;
  */
 class m191014_175740_create_table_user_profile extends Migration
 {
-    const TABLE_NAME = '{{%user_profile}}';
-
     /**
      * {@inheritdoc}
      */
@@ -17,7 +16,7 @@ class m191014_175740_create_table_user_profile extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_USER_PROFILE, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор профиля'),
 
@@ -89,7 +88,7 @@ class m191014_175740_create_table_user_profile extends Migration
                 ->comment('Дата обновления'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, [
+        $this->batchInsert(Constants::TABLE_NAME_USER_PROFILE, [
             'user_id',
             'first_name',
             'city_id',
@@ -115,6 +114,6 @@ class m191014_175740_create_table_user_profile extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_USER_PROFILE);
     }
 }

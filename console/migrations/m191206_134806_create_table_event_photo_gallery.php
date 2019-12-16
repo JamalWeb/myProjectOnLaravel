@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191206_134806_create_table_event_photo_gallery extends Migration
 {
-    const TABLE_NAME = '{{%event_photo_gallery}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_EVENT_PHOTO_GALLERY, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор фотографии'),
 
@@ -35,9 +34,9 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
 
         $this->addForeignKey(
             'FGK-event_id-event_photo_gallery',
-            self::TABLE_NAME,
+            Constants::TABLE_NAME_EVENT_PHOTO_GALLERY,
             'event_id',
-            '{{%event}}',
+            Constants::TABLE_NAME_EVENT,
             'id'
         );
     }
@@ -47,7 +46,7 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-event_id-event_photo_gallery', self::TABLE_NAME);
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropForeignKey('FGK-event_id-event_photo_gallery', Constants::TABLE_NAME_EVENT_PHOTO_GALLERY);
+        $this->dropTable(Constants::TABLE_NAME_EVENT_PHOTO_GALLERY);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -8,8 +9,6 @@ use yii\db\Migration;
  */
 class m190723_171804_create_table_children extends Migration
 {
-    const TABLE_NAME = '{{%user_children}}';
-
     /**
      * {@inheritdoc}
      */
@@ -17,7 +16,7 @@ class m190723_171804_create_table_children extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_USER_CHILDREN, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор ребенка пользователя'),
 
@@ -48,6 +47,6 @@ class m190723_171804_create_table_children extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_USER_CHILDREN);
     }
 }

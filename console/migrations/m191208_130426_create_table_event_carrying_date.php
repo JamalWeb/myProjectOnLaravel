@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191208_130426_create_table_event_carrying_date extends Migration
 {
-    const TABLE_NAME = '{{%event_carrying_date}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_EVENT_CARRYING_DATE, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор даты проведения события'),
 
@@ -32,9 +31,9 @@ class m191208_130426_create_table_event_carrying_date extends Migration
 
         $this->addForeignKey(
             'FGK-event_id-event_carrying_date',
-            self::TABLE_NAME,
+            Constants::TABLE_NAME_EVENT_CARRYING_DATE,
             'event_id',
-            '{{%event}}',
+            Constants::TABLE_NAME_EVENT,
             'id'
         );
     }
@@ -44,7 +43,7 @@ class m191208_130426_create_table_event_carrying_date extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-event_id-event_carrying_date', self::TABLE_NAME);
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropForeignKey('FGK-event_id-event_carrying_date', Constants::TABLE_NAME_EVENT_CARRYING_DATE);
+        $this->dropTable(Constants::TABLE_NAME_EVENT_CARRYING_DATE);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191109_151501_create_table_interest extends Migration
 {
-    const TABLE_NAME_INTEREST_CATEGORIES = '{{%interest_category}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME_INTEREST_CATEGORIES, [
+        $this->createTable(Constants::TABLE_NAME_INTEREST_CATEGORY, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор интереса'),
 
@@ -27,7 +26,7 @@ class m191109_151501_create_table_interest extends Migration
                 ->comment('Наименование картинки'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME_INTEREST_CATEGORIES, ['name', 'img'], [
+        $this->batchInsert(Constants::TABLE_NAME_INTEREST_CATEGORY, ['name', 'img'], [
             [
                 'name' => 'Entertainment',
                 'img'  => 'entertainment.png'
@@ -84,6 +83,6 @@ class m191109_151501_create_table_interest extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME_INTEREST_CATEGORIES);
+        $this->dropTable(Constants::TABLE_NAME_INTEREST_CATEGORY);
     }
 }

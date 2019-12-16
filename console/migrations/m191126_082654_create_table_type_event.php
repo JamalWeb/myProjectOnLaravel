@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191126_082654_create_table_type_event extends Migration
 {
-    const TABLE_NAME_EVENT_TYPE = '{{%event_type}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME_EVENT_TYPE, [
+        $this->createTable(Constants::TABLE_NAME_EVENT_TYPE, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор типа события'),
 
@@ -26,7 +25,7 @@ class m191126_082654_create_table_type_event extends Migration
                 ->comment('Описание типа события'),
         ]);
 
-        $this->batchInsert(self::TABLE_NAME_EVENT_TYPE, ['name', 'desc'], [
+        $this->batchInsert(Constants::TABLE_NAME_EVENT_TYPE, ['name', 'desc'], [
             [
                 'name' => 'One-day event',
                 'desc' => 'Событие на один день'
@@ -47,6 +46,6 @@ class m191126_082654_create_table_type_event extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME_EVENT_TYPE);
+        $this->dropTable(Constants::TABLE_NAME_EVENT_TYPE);
     }
 }

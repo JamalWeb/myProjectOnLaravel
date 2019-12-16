@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -8,8 +9,6 @@ use yii\db\Migration;
  */
 class m191014_181205_create_table_user_token extends Migration
 {
-    const TABLE_NAME = '{{%user_token}}';
-
     /**
      * {@inheritdoc}
      */
@@ -17,7 +16,7 @@ class m191014_181205_create_table_user_token extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_USER_TOKEN, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор токена'),
 
@@ -54,6 +53,6 @@ class m191014_181205_create_table_user_token extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_USER_TOKEN);
     }
 }

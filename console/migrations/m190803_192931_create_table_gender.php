@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m190803_192931_create_table_gender extends Migration
 {
-    const TABLE_NAME = '{{%user_gender}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_USER_GENDER, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор пола'),
 
@@ -23,7 +22,7 @@ class m190803_192931_create_table_gender extends Migration
                 ->comment('Наименование пола')
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['name'], [
+        $this->batchInsert(Constants::TABLE_NAME_USER_GENDER, ['name'], [
             ['name' => 'Male'],
             ['name' => 'Female'],
         ]);
@@ -34,6 +33,6 @@ class m190803_192931_create_table_gender extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_USER_GENDER);
     }
 }

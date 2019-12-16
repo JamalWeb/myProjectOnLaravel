@@ -3,8 +3,8 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\classes\base\Api;
+use common\models\event\EventStatus;
 use common\models\event\EventType;
-use yii\web\UploadedFile;
 
 class EventApi extends Api
 {
@@ -18,11 +18,21 @@ class EventApi extends Api
         return EventType::find()->all();
     }
 
+    /**
+     * Получить список статусов
+     *
+     * @return array
+     */
+    public function getStatusList(): array
+    {
+        return EventStatus::find()->all();
+    }
+
     public function create(array $post)
     {
         return [
-            '$_FILES' => $_FILES,
-            '$_POST'  => $_POST
+            '$post' => $post['carrying_date'],
+            'files' => $_FILES
         ];
     }
 }

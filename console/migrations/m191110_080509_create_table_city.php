@@ -1,5 +1,6 @@
 <?php
 
+use common\components\registry\Constants;
 use yii\db\Migration;
 
 /**
@@ -7,14 +8,12 @@ use yii\db\Migration;
  */
 class m191110_080509_create_table_city extends Migration
 {
-    const TABLE_NAME = '{{%city}}';
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable(self::TABLE_NAME, [
+        $this->createTable(Constants::TABLE_NAME_CITY, [
             'id' => $this->primaryKey()
                 ->comment('Идентификатор города'),
 
@@ -23,7 +22,7 @@ class m191110_080509_create_table_city extends Migration
                 ->comment('Наименование города')
         ]);
 
-        $this->batchInsert(self::TABLE_NAME, ['name'], [
+        $this->batchInsert(Constants::TABLE_NAME_CITY, ['name'], [
             ['name' => 'Moscow'],
             ['name' => 'San Francisco'],
             ['name' => 'London']
@@ -35,6 +34,6 @@ class m191110_080509_create_table_city extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropTable(Constants::TABLE_NAME_CITY);
     }
 }

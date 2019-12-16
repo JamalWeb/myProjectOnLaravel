@@ -5,6 +5,7 @@ namespace common\models\user;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\PasswordHelper;
+use common\components\registry\Constants;
 use common\models\base\BaseModel;
 use Yii;
 use yii\db\ActiveQuery;
@@ -41,10 +42,6 @@ use yii\web\IdentityInterface;
  */
 class User extends BaseModel implements IdentityInterface
 {
-    const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_UNCONFIRMED_EMAIL = 2;
-
     /**
      * {@inheritdoc}
      */
@@ -116,7 +113,7 @@ class User extends BaseModel implements IdentityInterface
     {
         return static::findOne([
             'id'        => $id,
-            'status'    => self::STATUS_ACTIVE,
+            'status'    => Constants::USER_STATUS_ACTIVE,
             'is_banned' => false
         ]);
     }
@@ -140,8 +137,8 @@ class User extends BaseModel implements IdentityInterface
         return static::findOne([
             'id'     => $userToken->user_id,
             'status' => [
-                self::STATUS_ACTIVE,
-                self::STATUS_UNCONFIRMED_EMAIL
+                Constants::USER_STATUS_ACTIVE,
+                Constants::USER_STATUS_UNCONFIRMED_EMAIL
             ]
         ]);
     }
@@ -164,13 +161,7 @@ class User extends BaseModel implements IdentityInterface
 
     public function getStatusNameById(int $typeId): string
     {
-        $statues = [
-            self::STATUS_INACTIVE          => 'Не активен',
-            self::STATUS_ACTIVE            => 'Активен',
-            self::STATUS_UNCONFIRMED_EMAIL => 'Почта не подтверждена',
-        ];
-
-        return $statues[$typeId];
+        return Constants::$userStatuses[$typeId];
     }
 
     /**

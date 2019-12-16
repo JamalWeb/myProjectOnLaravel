@@ -51,6 +51,50 @@ class EventController extends BaseController
     }
 
     /**
+     * @OA\Get(
+     *   path="/event/get-status-list",
+     *   summary="Получить список статусов",
+     *   tags={"Событие | Event"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           {
+     *              "id": 1,
+     *              "name": "Новое",
+     *              "desc": "Новое событие"
+     *           },
+     *           {
+     *              "id": 2,
+     *              "name": "Завершено",
+     *              "desc": "Событие было завершено"
+     *           },
+     *           {
+     *              "id": 3,
+     *              "name": "Отменено",
+     *              "desc": "Событие было отменено"
+     *           },
+     *           {
+     *              "id": 4,
+     *              "name": "Не активно",
+     *              "desc": "Событие временно не активно"
+     *           }
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     * )
+     */
+    public function actionGetStatusList(): array
+    {
+        return $this->api->getStatusList();
+    }
+
+    /**
      * @OA\Post(
      *   path="/event/create",
      *   summary="Создать",

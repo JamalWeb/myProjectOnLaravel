@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use common\components\registry\Constants;
 use common\models\user\User;
 use common\models\user\UserToken;
 use Exception;
@@ -31,7 +32,7 @@ class ConfirmController extends Controller
 
         try {
             $userToken->user->saveModel([
-                'status' => User::STATUS_ACTIVE
+                'status' => Constants::USER_STATUS_ACTIVE
             ]);
             $userToken->delete();
         } catch (Exception $e) {
