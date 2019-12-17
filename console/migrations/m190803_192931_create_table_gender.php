@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
 /**
@@ -13,19 +14,22 @@ class m190803_192931_create_table_gender extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(Constants::TABLE_NAME_USER_GENDER, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_USER_GENDER, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор пола'),
 
-            'name' => $this->string()
+            AttributeRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование пола')
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_USER_GENDER, ['name'], [
-            ['name' => 'Male'],
-            ['name' => 'Female'],
-        ]);
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_USER_GENDER,
+            [AttributeRegistry::NAME],
+            [
+                [AttributeRegistry::NAME => 'Male'],
+                [AttributeRegistry::NAME => 'Female'],
+            ]);
     }
 
     /**
@@ -33,6 +37,6 @@ class m190803_192931_create_table_gender extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_USER_GENDER);
+        $this->dropTable(TableRegistry::TABLE_NAME_USER_GENDER);
     }
 }

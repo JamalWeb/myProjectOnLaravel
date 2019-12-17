@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
 /**
@@ -13,20 +14,23 @@ class m191110_080509_create_table_city extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(Constants::TABLE_NAME_CITY, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_CITY, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор города'),
 
-            'name' => $this->string()
+            AttributeRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование города')
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_CITY, ['name'], [
-            ['name' => 'Moscow'],
-            ['name' => 'San Francisco'],
-            ['name' => 'London']
-        ]);
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_CITY,
+            [AttributeRegistry::NAME],
+            [
+                [AttributeRegistry::NAME => 'Moscow'],
+                [AttributeRegistry::NAME => 'San Francisco'],
+                [AttributeRegistry::NAME => 'London']
+            ]);
     }
 
     /**
@@ -34,6 +38,6 @@ class m191110_080509_create_table_city extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_CITY);
+        $this->dropTable(TableRegistry::TABLE_NAME_CITY);
     }
 }

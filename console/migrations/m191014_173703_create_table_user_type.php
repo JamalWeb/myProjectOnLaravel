@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -16,40 +17,46 @@ class m191014_173703_create_table_user_type extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(Constants::TABLE_NAME_USER_TYPE, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_USER_TYPE, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор типа'),
 
-            'name' => $this->string()
+            AttributeRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование'),
 
-            'desc' => $this->string()
+            AttributeRegistry::DESCRIPTION => $this->string()
                 ->comment('Описание'),
 
-            'created_at' => $this->timestamp()
+            AttributeRegistry::CREATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата создания'),
 
-            'updated_at' => $this->timestamp()
+            AttributeRegistry::UPDATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата обновления')
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_USER_TYPE, ['name', 'desc'], [
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_USER_TYPE,
             [
-                'name' => 'System',
-                'desc' => 'Системный пользователь'
+                AttributeRegistry::NAME,
+                AttributeRegistry::DESCRIPTION
             ],
             [
-                'name' => 'User',
-                'desc' => 'Обычный пользователь'
-            ],
-            [
-                'name' => 'Business',
-                'desc' => 'Бизнес пользователь'
-            ],
-        ]);
+                [
+                    AttributeRegistry::NAME => 'System',
+                    AttributeRegistry::DESCRIPTION => 'Системный пользователь'
+                ],
+                [
+                    AttributeRegistry::NAME => 'User',
+                    AttributeRegistry::DESCRIPTION => 'Обычный пользователь'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Business',
+                    AttributeRegistry::DESCRIPTION => 'Бизнес пользователь'
+                ],
+            ]);
     }
 
     /**
@@ -57,6 +64,6 @@ class m191014_173703_create_table_user_type extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_USER_TYPE);
+        $this->dropTable(TableRegistry::TABLE_NAME_USER_TYPE);
     }
 }

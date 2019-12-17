@@ -5,7 +5,8 @@ namespace common\models\user;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\PasswordHelper;
-use common\components\registry\Constants;
+use common\components\registry\TableRegistry;
+use common\components\registry\UserRegistry;
 use common\models\base\BaseModel;
 use Yii;
 use yii\db\ActiveQuery;
@@ -47,7 +48,7 @@ class User extends BaseModel implements IdentityInterface
      */
     public static function tableName()
     {
-        return Constants::TABLE_NAME_USER;
+        return TableRegistry::TABLE_NAME_USER;
     }
 
     /**
@@ -113,7 +114,7 @@ class User extends BaseModel implements IdentityInterface
     {
         return static::findOne([
             'id'        => $id,
-            'status'    => Constants::USER_STATUS_ACTIVE,
+            'status'    => UserRegistry::USER_STATUS_ACTIVE,
             'is_banned' => false
         ]);
     }
@@ -137,8 +138,8 @@ class User extends BaseModel implements IdentityInterface
         return static::findOne([
             'id'     => $userToken->user_id,
             'status' => [
-                Constants::USER_STATUS_ACTIVE,
-                Constants::USER_STATUS_UNCONFIRMED_EMAIL
+                UserRegistry::USER_STATUS_ACTIVE,
+                UserRegistry::USER_STATUS_UNCONFIRMED_EMAIL
             ]
         ]);
     }
@@ -159,11 +160,6 @@ class User extends BaseModel implements IdentityInterface
         return true;
     }
 
-    public function getStatusNameById(int $typeId): string
-    {
-        return Constants::$userStatuses[$typeId];
-    }
-
     /**
      * @return array
      */
@@ -174,7 +170,7 @@ class User extends BaseModel implements IdentityInterface
             'email'      => $this->email,
             'status'     => [
                 'id'   => $this->status,
-                'name' => $this->getStatusNameById($this->status)
+                'name' => UserRegistry::getStatusNameById($this->status)
             ],
             'banned'     => [
                 'is_banned'     => $this->is_banned,

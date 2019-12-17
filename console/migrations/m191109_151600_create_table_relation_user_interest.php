@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
 /**
@@ -13,39 +14,39 @@ class m191109_151600_create_table_relation_user_interest extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(Constants::TABLE_NAME_RELATION_USER_INTEREST, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_RELATION_USER_INTEREST, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор связи пользователя с его интересами'),
 
-            'user_id' => $this->integer()
+            AttributeRegistry::USER_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пользователя'),
 
-            'interest_category_id' => $this->integer()
+            AttributeRegistry::INTEREST_CATEGORY_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор интереса'),
 
-            'created_at' => $this->timestamp()
+            AttributeRegistry::CREATED_AT => $this->timestamp()
                 ->comment('Дата создания'),
 
-            'updated_at' => $this->timestamp()
+            AttributeRegistry::UPDATED_AT => $this->timestamp()
                 ->comment('Дата обновления')
         ]);
 
         $this->addForeignKey(
             'FGK-user_id-relation_user_interest',
-            Constants::TABLE_NAME_RELATION_USER_INTEREST,
-            'user_id',
-            Constants::TABLE_NAME_USER,
-            'id'
+            TableRegistry::TABLE_NAME_RELATION_USER_INTEREST,
+            AttributeRegistry::USER_ID,
+            TableRegistry::TABLE_NAME_USER,
+            AttributeRegistry::ID
         );
 
         $this->addForeignKey(
             'FGK-interest_category_id-relation_user_interest',
-            Constants::TABLE_NAME_RELATION_USER_INTEREST,
-            'interest_category_id',
-            Constants::TABLE_NAME_INTEREST_CATEGORY,
-            'id'
+            TableRegistry::TABLE_NAME_RELATION_USER_INTEREST,
+            AttributeRegistry::INTEREST_CATEGORY_ID,
+            TableRegistry::TABLE_NAME_INTEREST_CATEGORY,
+            AttributeRegistry::ID
         );
     }
 
@@ -56,14 +57,14 @@ class m191109_151600_create_table_relation_user_interest extends Migration
     {
         $this->dropForeignKey(
             'FGK-interest_category_id-relation_user_interest',
-            Constants::TABLE_NAME_RELATION_USER_INTEREST
+            TableRegistry::TABLE_NAME_RELATION_USER_INTEREST
         );
 
         $this->dropForeignKey(
             'FGK-user_id-relation_user_interest',
-            Constants::TABLE_NAME_RELATION_USER_INTEREST
+            TableRegistry::TABLE_NAME_RELATION_USER_INTEREST
         );
 
-        $this->dropTable(Constants::TABLE_NAME_RELATION_USER_INTEREST);
+        $this->dropTable(TableRegistry::TABLE_NAME_RELATION_USER_INTEREST);
     }
 }

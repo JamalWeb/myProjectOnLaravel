@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -16,97 +17,100 @@ class m191014_175740_create_table_user_profile extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(Constants::TABLE_NAME_USER_PROFILE, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_USER_PROFILE, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор профиля'),
 
-            'user_id' => $this->integer()
+            AttributeRegistry::USER_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пользователя'),
 
-            'first_name' => $this->string()
+            AttributeRegistry::FIRST_NAME => $this->string()
                 ->notNull()
                 ->comment('Имя'),
 
-            'last_name' => $this->string()
+            AttributeRegistry::LAST_NAME => $this->string()
                 ->comment('Фамилия'),
 
-            'patronymic' => $this->string()
+            AttributeRegistry::PATRONYMIC => $this->string()
                 ->comment('Отчество'),
 
-            'avatar' => $this->string()
+            AttributeRegistry::AVATAR => $this->string()
                 ->comment('Аватар'),
 
-            'phone_number' => $this->string()
+            AttributeRegistry::PHONE_NUMBER => $this->string()
                 ->comment('Телефонный номер'),
 
-            'address' => $this->string()
+            AttributeRegistry::ADDRESS => $this->string()
                 ->comment('Адрес'),
 
-            'gender_id' => $this->integer()
+            AttributeRegistry::GENDER_ID => $this->integer()
                 ->comment('Идентификатор пола'),
 
-            'about' => $this->string()
+            AttributeRegistry::ABOUT => $this->string()
                 ->comment('Описание бизнес аккаунта'),
 
-            'country_id' => $this->integer()
+            AttributeRegistry::COUNTRY_ID => $this->integer()
                 ->comment('Идентификатор страны'),
 
-            'city_id' => $this->integer()
+            AttributeRegistry::CITY_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор города'),
 
-            'is_closed' => $this->boolean()
+            AttributeRegistry::IS_CLOSED => $this->boolean()
                 ->defaultValue(false)
                 ->comment('Профиль закрыт'),
 
-            'is_notice' => $this->boolean()
+            AttributeRegistry::IS_NOTICE => $this->boolean()
                 ->defaultValue(false)
                 ->comment('Получать уведомления'),
 
-            'longitude' => $this->string()
+            AttributeRegistry::LONGITUDE => $this->string()
                 ->comment('Координаты: долгота'),
 
-            'latitude' => $this->string()
+            AttributeRegistry::LATITUDE => $this->string()
                 ->comment('Координаты: широта'),
 
-            'language' => $this->string()
+            AttributeRegistry::LANGUAGE => $this->string()
                 ->comment('Язык'),
 
-            'short_lang' => $this->string()
+            AttributeRegistry::SHORT_LANG => $this->string()
                 ->comment('Код языка'),
 
-            'timezone' => $this->string()
+            AttributeRegistry::TIMEZONE => $this->string()
                 ->comment('Часовой пояс'),
 
-            'created_at' => $this->timestamp()
+            AttributeRegistry::CREATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата создания'),
 
-            'updated_at' => $this->timestamp()
+            AttributeRegistry::UPDATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата обновления'),
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_USER_PROFILE, [
-            'user_id',
-            'first_name',
-            'city_id',
-            'gender_id',
-            'language',
-            'short_lang',
-            'timezone',
-        ], [
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_USER_PROFILE,
             [
-                1,
-                'Admin',
-                1,
-                1,
-                'Russian',
-                'ru-RU',
-                'Europe/Moscow',
-            ]
-        ]);
+                AttributeRegistry::USER_ID,
+                AttributeRegistry::FIRST_NAME,
+                AttributeRegistry::CITY_ID,
+                AttributeRegistry::GENDER_ID,
+                AttributeRegistry::LANGUAGE,
+                AttributeRegistry::SHORT_LANG,
+                AttributeRegistry::TIMEZONE,
+            ],
+            [
+                [
+                    1,
+                    'Admin',
+                    1,
+                    1,
+                    'Russian',
+                    'ru-RU',
+                    'Europe/Moscow',
+                ]
+            ]);
     }
 
     /**
@@ -114,6 +118,6 @@ class m191014_175740_create_table_user_profile extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_USER_PROFILE);
+        $this->dropTable(TableRegistry::TABLE_NAME_USER_PROFILE);
     }
 }

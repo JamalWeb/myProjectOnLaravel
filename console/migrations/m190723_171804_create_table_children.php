@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -16,27 +17,27 @@ class m190723_171804_create_table_children extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(Constants::TABLE_NAME_USER_CHILDREN, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_USER_CHILDREN, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор ребенка пользователя'),
 
-            'user_id' => $this->integer()
+            AttributeRegistry::USER_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пользователя'),
 
-            'age' => $this->integer()
+            AttributeRegistry::AGE => $this->integer()
                 ->notNull()
                 ->comment('Возраст'),
 
-            'gender_id' => $this->integer()
+            AttributeRegistry::GENDER_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пола'),
 
-            'created_at' => $this->timestamp()
+            AttributeRegistry::CREATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата создания'),
 
-            'updated_at' => $this->timestamp()
+            AttributeRegistry::UPDATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата обновления'),
         ]);
@@ -47,6 +48,6 @@ class m190723_171804_create_table_children extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_USER_CHILDREN);
+        $this->dropTable(TableRegistry::TABLE_NAME_USER_CHILDREN);
     }
 }

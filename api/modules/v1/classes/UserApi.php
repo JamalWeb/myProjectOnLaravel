@@ -6,7 +6,8 @@ use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\form\base\AbstractUserForm;
 use api\modules\v1\models\form\BusinessUserForm;
 use common\components\PasswordHelper;
-use common\components\registry\Constants;
+use common\components\registry\TableRegistry;
+use common\components\registry\UserRegistry;
 use common\models\user\UserGender;
 use common\models\user\UserRole;
 use Yii;
@@ -125,7 +126,7 @@ class UserApi extends Api
                 'role_id'    => UserRole::ROLE_DEFAULT_USER,
                 'email'      => $defaultUserForm->email,
                 'password'   => PasswordHelper::encrypt($defaultUserForm->password),
-                'status'     => Constants::USER_STATUS_UNCONFIRMED_EMAIL,
+                'status'     => UserRegistry::USER_STATUS_UNCONFIRMED_EMAIL,
                 'created_ip' => Yii::$app->request->remoteIP,
             ]);
 
@@ -182,7 +183,7 @@ class UserApi extends Api
                 'role_id'    => UserRole::ROLE_BUSINESS_USER,
                 'email'      => $businessUserForm->email,
                 'password'   => PasswordHelper::encrypt($businessUserForm->password),
-                'status'     => Constants::USER_STATUS_UNCONFIRMED_EMAIL,
+                'status'     => UserRegistry::USER_STATUS_UNCONFIRMED_EMAIL,
                 'created_ip' => Yii::$app->request->remoteIP,
             ]);
 
@@ -309,7 +310,7 @@ class UserApi extends Api
         $user = User::findOne([
             'id'        => $id,
             'type_id'   => UserType::$validTypeSearch,
-            'status'    => Constants::USER_STATUS_ACTIVE,
+            'status'    => UserRegistry::USER_STATUS_ACTIVE,
             'is_banned' => false
         ]);
 

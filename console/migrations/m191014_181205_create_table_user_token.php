@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -16,33 +17,33 @@ class m191014_181205_create_table_user_token extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(Constants::TABLE_NAME_USER_TOKEN, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_USER_TOKEN, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор токена'),
 
-            'user_id' => $this->integer()
+            AttributeRegistry::USER_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пользователя'),
 
-            'type' => $this->integer()
+            AttributeRegistry::TYPE_ID => $this->integer()
                 ->notNull()
                 ->comment('Тип токена'),
 
-            'access_token' => $this->string()
+            AttributeRegistry::ACCESS_TOKEN => $this->string()
                 ->notNull()
                 ->comment('Токен доступа'),
 
-            'data' => $this->text()
+            AttributeRegistry::DATA => $this->text()
                 ->comment('Временное хранение данных'),
 
-            'expired_at' => $this->timestamp()
+            AttributeRegistry::EXPIRED_AT => $this->timestamp()
                 ->comment('Срок действия'),
 
-            'created_at' => $this->timestamp()
+            AttributeRegistry::CREATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата создания'),
 
-            'updated_at' => $this->timestamp()
+            AttributeRegistry::UPDATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата обновления')
         ]);
@@ -53,6 +54,6 @@ class m191014_181205_create_table_user_token extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_USER_TOKEN);
+        $this->dropTable(TableRegistry::TABLE_NAME_USER_TOKEN);
     }
 }

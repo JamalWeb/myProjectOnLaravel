@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
 /**
@@ -13,42 +14,48 @@ class m191212_071929_create_table_event_status extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(Constants::TABLE_NAME_EVENT_STATUS, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_EVENT_STATUS, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор статуса события'),
 
-            'name' => $this->string()
+            AttributeRegistry::NAME => $this->string()
                 ->comment('Наименование статуса события'),
 
-            'desc' => $this->string()
+            AttributeRegistry::DESCRIPTION => $this->string()
                 ->comment('Описание статуса события'),
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_EVENT_STATUS, ['name', 'desc'], [
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_EVENT_STATUS,
             [
-                'name' => 'Новое',
-                'desc' => 'Новое событие'
+                AttributeRegistry::NAME,
+                AttributeRegistry::DESCRIPTION
             ],
             [
-                'name' => 'Завершено',
-                'desc' => 'Событие было завершено'
-            ],
-            [
-                'name' => 'Отменено',
-                'desc' => 'Событие было отменено'
-            ],
-            [
-                'name' => 'Не активно',
-                'desc' => 'Событие временно не активно'
-            ]
-        ]);
+                [
+                    AttributeRegistry::NAME        => 'Новое',
+                    AttributeRegistry::DESCRIPTION => 'Новое событие'
+                ],
+                [
+                    AttributeRegistry::NAME        => 'Завершено',
+                    AttributeRegistry::DESCRIPTION => 'Событие было завершено'
+                ],
+                [
+                    AttributeRegistry::NAME        => 'Отменено',
+                    AttributeRegistry::DESCRIPTION => 'Событие было отменено'
+                ],
+                [
+                    AttributeRegistry::NAME        => 'Не активно',
+                    AttributeRegistry::DESCRIPTION => 'Событие временно не активно'
+                ]
+            ]);
 
         $this->addForeignKey(
             'FGK-status_id-event',
-            Constants::TABLE_NAME_EVENT,
-            'status_id',
-            Constants::TABLE_NAME_EVENT_STATUS,
-            'id'
+            TableRegistry::TABLE_NAME_EVENT,
+            AttributeRegistry::STATUS_ID,
+            TableRegistry::TABLE_NAME_EVENT_STATUS,
+            AttributeRegistry::ID
         );
     }
 
@@ -57,7 +64,7 @@ class m191212_071929_create_table_event_status extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-status_id-event', Constants::TABLE_NAME_EVENT);
-        $this->dropTable(Constants::TABLE_NAME_EVENT_STATUS);
+        $this->dropForeignKey('FGK-status_id-event', TableRegistry::TABLE_NAME_EVENT);
+        $this->dropTable(TableRegistry::TABLE_NAME_EVENT_STATUS);
     }
 }

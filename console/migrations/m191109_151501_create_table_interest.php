@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
 /**
@@ -13,69 +14,75 @@ class m191109_151501_create_table_interest extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(Constants::TABLE_NAME_INTEREST_CATEGORY, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_INTEREST_CATEGORY, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор интереса'),
 
-            'name' => $this->string()
+            AttributeRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование интереса'),
 
-            'img' => $this->string()
+            AttributeRegistry::IMG => $this->string()
                 ->notNull()
                 ->comment('Наименование картинки'),
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_INTEREST_CATEGORY, ['name', 'img'], [
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_INTEREST_CATEGORY,
             [
-                'name' => 'Entertainment',
-                'img'  => 'entertainment.png'
+                AttributeRegistry::NAME,
+                AttributeRegistry::IMG
             ],
             [
-                'name' => 'Art',
-                'img'  => 'art.png'
-            ],
-            [
-                'name' => 'Sport',
-                'img'  => 'sport.png'
-            ],
-            [
-                'name' => 'Music',
-                'img'  => 'music.png'
-            ],
-            [
-                'name' => 'Education',
-                'img'  => 'education.png'
-            ],
-            [
-                'name' => 'Talks',
-                'img'  => 'talks.png'
-            ],
-            [
-                'name' => 'Food',
-                'img'  => 'food.png'
-            ],
-            [
-                'name' => 'Shopping',
-                'img'  => 'shopping.png'
-            ],
-            [
-                'name' => 'Strolls',
-                'img'  => 'strolls.png'
-            ],
-            [
-                'name' => 'Travel',
-                'img'  => 'travel.png'
-            ],
-            [
-                'name' => 'Health',
-                'img'  => 'health.png'
-            ],
-            [
-                'name' => 'Beauty',
-                'img'  => 'beauty.png'
-            ]
-        ]);
+                [
+                    AttributeRegistry::NAME => 'Entertainment',
+                    AttributeRegistry::IMG  => 'entertainment.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Art',
+                    AttributeRegistry::IMG  => 'art.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Sport',
+                    AttributeRegistry::IMG  => 'sport.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Music',
+                    AttributeRegistry::IMG  => 'music.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Education',
+                    AttributeRegistry::IMG  => 'education.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Talks',
+                    AttributeRegistry::IMG  => 'talks.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Food',
+                    AttributeRegistry::IMG  => 'food.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Shopping',
+                    AttributeRegistry::IMG  => 'shopping.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Strolls',
+                    AttributeRegistry::IMG  => 'strolls.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Travel',
+                    AttributeRegistry::IMG  => 'travel.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Health',
+                    AttributeRegistry::IMG  => 'health.png'
+                ],
+                [
+                    AttributeRegistry::NAME => 'Beauty',
+                    AttributeRegistry::IMG  => 'beauty.png'
+                ]
+            ]);
     }
 
     /**
@@ -83,6 +90,6 @@ class m191109_151501_create_table_interest extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_INTEREST_CATEGORY);
+        $this->dropTable(TableRegistry::TABLE_NAME_INTEREST_CATEGORY);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
-use common\components\registry\Constants;
+use common\components\registry\AttributeRegistry;
+use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
 /**
@@ -13,32 +14,38 @@ class m191126_082654_create_table_type_event extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(Constants::TABLE_NAME_EVENT_TYPE, [
-            'id' => $this->primaryKey()
+        $this->createTable(TableRegistry::TABLE_NAME_EVENT_TYPE, [
+            AttributeRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор типа события'),
 
-            'name' => $this->string()
+            AttributeRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование типа события'),
 
-            'desc' => $this->string()
+            AttributeRegistry::DESCRIPTION => $this->string()
                 ->comment('Описание типа события'),
         ]);
 
-        $this->batchInsert(Constants::TABLE_NAME_EVENT_TYPE, ['name', 'desc'], [
+        $this->batchInsert(
+            TableRegistry::TABLE_NAME_EVENT_TYPE,
             [
-                'name' => 'One-day event',
-                'desc' => 'Событие на один день'
+                AttributeRegistry::NAME,
+                AttributeRegistry::DESCRIPTION
             ],
             [
-                'name' => 'Multiple-days event',
-                'desc' => 'Событие на несколько дней'
-            ],
-            [
-                'name' => 'Regular event',
-                'desc' => 'Повторяющееся событие'
-            ],
-        ]);
+                [
+                    AttributeRegistry::NAME        => 'One-day event',
+                    AttributeRegistry::DESCRIPTION => 'Событие на один день'
+                ],
+                [
+                    AttributeRegistry::NAME        => 'Multiple-days event',
+                    AttributeRegistry::DESCRIPTION => 'Событие на несколько дней'
+                ],
+                [
+                    AttributeRegistry::NAME        => 'Regular event',
+                    AttributeRegistry::DESCRIPTION => 'Повторяющееся событие'
+                ],
+            ]);
     }
 
     /**
@@ -46,6 +53,6 @@ class m191126_082654_create_table_type_event extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(Constants::TABLE_NAME_EVENT_TYPE);
+        $this->dropTable(TableRegistry::TABLE_NAME_EVENT_TYPE);
     }
 }
