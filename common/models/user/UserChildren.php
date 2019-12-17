@@ -2,6 +2,7 @@
 
 namespace common\models\user;
 
+use common\components\registry\Constants;
 use Yii;
 use common\models\base\BaseModel;
 use yii\db\ActiveQuery;
@@ -25,7 +26,7 @@ class UserChildren extends BaseModel
      */
     public static function tableName()
     {
-        return 'user_children';
+        return Constants::TABLE_NAME_USER_CHILDREN;
     }
 
     /**

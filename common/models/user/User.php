@@ -47,7 +47,7 @@ class User extends BaseModel implements IdentityInterface
      */
     public static function tableName()
     {
-        return 'user';
+        return Constants::TABLE_NAME_USER;
     }
 
     /**

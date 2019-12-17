@@ -3,6 +3,7 @@
 namespace common\models\user;
 
 use common\components\ArrayHelper;
+use common\components\registry\Constants;
 use Yii;
 use common\models\base\BaseModel;
 use yii\behaviors\TimestampBehavior;
@@ -32,7 +33,7 @@ class UserGender extends BaseModel
      */
     public static function tableName()
     {
-        return 'user_gender';
+        return Constants::TABLE_NAME_USER_GENDER;
     }
 
     /**

@@ -21,6 +21,11 @@ class Constants
     const TABLE_NAME_EVENT_PHOTO_GALLERY = '{{%event_photo_gallery}}';
     const TABLE_NAME_EVENT_CARRYING_DATE = '{{%event_carrying_date}}';
 
+    /* Роли пользователя */
+    const USER_ROLE_ADMIN = 1;
+    const USER_ROLE_DEFAULT_USER = 2;
+    const USER_ROLE_BUSINESS_USER = 3;
+
     /* Статусы пользователя */
     const USER_STATUS_INACTIVE = 0;
     const USER_STATUS_ACTIVE = 1;

@@ -2,6 +2,7 @@
 
 namespace common\models\user;
 
+use common\components\registry\Constants;
 use common\models\City;
 use Yii;
 use common\models\base\BaseModel;
@@ -41,7 +42,7 @@ class UserProfile extends BaseModel
      */
     public static function tableName()
     {
-        return 'user_profile';
+        return Constants::TABLE_NAME_USER_PROFILE;
     }
 
     /**
