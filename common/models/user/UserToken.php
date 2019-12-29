@@ -4,8 +4,8 @@ namespace common\models\user;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\DateHelper;
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use Yii;
 use common\models\base\BaseModel;
 use yii\base\Exception;
@@ -45,7 +45,7 @@ class UserToken extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_USER_TOKEN;
+        return RgTable::NAME_USER_TOKEN;
     }
 
     /**
@@ -68,17 +68,17 @@ class UserToken extends BaseModel
 
         $userToken = self::findOne(
             [
-                AttrRegistry::USER_ID => $user->id,
-                AttrRegistry::TYPE_ID => $typeId
+                RgAttribute::USER_ID => $user->id,
+                RgAttribute::TYPE_ID => $typeId
             ]
         );
 
         if (is_null($userToken)) {
             $userToken = new UserToken(
                 [
-                    AttrRegistry::USER_ID => $user->id,
-                    AttrRegistry::TYPE_ID => $typeId,
-                    AttrRegistry::DATA    => $data
+                    RgAttribute::USER_ID => $user->id,
+                    RgAttribute::TYPE_ID => $typeId,
+                    RgAttribute::DATA    => $data
                 ]
             );
         }
@@ -110,8 +110,8 @@ class UserToken extends BaseModel
 
         $userToken = UserToken::findOne(
             [
-                AttrRegistry::USER_ID => $user->id,
-                AttrRegistry::TYPE_ID => $typeId
+                RgAttribute::USER_ID => $user->id,
+                RgAttribute::TYPE_ID => $typeId
             ]
         );
 
@@ -133,7 +133,7 @@ class UserToken extends BaseModel
         if (!in_array($type, self::$allowedTokens)) {
             throw new BadRequestHttpException(
                 [
-                    AttrRegistry::ACCESS_TOKEN => 'not found'
+                    RgAttribute::ACCESS_TOKEN => 'not found'
                 ]
             );
         }
@@ -147,7 +147,7 @@ class UserToken extends BaseModel
         return $this->hasOne(
             User::class,
             [
-                AttrRegistry::ID => AttrRegistry::USER_ID
+                RgAttribute::ID => RgAttribute::USER_ID
             ]
         );
     }
@@ -158,14 +158,14 @@ class UserToken extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID           => Yii::t('app', 'ID'),
-            AttrRegistry::USER_ID      => Yii::t('app', 'User ID'),
-            AttrRegistry::TYPE_ID      => Yii::t('app', 'Type ID'),
-            AttrRegistry::ACCESS_TOKEN => Yii::t('app', 'Access token'),
-            AttrRegistry::DATA         => Yii::t('app', 'Data'),
-            AttrRegistry::EXPIRED_AT   => Yii::t('app', 'Expired At'),
-            AttrRegistry::CREATED_AT   => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT   => Yii::t('app', 'Updated At'),
+            RgAttribute::ID           => Yii::t('app', 'ID'),
+            RgAttribute::USER_ID      => Yii::t('app', 'User ID'),
+            RgAttribute::TYPE_ID      => Yii::t('app', 'Type ID'),
+            RgAttribute::ACCESS_TOKEN => Yii::t('app', 'Access token'),
+            RgAttribute::DATA         => Yii::t('app', 'Data'),
+            RgAttribute::EXPIRED_AT   => Yii::t('app', 'Expired At'),
+            RgAttribute::CREATED_AT   => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT   => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -177,24 +177,24 @@ class UserToken extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::TYPE_ID,
-                    AttrRegistry::ACCESS_TOKEN
+                    RgAttribute::USER_ID,
+                    RgAttribute::TYPE_ID,
+                    RgAttribute::ACCESS_TOKEN
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::TYPE_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::TYPE_ID
                 ],
                 'default',
                 'value' => null
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::TYPE_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::TYPE_ID
                 ],
                 'integer'
             ],
@@ -204,14 +204,14 @@ class UserToken extends BaseModel
             ],
             [
                 [
-                    AttrRegistry::EXPIRED_AT,
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::EXPIRED_AT,
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
-                [AttrRegistry::ACCESS_TOKEN],
+                [RgAttribute::ACCESS_TOKEN],
                 'string',
                 'max' => 255
             ],

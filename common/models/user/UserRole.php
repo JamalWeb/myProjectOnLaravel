@@ -2,8 +2,8 @@
 
 namespace common\models\user;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use Yii;
 
@@ -25,7 +25,7 @@ class UserRole extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_USER_ROLE;
+        return RgTable::NAME_USER_ROLE;
     }
 
     /**
@@ -34,11 +34,11 @@ class UserRole extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID          => Yii::t('app', 'ID'),
-            AttrRegistry::NAME        => Yii::t('app', 'Name'),
-            AttrRegistry::DESCRIPTION => Yii::t('app', 'Desc'),
-            AttrRegistry::CREATED_AT  => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT  => Yii::t('app', 'Updated At'),
+            RgAttribute::ID          => Yii::t('app', 'ID'),
+            RgAttribute::NAME        => Yii::t('app', 'Name'),
+            RgAttribute::DESCRIPTION => Yii::t('app', 'Desc'),
+            RgAttribute::CREATED_AT  => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT  => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -50,22 +50,22 @@ class UserRole extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::NAME,
-                    AttrRegistry::DESCRIPTION
+                    RgAttribute::NAME,
+                    RgAttribute::DESCRIPTION
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
                 [
-                    AttrRegistry::NAME,
-                    AttrRegistry::DESCRIPTION
+                    RgAttribute::NAME,
+                    RgAttribute::DESCRIPTION
                 ],
                 'string',
                 'max' => 255

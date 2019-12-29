@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -14,22 +14,32 @@ class m190803_192931_create_table_gender extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::NAME_USER_GENDER, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор пола'),
+        $this->createTable(
+            RgTable::NAME_USER_GENDER,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор пола'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование пола')
-        ]);
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование пола')
+            ]
+        );
 
         $this->batchInsert(
-            TableRegistry::NAME_USER_GENDER,
-            [AttrRegistry::NAME],
+            RgTable::NAME_USER_GENDER,
             [
-                [AttrRegistry::NAME => 'Male'],
-                [AttrRegistry::NAME => 'Female'],
-            ]);
+                RgAttribute::NAME
+            ],
+            [
+                [
+                    RgAttribute::NAME => 'Male'
+                ],
+                [
+                    RgAttribute::NAME => 'Female'
+                ],
+            ]
+        );
     }
 
     /**
@@ -37,6 +47,6 @@ class m190803_192931_create_table_gender extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_USER_GENDER);
+        $this->dropTable(RgTable::NAME_USER_GENDER);
     }
 }

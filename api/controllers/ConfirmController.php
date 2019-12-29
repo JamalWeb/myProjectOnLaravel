@@ -2,9 +2,7 @@
 
 namespace api\controllers;
 
-use common\components\registry\TableRegistry;
-use common\components\registry\UserRegistry;
-use common\models\user\User;
+use common\components\registry\RgUser;
 use common\models\user\UserToken;
 use Exception;
 use Throwable;
@@ -33,7 +31,7 @@ class ConfirmController extends Controller
 
         try {
             $userToken->user->saveModel([
-                'status' => UserRegistry::USER_STATUS_ACTIVE
+                'status' => RgUser::USER_STATUS_ACTIVE
             ]);
             $userToken->delete();
         } catch (Exception $e) {

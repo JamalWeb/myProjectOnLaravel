@@ -1,4 +1,5 @@
 <?php
+
 require_once Yii::getAlias('@yii/i18n/migrations/m150207_210500_i18n_init.php');
 
 use yii\db\Migration;

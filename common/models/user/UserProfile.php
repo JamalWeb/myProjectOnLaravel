@@ -2,8 +2,8 @@
 
 namespace common\models\user;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\City;
 use Yii;
 use common\models\base\BaseModel;
@@ -43,7 +43,7 @@ class UserProfile extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_USER_PROFILE;
+        return RgTable::NAME_USER_PROFILE;
     }
 
     /**
@@ -54,7 +54,7 @@ class UserProfile extends BaseModel
         return $this->hasOne(
             User::class,
             [
-                AttrRegistry::ID => AttrRegistry::USER_ID
+                RgAttribute::ID => RgAttribute::USER_ID
             ]
         );
     }
@@ -67,7 +67,7 @@ class UserProfile extends BaseModel
         return $this->hasOne(
             City::class,
             [
-                AttrRegistry::ID => AttrRegistry::CITY_ID
+                RgAttribute::ID => RgAttribute::CITY_ID
             ]
         );
     }
@@ -78,27 +78,27 @@ class UserProfile extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID           => Yii::t('app', 'ID'),
-            AttrRegistry::USER_ID      => Yii::t('app', 'User ID'),
-            AttrRegistry::FIRST_NAME   => Yii::t('app', 'First Name'),
-            AttrRegistry::LAST_NAME    => Yii::t('app', 'Last Name'),
-            AttrRegistry::PATRONYMIC   => Yii::t('app', 'Patronymic'),
-            AttrRegistry::AVATAR       => Yii::t('app', 'Avatar'),
-            AttrRegistry::PHONE_NUMBER => Yii::t('app', 'Phone Number'),
-            AttrRegistry::ADDRESS      => Yii::t('app', 'Address'),
-            AttrRegistry::GENDER_ID    => Yii::t('app', 'Gender ID'),
-            AttrRegistry::ABOUT        => Yii::t('app', 'About'),
-            AttrRegistry::COUNTRY_ID   => Yii::t('app', 'Country ID'),
-            AttrRegistry::CITY_ID      => Yii::t('app', 'City ID'),
-            AttrRegistry::IS_CLOSED    => Yii::t('app', 'Is Closed'),
-            AttrRegistry::IS_NOTICE    => Yii::t('app', 'Is Notice'),
-            AttrRegistry::LONGITUDE    => Yii::t('app', 'Longitude'),
-            AttrRegistry::LATITUDE     => Yii::t('app', 'Latitude'),
-            AttrRegistry::LANGUAGE     => Yii::t('app', 'Language'),
-            AttrRegistry::SHORT_LANG   => Yii::t('app', 'Short Lang'),
-            AttrRegistry::TIMEZONE     => Yii::t('app', 'Timezone'),
-            AttrRegistry::CREATED_AT   => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT   => Yii::t('app', 'Updated At'),
+            RgAttribute::ID           => Yii::t('app', 'ID'),
+            RgAttribute::USER_ID      => Yii::t('app', 'User ID'),
+            RgAttribute::FIRST_NAME   => Yii::t('app', 'First Name'),
+            RgAttribute::LAST_NAME    => Yii::t('app', 'Last Name'),
+            RgAttribute::PATRONYMIC   => Yii::t('app', 'Patronymic'),
+            RgAttribute::AVATAR       => Yii::t('app', 'Avatar'),
+            RgAttribute::PHONE_NUMBER => Yii::t('app', 'Phone Number'),
+            RgAttribute::ADDRESS      => Yii::t('app', 'Address'),
+            RgAttribute::GENDER_ID    => Yii::t('app', 'Gender ID'),
+            RgAttribute::ABOUT        => Yii::t('app', 'About'),
+            RgAttribute::COUNTRY_ID   => Yii::t('app', 'Country ID'),
+            RgAttribute::CITY_ID      => Yii::t('app', 'City ID'),
+            RgAttribute::IS_CLOSED    => Yii::t('app', 'Is Closed'),
+            RgAttribute::IS_NOTICE    => Yii::t('app', 'Is Notice'),
+            RgAttribute::LONGITUDE    => Yii::t('app', 'Longitude'),
+            RgAttribute::LATITUDE     => Yii::t('app', 'Latitude'),
+            RgAttribute::LANGUAGE     => Yii::t('app', 'Language'),
+            RgAttribute::SHORT_LANG   => Yii::t('app', 'Short Lang'),
+            RgAttribute::TIMEZONE     => Yii::t('app', 'Timezone'),
+            RgAttribute::CREATED_AT   => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT   => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -110,59 +110,59 @@ class UserProfile extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::CITY_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::CITY_ID
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::GENDER_ID,
-                    AttrRegistry::COUNTRY_ID,
-                    AttrRegistry::CITY_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::GENDER_ID,
+                    RgAttribute::COUNTRY_ID,
+                    RgAttribute::CITY_ID
                 ],
                 'default',
                 'value' => null
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::GENDER_ID,
-                    AttrRegistry::COUNTRY_ID,
-                    AttrRegistry::CITY_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::GENDER_ID,
+                    RgAttribute::COUNTRY_ID,
+                    RgAttribute::CITY_ID
                 ],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
                 [
-                    AttrRegistry::FIRST_NAME,
-                    AttrRegistry::LAST_NAME,
-                    AttrRegistry::PATRONYMIC,
-                    AttrRegistry::AVATAR,
-                    AttrRegistry::PHONE_NUMBER,
-                    AttrRegistry::ADDRESS,
-                    AttrRegistry::ABOUT,
-                    AttrRegistry::LONGITUDE,
-                    AttrRegistry::LATITUDE,
-                    AttrRegistry::LANGUAGE,
-                    AttrRegistry::SHORT_LANG,
-                    AttrRegistry::TIMEZONE
+                    RgAttribute::FIRST_NAME,
+                    RgAttribute::LAST_NAME,
+                    RgAttribute::PATRONYMIC,
+                    RgAttribute::AVATAR,
+                    RgAttribute::PHONE_NUMBER,
+                    RgAttribute::ADDRESS,
+                    RgAttribute::ABOUT,
+                    RgAttribute::LONGITUDE,
+                    RgAttribute::LATITUDE,
+                    RgAttribute::LANGUAGE,
+                    RgAttribute::SHORT_LANG,
+                    RgAttribute::TIMEZONE
                 ],
                 'string',
                 'max' => 255
             ],
             [
                 [
-                    AttrRegistry::IS_CLOSED,
-                    AttrRegistry::IS_NOTICE
+                    RgAttribute::IS_CLOSED,
+                    RgAttribute::IS_NOTICE
                 ],
                 'boolean'
             ]

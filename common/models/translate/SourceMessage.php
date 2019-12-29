@@ -2,8 +2,8 @@
 
 namespace common\models\translate;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -21,7 +21,7 @@ class SourceMessage extends ActiveRecord
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_SOURCE_MESSAGE;
+        return RgTable::NAME_SOURCE_MESSAGE;
     }
 
     /**
@@ -32,7 +32,7 @@ class SourceMessage extends ActiveRecord
         return $this->hasMany(
             Message::class,
             [
-                AttrRegistry::ID => AttrRegistry::ID
+                RgAttribute::ID => RgAttribute::ID
             ]
         );
     }
@@ -43,9 +43,9 @@ class SourceMessage extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID       => Yii::t('api', 'ID'),
-            AttrRegistry::CATEGORY => Yii::t('api', 'Category'),
-            AttrRegistry::MESSAGE  => Yii::t('api', 'Message'),
+            RgAttribute::ID       => Yii::t('api', 'ID'),
+            RgAttribute::CATEGORY => Yii::t('api', 'Category'),
+            RgAttribute::MESSAGE  => Yii::t('api', 'Message'),
         ];
     }
 
@@ -56,11 +56,11 @@ class SourceMessage extends ActiveRecord
     {
         return [
             [
-                [AttrRegistry::MESSAGE],
+                [RgAttribute::MESSAGE],
                 'string'
             ],
             [
-                [AttrRegistry::CATEGORY],
+                [RgAttribute::CATEGORY],
                 'string',
                 'max' => 255
             ],

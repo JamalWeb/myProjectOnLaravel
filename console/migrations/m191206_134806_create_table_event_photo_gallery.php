@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -14,31 +14,26 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::NAME_EVENT_PHOTO_GALLERY, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор фотографии'),
+        $this->createTable(
+            RgTable::NAME_EVENT_PHOTO_GALLERY,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор фотографии'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование фотографии'),
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование фотографии'),
 
-            AttrRegistry::EVENT_ID => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор события'),
+                RgAttribute::EVENT_ID => $this->integer()
+                    ->notNull()
+                    ->comment('Идентификатор события'),
 
-            AttrRegistry::CREATED_AT => $this->timestamp()
-                ->comment('Дата создания'),
+                RgAttribute::CREATED_AT => $this->timestamp()
+                    ->comment('Дата создания'),
 
-            AttrRegistry::UPDATED_AT => $this->timestamp()
-                ->comment('Дата обновления')
-        ]);
-
-        $this->addForeignKey(
-            'FGK-event_id-event_photo_gallery',
-            TableRegistry::NAME_EVENT_PHOTO_GALLERY,
-            AttrRegistry::EVENT_ID,
-            TableRegistry::NAME_EVENT,
-            AttrRegistry::ID
+                RgAttribute::UPDATED_AT => $this->timestamp()
+                    ->comment('Дата обновления')
+            ]
         );
     }
 
@@ -47,7 +42,6 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-event_id-event_photo_gallery', TableRegistry::NAME_EVENT_PHOTO_GALLERY);
-        $this->dropTable(TableRegistry::NAME_EVENT_PHOTO_GALLERY);
+        $this->dropTable(RgTable::NAME_EVENT_PHOTO_GALLERY);
     }
 }

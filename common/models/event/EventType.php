@@ -3,8 +3,8 @@
 namespace common\models\event;
 
 use common\components\ArrayHelper;
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -38,7 +38,7 @@ class EventType extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_EVENT_TYPE;
+        return RgTable::NAME_EVENT_TYPE;
     }
 
     /**
@@ -49,7 +49,7 @@ class EventType extends BaseModel
         return $this->hasMany(
             Event::class,
             [
-                AttrRegistry::TYPE_ID => AttrRegistry::ID
+                RgAttribute::TYPE_ID => RgAttribute::ID
             ]
         );
     }
@@ -60,9 +60,9 @@ class EventType extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID          => Yii::t('app', 'ID'),
-            AttrRegistry::NAME        => Yii::t('app', 'Name'),
-            AttrRegistry::DESCRIPTION => Yii::t('app', 'Desc'),
+            RgAttribute::ID          => Yii::t('app', 'ID'),
+            RgAttribute::NAME        => Yii::t('app', 'Name'),
+            RgAttribute::DESCRIPTION => Yii::t('app', 'Desc'),
         ];
     }
 
@@ -73,13 +73,13 @@ class EventType extends BaseModel
     {
         return [
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::NAME,
-                    AttrRegistry::DESCRIPTION
+                    RgAttribute::NAME,
+                    RgAttribute::DESCRIPTION
                 ],
                 'string',
                 'max' => 255

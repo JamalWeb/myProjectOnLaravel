@@ -3,8 +3,8 @@
 namespace common\models\event;
 
 use common\components\ArrayHelper;
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -39,7 +39,7 @@ class EventCarryingDate extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_EVENT_CARRYING_DATE;
+        return RgTable::NAME_EVENT_CARRYING_DATE;
     }
 
     /**
@@ -50,7 +50,7 @@ class EventCarryingDate extends BaseModel
         return $this->hasOne(
             Event::class,
             [
-                AttrRegistry::ID => AttrRegistry::EVENT_ID
+                RgAttribute::ID => RgAttribute::EVENT_ID
             ]
         );
     }
@@ -61,10 +61,10 @@ class EventCarryingDate extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID       => Yii::t('app', 'ID'),
-            AttrRegistry::EVENT_ID => Yii::t('app', 'Event ID'),
-            AttrRegistry::DATE     => Yii::t('app', 'Date'),
-            AttrRegistry::DURATION => Yii::t('app', 'Duration'),
+            RgAttribute::ID       => Yii::t('app', 'ID'),
+            RgAttribute::EVENT_ID => Yii::t('app', 'Event ID'),
+            RgAttribute::DATE     => Yii::t('app', 'Date'),
+            RgAttribute::DURATION => Yii::t('app', 'Duration'),
         ];
     }
 
@@ -76,37 +76,37 @@ class EventCarryingDate extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::EVENT_ID,
-                    AttrRegistry::DATE
+                    RgAttribute::EVENT_ID,
+                    RgAttribute::DATE
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::EVENT_ID,
-                    AttrRegistry::DURATION
+                    RgAttribute::EVENT_ID,
+                    RgAttribute::DURATION
                 ],
                 'default',
                 'value' => null
             ],
             [
                 [
-                    AttrRegistry::EVENT_ID,
-                    AttrRegistry::DURATION
+                    RgAttribute::EVENT_ID,
+                    RgAttribute::DURATION
                 ],
                 'integer'
             ],
             [
-                [AttrRegistry::DATE],
+                [RgAttribute::DATE],
                 'safe'
             ],
             [
-                [AttrRegistry::EVENT_ID],
+                [RgAttribute::EVENT_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => Event::class,
                 'targetAttribute' => [
-                    AttrRegistry::EVENT_ID => AttrRegistry::ID
+                    RgAttribute::EVENT_ID => RgAttribute::ID
                 ]
             ],
         ];

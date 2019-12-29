@@ -3,7 +3,7 @@
 namespace api\modules\v1\models\form;
 
 use api\modules\v1\models\form\base\AbstractUserForm;
-use common\components\registry\AttrRegistry;
+use common\components\registry\RgAttribute;
 use common\models\user\User;
 use yii\web\UploadedFile;
 
@@ -51,47 +51,47 @@ class DefaultUserForm extends AbstractUserForm
         return [
             [
                 [
-                    AttrRegistry::CITY_ID,
-                    AttrRegistry::FIRST_NAME
+                    RgAttribute::CITY_ID,
+                    RgAttribute::FIRST_NAME
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD
                 ],
                 'required',
                 'on' => self::SCENARIO_CREATE
             ],
             [
                 [
-                    AttrRegistry::CITY_ID,
-                    AttrRegistry::COUNTRY_ID
+                    RgAttribute::CITY_ID,
+                    RgAttribute::COUNTRY_ID
                 ],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::FIRST_NAME,
-                    AttrRegistry::LAST_NAME,
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD,
-                    AttrRegistry::CHILDREN,
-                    AttrRegistry::LANGUAGE,
-                    AttrRegistry::SHORT_LANG,
-                    AttrRegistry::TIMEZONE
+                    RgAttribute::FIRST_NAME,
+                    RgAttribute::LAST_NAME,
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD,
+                    RgAttribute::CHILDREN,
+                    RgAttribute::LANGUAGE,
+                    RgAttribute::SHORT_LANG,
+                    RgAttribute::TIMEZONE
                 ],
                 'string'
             ],
             [
-                [AttrRegistry::EMAIL],
+                [RgAttribute::EMAIL],
                 'email'
             ],
             [
-                [AttrRegistry::EMAIL],
+                [RgAttribute::EMAIL],
                 function ($attribute) {
-                    $user = User::find()->where([AttrRegistry::EMAIL => $this->email])->exists();
+                    $user = User::find()->where([RgAttribute::EMAIL => $this->email])->exists();
                     if ($user) {
                         $this->addError($attribute, 'This email is already in use.');
                     }
@@ -99,20 +99,20 @@ class DefaultUserForm extends AbstractUserForm
                 'on' => self::SCENARIO_CREATE
             ],
             [
-                [AttrRegistry::PASSWORD],
+                [RgAttribute::PASSWORD],
                 'string',
                 'min' => 6,
                 'max' => 20
             ],
             [
                 [
-                    AttrRegistry::LONGITUDE,
-                    AttrRegistry::LATITUDE
+                    RgAttribute::LONGITUDE,
+                    RgAttribute::LATITUDE
                 ],
                 'number'
             ],
             [
-                [AttrRegistry::AVATAR],
+                [RgAttribute::AVATAR],
                 'image',
                 'skipOnEmpty' => true,
                 'extensions'  => 'png, jpg, jpeg',
@@ -122,8 +122,8 @@ class DefaultUserForm extends AbstractUserForm
             ],
             [
                 [
-                    AttrRegistry::IS_CLOSED,
-                    AttrRegistry::IS_NOTICE
+                    RgAttribute::IS_CLOSED,
+                    RgAttribute::IS_NOTICE
                 ],
                 'boolean'
             ]

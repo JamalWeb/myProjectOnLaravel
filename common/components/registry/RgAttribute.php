@@ -2,7 +2,7 @@
 
 namespace common\components\registry;
 
-class AttrRegistry
+class RgAttribute
 {
     const ID = 'id';
     const USER_ID = 'user_id';

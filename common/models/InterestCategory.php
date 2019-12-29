@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use Yii;
 
@@ -19,7 +19,7 @@ class InterestCategory extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_INTEREST_CATEGORY;
+        return RgTable::NAME_INTEREST_CATEGORY;
     }
 
     /**
@@ -28,9 +28,9 @@ class InterestCategory extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID   => Yii::t('app', 'ID'),
-            AttrRegistry::NAME => Yii::t('app', 'Name'),
-            AttrRegistry::IMG  => Yii::t('app', 'Img'),
+            RgAttribute::ID   => Yii::t('app', 'ID'),
+            RgAttribute::NAME => Yii::t('app', 'Name'),
+            RgAttribute::IMG  => Yii::t('app', 'Img'),
         ];
     }
 
@@ -42,15 +42,15 @@ class InterestCategory extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::NAME,
-                    AttrRegistry::IMG
+                    RgAttribute::NAME,
+                    RgAttribute::IMG
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::NAME,
-                    AttrRegistry::IMG
+                    RgAttribute::NAME,
+                    RgAttribute::IMG
                 ],
                 'string',
                 'max' => 255

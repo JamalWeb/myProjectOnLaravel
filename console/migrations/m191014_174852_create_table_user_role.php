@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -17,32 +17,35 @@ class m191014_174852_create_table_user_role extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(TableRegistry::NAME_USER_ROLE, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор роли'),
+        $this->createTable(
+            RgTable::NAME_USER_ROLE,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор роли'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование роли'),
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование роли'),
 
-            AttrRegistry::DESCRIPTION => $this->string()
-                ->notNull()
-                ->comment('Описание роли'),
+                RgAttribute::DESCRIPTION => $this->string()
+                    ->notNull()
+                    ->comment('Описание роли'),
 
-            AttrRegistry::CREATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата создания'),
+                RgAttribute::CREATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата создания'),
 
-            AttrRegistry::UPDATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата обновления')
-        ]);
+                RgAttribute::UPDATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата обновления')
+            ]
+        );
 
         $this->batchInsert(
-            TableRegistry::NAME_USER_ROLE,
+            RgTable::NAME_USER_ROLE,
             [
-                AttrRegistry::NAME,
-                AttrRegistry::DESCRIPTION
+                RgAttribute::NAME,
+                RgAttribute::DESCRIPTION
             ],
             [
                 [
@@ -57,7 +60,8 @@ class m191014_174852_create_table_user_role extends Migration
                     'Business',
                     'Бизнес пользователь'
                 ],
-            ]);
+            ]
+        );
     }
 
     /**
@@ -65,6 +69,6 @@ class m191014_174852_create_table_user_role extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_USER_ROLE);
+        $this->dropTable(RgTable::NAME_USER_ROLE);
     }
 }

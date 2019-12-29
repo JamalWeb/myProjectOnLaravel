@@ -2,7 +2,7 @@
 
 namespace common\components\registry;
 
-class UserRegistry
+class RgUser
 {
     /* Статусы пользователя */
     const USER_STATUS_INACTIVE = 1;

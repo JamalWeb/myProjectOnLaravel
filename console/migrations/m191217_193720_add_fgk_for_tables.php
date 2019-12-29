@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -16,33 +16,117 @@ class m191217_193720_add_fgk_for_tables extends Migration
     {
         $this->addForeignKey(
             'FGK-user_id-user_children',
-            TableRegistry::NAME_USER_CHILDREN,
-            AttrRegistry::USER_ID,
-            TableRegistry::NAME_USER,
-            AttrRegistry::ID,
+            RgTable::NAME_USER_CHILDREN,
+            RgAttribute::USER_ID,
+            RgTable::NAME_USER,
+            RgAttribute::ID,
             'CASCADE',
             'CASCADE'
         );
-
         $this->addForeignKey(
-            'FGK-gender_id-',
-            '',
-            '',
-            '',
-            '',
-            '',
-            ''
+            'FGK-gender_id-user_children',
+            RgTable::NAME_USER_CHILDREN,
+            RgAttribute::GENDER_ID,
+            RgTable::NAME_USER_GENDER,
+            RgAttribute::ID
         );
-//
-//        $this->addForeignKey(
-//            '',
-//            '',
-//            '',
-//            '',
-//            '',
-//            '',
-//            ''
-//        );
+        $this->addForeignKey(
+            'FGK-user_id-user_profile',
+            RgTable::NAME_USER_PROFILE,
+            RgAttribute::USER_ID,
+            RgTable::NAME_USER,
+            RgAttribute::ID,
+            'CASCADE',
+            'CASCADE'
+        );
+        $this->addForeignKey(
+            'FGK-gender_id-user_profile',
+            RgTable::NAME_USER_PROFILE,
+            RgAttribute::GENDER_ID,
+            RgTable::NAME_USER_GENDER,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-user_id-relation_user_interest',
+            RgTable::NAME_RELATION_USER_INTEREST,
+            RgAttribute::USER_ID,
+            RgTable::NAME_USER,
+            RgAttribute::ID,
+            'CASCADE',
+            'CASCADE'
+        );
+        $this->addForeignKey(
+            'FGK-interest_category_id-relation_user_interest',
+            RgTable::NAME_RELATION_USER_INTEREST,
+            RgAttribute::INTEREST_CATEGORY_ID,
+            RgTable::NAME_INTEREST_CATEGORY,
+            RgAttribute::ID,
+            'CASCADE',
+            'CASCADE'
+        );
+        $this->addForeignKey(
+            'FGK-user_id-event',
+            RgTable::NAME_EVENT,
+            RgAttribute::USER_ID,
+            RgTable::NAME_USER,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-type_id-event',
+            RgTable::NAME_EVENT,
+            RgAttribute::TYPE_ID,
+            RgTable::NAME_EVENT_TYPE,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-interest_category_id-event',
+            RgTable::NAME_EVENT,
+            RgAttribute::INTEREST_CATEGORY_ID,
+            RgTable::NAME_INTEREST_CATEGORY,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-city_id-event',
+            RgTable::NAME_EVENT,
+            RgAttribute::CITY_ID,
+            RgTable::NAME_CITY,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-event_id-event_photo_gallery',
+            RgTable::NAME_EVENT_PHOTO_GALLERY,
+            RgAttribute::EVENT_ID,
+            RgTable::NAME_EVENT,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-event_id-event_carrying_date',
+            RgTable::NAME_EVENT_CARRYING_DATE,
+            RgAttribute::EVENT_ID,
+            RgTable::NAME_EVENT,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-status_id-event',
+            RgTable::NAME_EVENT,
+            RgAttribute::STATUS_ID,
+            RgTable::NAME_EVENT_STATUS,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-status_id-user',
+            RgTable::NAME_USER,
+            RgAttribute::STATUS_ID,
+            RgTable::NAME_USER_STATUS,
+            RgAttribute::ID
+        );
+        $this->addForeignKey(
+            'FGK-type_id-user_token_type',
+            RgTable::NAME_USER_TOKEN,
+            RgAttribute::TYPE_ID,
+            RgTable::NAME_USER_TOKEN_TYPE,
+            RgAttribute::ID
+        );
     }
 
     /**
@@ -50,8 +134,65 @@ class m191217_193720_add_fgk_for_tables extends Migration
      */
     public function safeDown()
     {
-        echo "m191217_193720_add_fgk_for_tables cannot be reverted.\n";
-
-        return false;
+        $this->dropForeignKey(
+            'FGK-type_id-user_token_type',
+            RgTable::NAME_USER_TOKEN
+        );
+        $this->dropForeignKey(
+            'FGK-status_id-user',
+            RgTable::NAME_USER
+        );
+        $this->dropForeignKey(
+            'FGK-status_id-event',
+            RgTable::NAME_EVENT
+        );
+        $this->dropForeignKey(
+            'FGK-event_id-event_carrying_date',
+            RgTable::NAME_EVENT_CARRYING_DATE
+        );
+        $this->dropForeignKey(
+            'FGK-event_id-event_photo_gallery',
+            RgTable::NAME_EVENT_PHOTO_GALLERY
+        );
+        $this->dropForeignKey(
+            'FGK-city_id-event',
+            RgTable::NAME_EVENT
+        );
+        $this->dropForeignKey(
+            'FGK-user_id-event',
+            RgTable::NAME_EVENT
+        );
+        $this->dropForeignKey(
+            'FGK-type_id-event',
+            RgTable::NAME_EVENT
+        );
+        $this->dropForeignKey(
+            'FGK-interest_category_id-event',
+            RgTable::NAME_EVENT
+        );
+        $this->dropForeignKey(
+            'FGK-user_id-relation_user_interest',
+            RgTable::NAME_RELATION_USER_INTEREST
+        );
+        $this->dropForeignKey(
+            'FGK-interest_category_id-relation_user_interest',
+            RgTable::NAME_RELATION_USER_INTEREST
+        );
+        $this->dropForeignKey(
+            'FGK-gender_id-user_profile',
+            RgTable::NAME_USER_PROFILE
+        );
+        $this->dropForeignKey(
+            'FGK-user_id-user_profile',
+            RgTable::NAME_USER_PROFILE
+        );
+        $this->dropForeignKey(
+            'FGK-gender_id-user_children',
+            RgTable::NAME_USER_CHILDREN
+        );
+        $this->dropForeignKey(
+            'FGK-user_id-user_children',
+            RgTable::NAME_USER_CHILDREN
+        );
     }
 }

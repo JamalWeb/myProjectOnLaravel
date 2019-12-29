@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -17,46 +17,50 @@ class m191014_173703_create_table_user_type extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(TableRegistry::NAME_USER_TYPE, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор типа'),
+        $this->createTable(
+            RgTable::NAME_USER_TYPE,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор типа'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование'),
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование'),
 
-            AttrRegistry::DESCRIPTION => $this->string()
-                ->comment('Описание'),
+                RgAttribute::DESCRIPTION => $this->string()
+                    ->comment('Описание'),
 
-            AttrRegistry::CREATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата создания'),
+                RgAttribute::CREATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата создания'),
 
-            AttrRegistry::UPDATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата обновления')
-        ]);
+                RgAttribute::UPDATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата обновления')
+            ]
+        );
 
         $this->batchInsert(
-            TableRegistry::NAME_USER_TYPE,
+            RgTable::NAME_USER_TYPE,
             [
-                AttrRegistry::NAME,
-                AttrRegistry::DESCRIPTION
+                RgAttribute::NAME,
+                RgAttribute::DESCRIPTION
             ],
             [
                 [
-                    AttrRegistry::NAME        => 'System',
-                    AttrRegistry::DESCRIPTION => 'Системный пользователь'
+                    RgAttribute::NAME        => 'System',
+                    RgAttribute::DESCRIPTION => 'Системный пользователь'
                 ],
                 [
-                    AttrRegistry::NAME        => 'User',
-                    AttrRegistry::DESCRIPTION => 'Обычный пользователь'
+                    RgAttribute::NAME        => 'User',
+                    RgAttribute::DESCRIPTION => 'Обычный пользователь'
                 ],
                 [
-                    AttrRegistry::NAME        => 'Business',
-                    AttrRegistry::DESCRIPTION => 'Бизнес пользователь'
+                    RgAttribute::NAME        => 'Business',
+                    RgAttribute::DESCRIPTION => 'Бизнес пользователь'
                 ],
-            ]);
+            ]
+        );
     }
 
     /**
@@ -64,6 +68,6 @@ class m191014_173703_create_table_user_type extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_USER_TYPE);
+        $this->dropTable(RgTable::NAME_USER_TYPE);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -14,33 +14,44 @@ class m191217_182551_create_table_user_token_type extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::NAME_USER_TOKEN_TYPE, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор типа токена'),
+        $this->createTable(
+            RgTable::NAME_USER_TOKEN_TYPE,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор типа токена'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование типа токена'),
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование типа токена'),
 
-            AttrRegistry::DESCRIPTION => $this->string()
-                ->comment('Описание типа токена'),
-        ]);
+                RgAttribute::DESCRIPTION => $this->string()
+                    ->comment('Описание типа токена'),
+            ]
+        );
 
-        $this->batchInsert(TableRegistry::NAME_USER_TOKEN_TYPE, [AttrRegistry::NAME], [
-            [AttrRegistry::NAME => 'Авторизация'],
-            [AttrRegistry::NAME => 'Сброс авторизации'],
-            [AttrRegistry::NAME => 'Изменение пароля'],
-            [AttrRegistry::NAME => 'Подтверждение по электронной почте'],
-            [AttrRegistry::NAME => 'Изменение электронной почты'],
-            [AttrRegistry::NAME => 'Восстановление пользователя']
-        ]);
-
-        $this->addForeignKey(
-            'FGK-type_id-user_token_type',
-            TableRegistry::NAME_USER_TOKEN,
-            AttrRegistry::TYPE_ID,
-            TableRegistry::NAME_USER_TOKEN_TYPE,
-            AttrRegistry::ID
+        $this->batchInsert(
+            RgTable::NAME_USER_TOKEN_TYPE,
+            [RgAttribute::NAME],
+            [
+                [
+                    RgAttribute::NAME => 'Авторизация'
+                ],
+                [
+                    RgAttribute::NAME => 'Сброс авторизации'
+                ],
+                [
+                    RgAttribute::NAME => 'Изменение пароля'
+                ],
+                [
+                    RgAttribute::NAME => 'Подтверждение по электронной почте'
+                ],
+                [
+                    RgAttribute::NAME => 'Изменение электронной почты'
+                ],
+                [
+                    RgAttribute::NAME => 'Восстановление пользователя'
+                ]
+            ]
         );
     }
 
@@ -49,7 +60,6 @@ class m191217_182551_create_table_user_token_type extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-type_id-user_token_type', TableRegistry::NAME_USER_TOKEN);
-        $this->dropTable(TableRegistry::NAME_USER_TOKEN_TYPE);
+        $this->dropTable(RgTable::NAME_USER_TOKEN_TYPE);
     }
 }

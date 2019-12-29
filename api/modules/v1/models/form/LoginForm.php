@@ -2,8 +2,8 @@
 
 namespace api\modules\v1\models\form;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\UserRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgUser;
 use Yii;
 use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
@@ -71,7 +71,7 @@ class LoginForm extends Model
             $this->handleFailure();
             throw new UnauthorizedHttpException(
                 [
-                    AttrRegistry::EMAIL => Yii::t('app', 'Email not found')
+                    RgAttribute::EMAIL => Yii::t('app', 'Email not found')
                 ]
             );
         }
@@ -88,7 +88,7 @@ class LoginForm extends Model
             $this->user = User::find()
                 ->where(
                     [
-                        AttrRegistry::EMAIL => $this->email
+                        RgAttribute::EMAIL => $this->email
                     ]
                 )
                 ->one();
@@ -113,7 +113,7 @@ class LoginForm extends Model
             $this->handleFailure();
             throw new UnauthorizedHttpException(
                 [
-                    AttrRegistry::PASSWORD => Yii::t('app', 'Incorrect password')
+                    RgAttribute::PASSWORD => Yii::t('app', 'Incorrect password')
                 ]
             );
         }
@@ -121,7 +121,7 @@ class LoginForm extends Model
         if ($this->user->is_banned) {
             throw new UnauthorizedHttpException(
                 [
-                    AttrRegistry::EMAIL => Yii::t(
+                    RgAttribute::EMAIL => Yii::t(
                         'app',
                         'User is banned - {banReason}',
                         [
@@ -133,9 +133,9 @@ class LoginForm extends Model
         }
 
         switch ($this->user->status_id) {
-            case UserRegistry::USER_STATUS_INACTIVE:
+            case RgUser::USER_STATUS_INACTIVE:
                 $error = [
-                    AttrRegistry::EMAIL => 'Ваш аккаунт отключен'
+                    RgAttribute::EMAIL => 'Ваш аккаунт отключен'
                 ];
                 break;
 //            case User::STATUS_UNCONFIRMED_EMAIL:
@@ -180,8 +180,8 @@ class LoginForm extends Model
     public function attributeLabels(): array
     {
         return [
-            AttrRegistry::EMAIL    => 'Email',
-            AttrRegistry::PASSWORD => 'Password'
+            RgAttribute::EMAIL    => 'Email',
+            RgAttribute::PASSWORD => 'Password'
         ];
     }
 
@@ -193,20 +193,20 @@ class LoginForm extends Model
         return [
             [
                 [
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD
                 ],
                 'string'
             ],
             [
-                [AttrRegistry::EMAIL],
+                [RgAttribute::EMAIL],
                 'email'
             ],
         ];

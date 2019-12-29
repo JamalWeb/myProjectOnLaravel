@@ -2,7 +2,7 @@
 
 namespace common\components\registry;
 
-class TableRegistry
+class RgTable
 {
     /* Наименование таблиц */
     const NAME_USER = '{{%user}}';

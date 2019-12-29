@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -14,28 +14,23 @@ class m191208_130426_create_table_event_carrying_date extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::NAME_EVENT_CARRYING_DATE, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор даты проведения события'),
+        $this->createTable(
+            RgTable::NAME_EVENT_CARRYING_DATE,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор даты проведения события'),
 
-            AttrRegistry::EVENT_ID => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор события'),
+                RgAttribute::EVENT_ID => $this->integer()
+                    ->notNull()
+                    ->comment('Идентификатор события'),
 
-            AttrRegistry::DATE => $this->timestamp()
-                ->notNull()
-                ->comment('Дата проведения'),
+                RgAttribute::DATE => $this->timestamp()
+                    ->notNull()
+                    ->comment('Дата проведения'),
 
-            AttrRegistry::DURATION => $this->integer()
-                ->comment('Продолжительность')
-        ]);
-
-        $this->addForeignKey(
-            'FGK-event_id-event_carrying_date',
-            TableRegistry::NAME_EVENT_CARRYING_DATE,
-            AttrRegistry::EVENT_ID,
-            TableRegistry::NAME_EVENT,
-            AttrRegistry::ID
+                RgAttribute::DURATION => $this->integer()
+                    ->comment('Продолжительность')
+            ]
         );
     }
 
@@ -44,7 +39,6 @@ class m191208_130426_create_table_event_carrying_date extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-event_id-event_carrying_date', TableRegistry::NAME_EVENT_CARRYING_DATE);
-        $this->dropTable(TableRegistry::NAME_EVENT_CARRYING_DATE);
+        $this->dropTable(RgTable::NAME_EVENT_CARRYING_DATE);
     }
 }

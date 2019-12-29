@@ -2,8 +2,8 @@
 
 namespace common\models\event;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use Yii;
 use yii\db\ActiveQuery;
@@ -23,7 +23,7 @@ class EventPhotoGallery extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_EVENT_PHOTO_GALLERY;
+        return RgTable::NAME_EVENT_PHOTO_GALLERY;
     }
 
     /**
@@ -34,7 +34,7 @@ class EventPhotoGallery extends BaseModel
         return $this->hasOne(
             Event::class,
             [
-                AttrRegistry::ID => AttrRegistry::EVENT_ID
+                RgAttribute::ID => RgAttribute::EVENT_ID
             ]
         );
     }
@@ -45,11 +45,11 @@ class EventPhotoGallery extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID         => Yii::t('app', 'ID'),
-            AttrRegistry::NAME       => Yii::t('app', 'Name'),
-            AttrRegistry::EVENT_ID   => Yii::t('app', 'Event ID'),
-            AttrRegistry::CREATED_AT => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT => Yii::t('app', 'Updated At'),
+            RgAttribute::ID         => Yii::t('app', 'ID'),
+            RgAttribute::NAME       => Yii::t('app', 'Name'),
+            RgAttribute::EVENT_ID   => Yii::t('app', 'Event ID'),
+            RgAttribute::CREATED_AT => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -61,39 +61,39 @@ class EventPhotoGallery extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::NAME,
-                    AttrRegistry::EVENT_ID
+                    RgAttribute::NAME,
+                    RgAttribute::EVENT_ID
                 ],
                 'required'
             ],
             [
-                [AttrRegistry::EVENT_ID],
+                [RgAttribute::EVENT_ID],
                 'default',
                 'value' => null
             ],
             [
-                [AttrRegistry::EVENT_ID],
+                [RgAttribute::EVENT_ID],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'string',
                 'max' => 255
             ],
             [
-                [AttrRegistry::EVENT_ID],
+                [RgAttribute::EVENT_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => Event::class,
                 'targetAttribute' => [
-                    AttrRegistry::EVENT_ID => AttrRegistry::ID
+                    RgAttribute::EVENT_ID => RgAttribute::ID
                 ]
             ],
         ];

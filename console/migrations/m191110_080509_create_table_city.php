@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -14,23 +14,35 @@ class m191110_080509_create_table_city extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::NAME_CITY, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор города'),
+        $this->createTable(
+            RgTable::NAME_CITY,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор города'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование города')
-        ]);
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование города')
+            ]
+        );
 
         $this->batchInsert(
-            TableRegistry::NAME_CITY,
-            [AttrRegistry::NAME],
+            RgTable::NAME_CITY,
             [
-                [AttrRegistry::NAME => 'Moscow'],
-                [AttrRegistry::NAME => 'San Francisco'],
-                [AttrRegistry::NAME => 'London']
-            ]);
+                RgAttribute::NAME
+            ],
+            [
+                [
+                    RgAttribute::NAME => 'Moscow'
+                ],
+                [
+                    RgAttribute::NAME => 'San Francisco'
+                ],
+                [
+                    RgAttribute::NAME => 'London'
+                ]
+            ]
+        );
     }
 
     /**
@@ -38,6 +50,6 @@ class m191110_080509_create_table_city extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_CITY);
+        $this->dropTable(RgTable::NAME_CITY);
     }
 }

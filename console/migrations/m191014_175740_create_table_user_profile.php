@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -17,88 +17,91 @@ class m191014_175740_create_table_user_profile extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(TableRegistry::NAME_USER_PROFILE, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор профиля'),
+        $this->createTable(
+            RgTable::NAME_USER_PROFILE,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор профиля'),
 
-            AttrRegistry::USER_ID => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор пользователя'),
+                RgAttribute::USER_ID => $this->integer()
+                    ->notNull()
+                    ->comment('Идентификатор пользователя'),
 
-            AttrRegistry::FIRST_NAME => $this->string()
-                ->notNull()
-                ->comment('Имя'),
+                RgAttribute::FIRST_NAME => $this->string()
+                    ->notNull()
+                    ->comment('Имя'),
 
-            AttrRegistry::LAST_NAME => $this->string()
-                ->comment('Фамилия'),
+                RgAttribute::LAST_NAME => $this->string()
+                    ->comment('Фамилия'),
 
-            AttrRegistry::PATRONYMIC => $this->string()
-                ->comment('Отчество'),
+                RgAttribute::PATRONYMIC => $this->string()
+                    ->comment('Отчество'),
 
-            AttrRegistry::AVATAR => $this->string()
-                ->comment('Аватар'),
+                RgAttribute::AVATAR => $this->string()
+                    ->comment('Аватар'),
 
-            AttrRegistry::PHONE_NUMBER => $this->string()
-                ->comment('Телефонный номер'),
+                RgAttribute::PHONE_NUMBER => $this->string()
+                    ->comment('Телефонный номер'),
 
-            AttrRegistry::ADDRESS => $this->string()
-                ->comment('Адрес'),
+                RgAttribute::ADDRESS => $this->string()
+                    ->comment('Адрес'),
 
-            AttrRegistry::GENDER_ID => $this->integer()
-                ->comment('Идентификатор пола'),
+                RgAttribute::GENDER_ID => $this->integer()
+                    ->comment('Идентификатор пола'),
 
-            AttrRegistry::ABOUT => $this->string()
-                ->comment('Описание бизнес аккаунта'),
+                RgAttribute::ABOUT => $this->string()
+                    ->comment('Описание бизнес аккаунта'),
 
-            AttrRegistry::COUNTRY_ID => $this->integer()
-                ->comment('Идентификатор страны'),
+                RgAttribute::COUNTRY_ID => $this->integer()
+                    ->comment('Идентификатор страны'),
 
-            AttrRegistry::CITY_ID => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор города'),
+                RgAttribute::CITY_ID => $this->integer()
+                    ->notNull()
+                    ->comment('Идентификатор города'),
 
-            AttrRegistry::IS_CLOSED => $this->boolean()
-                ->defaultValue(false)
-                ->comment('Профиль закрыт'),
+                RgAttribute::IS_CLOSED => $this->boolean()
+                    ->defaultValue(false)
+                    ->comment('Профиль закрыт'),
 
-            AttrRegistry::IS_NOTICE => $this->boolean()
-                ->defaultValue(false)
-                ->comment('Получать уведомления'),
+                RgAttribute::IS_NOTICE => $this->boolean()
+                    ->defaultValue(false)
+                    ->comment('Получать уведомления'),
 
-            AttrRegistry::LONGITUDE => $this->string()
-                ->comment('Координаты: долгота'),
+                RgAttribute::LONGITUDE => $this->string()
+                    ->comment('Координаты: долгота'),
 
-            AttrRegistry::LATITUDE => $this->string()
-                ->comment('Координаты: широта'),
+                RgAttribute::LATITUDE => $this->string()
+                    ->comment('Координаты: широта'),
 
-            AttrRegistry::LANGUAGE => $this->string()
-                ->comment('Язык'),
+                RgAttribute::LANGUAGE => $this->string()
+                    ->comment('Язык'),
 
-            AttrRegistry::SHORT_LANG => $this->string()
-                ->comment('Код языка'),
+                RgAttribute::SHORT_LANG => $this->string()
+                    ->comment('Код языка'),
 
-            AttrRegistry::TIMEZONE => $this->string()
-                ->comment('Часовой пояс'),
+                RgAttribute::TIMEZONE => $this->string()
+                    ->comment('Часовой пояс'),
 
-            AttrRegistry::CREATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата создания'),
+                RgAttribute::CREATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата создания'),
 
-            AttrRegistry::UPDATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата обновления'),
-        ]);
+                RgAttribute::UPDATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата обновления'),
+            ]
+        );
 
         $this->batchInsert(
-            TableRegistry::NAME_USER_PROFILE,
+            RgTable::NAME_USER_PROFILE,
             [
-                AttrRegistry::USER_ID,
-                AttrRegistry::FIRST_NAME,
-                AttrRegistry::CITY_ID,
-                AttrRegistry::GENDER_ID,
-                AttrRegistry::LANGUAGE,
-                AttrRegistry::SHORT_LANG,
-                AttrRegistry::TIMEZONE,
+                RgAttribute::USER_ID,
+                RgAttribute::FIRST_NAME,
+                RgAttribute::CITY_ID,
+                RgAttribute::GENDER_ID,
+                RgAttribute::LANGUAGE,
+                RgAttribute::SHORT_LANG,
+                RgAttribute::TIMEZONE,
             ],
             [
                 [
@@ -110,7 +113,8 @@ class m191014_175740_create_table_user_profile extends Migration
                     'ru-RU',
                     'Europe/Moscow',
                 ]
-            ]);
+            ]
+        );
     }
 
     /**
@@ -118,6 +122,6 @@ class m191014_175740_create_table_user_profile extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_USER_PROFILE);
+        $this->dropTable(RgTable::NAME_USER_PROFILE);
     }
 }

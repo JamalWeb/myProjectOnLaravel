@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Expression;
 use yii\db\Migration;
 
@@ -17,30 +17,33 @@ class m190723_171804_create_table_children extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(TableRegistry::NAME_USER_CHILDREN, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор ребенка пользователя'),
+        $this->createTable(
+            RgTable::NAME_USER_CHILDREN,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор ребенка пользователя'),
 
-            AttrRegistry::USER_ID => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор пользователя'),
+                RgAttribute::USER_ID => $this->integer()
+                    ->notNull()
+                    ->comment('Идентификатор пользователя'),
 
-            AttrRegistry::AGE => $this->integer()
-                ->notNull()
-                ->comment('Возраст'),
+                RgAttribute::AGE => $this->integer()
+                    ->notNull()
+                    ->comment('Возраст'),
 
-            AttrRegistry::GENDER_ID => $this->integer()
-                ->notNull()
-                ->comment('Идентификатор пола'),
+                RgAttribute::GENDER_ID => $this->integer()
+                    ->notNull()
+                    ->comment('Идентификатор пола'),
 
-            AttrRegistry::CREATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата создания'),
+                RgAttribute::CREATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата создания'),
 
-            AttrRegistry::UPDATED_AT => $this->timestamp()
-                ->defaultValue($defaultDate)
-                ->comment('Дата обновления'),
-        ]);
+                RgAttribute::UPDATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата обновления'),
+            ]
+        );
     }
 
     /**
@@ -48,6 +51,6 @@ class m190723_171804_create_table_children extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_USER_CHILDREN);
+        $this->dropTable(RgTable::NAME_USER_CHILDREN);
     }
 }

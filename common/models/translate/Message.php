@@ -2,8 +2,8 @@
 
 namespace common\models\translate;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -21,7 +21,7 @@ class Message extends ActiveRecord
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_MESSAGE;
+        return RgTable::NAME_MESSAGE;
     }
 
     /**
@@ -32,7 +32,7 @@ class Message extends ActiveRecord
         return $this->hasOne(
             SourceMessage::class,
             [
-                AttrRegistry::ID => AttrRegistry::ID
+                RgAttribute::ID => RgAttribute::ID
             ]
         );
     }
@@ -43,9 +43,9 @@ class Message extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID          => Yii::t('api', 'ID'),
-            AttrRegistry::LANGUAGE    => Yii::t('api', 'Language'),
-            AttrRegistry::TRANSLATION => Yii::t('api', 'Translation'),
+            RgAttribute::ID          => Yii::t('api', 'ID'),
+            RgAttribute::LANGUAGE    => Yii::t('api', 'Language'),
+            RgAttribute::TRANSLATION => Yii::t('api', 'Translation'),
         ];
     }
 
@@ -57,47 +57,47 @@ class Message extends ActiveRecord
         return [
             [
                 [
-                    AttrRegistry::ID,
-                    AttrRegistry::LANGUAGE
+                    RgAttribute::ID,
+                    RgAttribute::LANGUAGE
                 ],
                 'required'
             ],
             [
-                [AttrRegistry::ID],
+                [RgAttribute::ID],
                 'default',
                 'value' => null
             ],
             [
-                [AttrRegistry::ID],
+                [RgAttribute::ID],
                 'integer'
             ],
             [
-                [AttrRegistry::TRANSLATION],
+                [RgAttribute::TRANSLATION],
                 'string'
             ],
             [
-                [AttrRegistry::LANGUAGE],
+                [RgAttribute::LANGUAGE],
                 'string',
                 'max' => 16
             ],
             [
                 [
-                    AttrRegistry::ID,
-                    AttrRegistry::LANGUAGE
+                    RgAttribute::ID,
+                    RgAttribute::LANGUAGE
                 ],
                 'unique',
                 'targetAttribute' => [
-                    AttrRegistry::ID,
-                    AttrRegistry::LANGUAGE
+                    RgAttribute::ID,
+                    RgAttribute::LANGUAGE
                 ]
             ],
             [
-                [AttrRegistry::ID],
+                [RgAttribute::ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => SourceMessage::class,
                 'targetAttribute' => [
-                    AttrRegistry::ID => AttrRegistry::ID
+                    RgAttribute::ID => RgAttribute::ID
                 ]
             ],
         ];

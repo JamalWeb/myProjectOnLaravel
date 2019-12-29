@@ -2,8 +2,8 @@
 
 namespace common\models\relations;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use common\models\InterestCategory;
 use common\models\user\User;
@@ -26,7 +26,7 @@ class RelationUserInterest extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_RELATION_USER_INTEREST;
+        return RgTable::NAME_RELATION_USER_INTEREST;
     }
 
     /**
@@ -37,7 +37,7 @@ class RelationUserInterest extends BaseModel
         return $this->hasOne(
             InterestCategory::class,
             [
-                AttrRegistry::ID => AttrRegistry::INTEREST_CATEGORY_ID
+                RgAttribute::ID => RgAttribute::INTEREST_CATEGORY_ID
             ]
         );
     }
@@ -50,7 +50,7 @@ class RelationUserInterest extends BaseModel
         return $this->hasOne(
             User::class,
             [
-                AttrRegistry::ID => AttrRegistry::USER_ID
+                RgAttribute::ID => RgAttribute::USER_ID
             ]
         );
     }
@@ -61,11 +61,11 @@ class RelationUserInterest extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID                   => Yii::t('app', 'ID'),
-            AttrRegistry::USER_ID              => Yii::t('app', 'User ID'),
-            AttrRegistry::INTEREST_CATEGORY_ID => Yii::t('app', 'Interest Category ID'),
-            AttrRegistry::CREATED_AT           => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT           => Yii::t('app', 'Updated At'),
+            RgAttribute::ID                   => Yii::t('app', 'ID'),
+            RgAttribute::USER_ID              => Yii::t('app', 'User ID'),
+            RgAttribute::INTEREST_CATEGORY_ID => Yii::t('app', 'Interest Category ID'),
+            RgAttribute::CREATED_AT           => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT           => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -77,49 +77,49 @@ class RelationUserInterest extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::INTEREST_CATEGORY_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::INTEREST_CATEGORY_ID
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::INTEREST_CATEGORY_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::INTEREST_CATEGORY_ID
                 ],
                 'default',
                 'value' => null
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::INTEREST_CATEGORY_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::INTEREST_CATEGORY_ID
                 ],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
-                [AttrRegistry::INTEREST_CATEGORY_ID],
+                [RgAttribute::INTEREST_CATEGORY_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => InterestCategory::class,
                 'targetAttribute' => [
-                    AttrRegistry::INTEREST_CATEGORY_ID => AttrRegistry::ID
+                    RgAttribute::INTEREST_CATEGORY_ID => RgAttribute::ID
                 ]
             ],
             [
-                [AttrRegistry::USER_ID],
+                [RgAttribute::USER_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => User::class,
                 'targetAttribute' => [
-                    AttrRegistry::USER_ID => AttrRegistry::ID
+                    RgAttribute::USER_ID => RgAttribute::ID
                 ]
             ],
         ];

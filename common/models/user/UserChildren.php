@@ -2,8 +2,8 @@
 
 namespace common\models\user;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use Yii;
 use common\models\base\BaseModel;
 use yii\db\ActiveQuery;
@@ -25,7 +25,7 @@ class UserChildren extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_USER_CHILDREN;
+        return RgTable::NAME_USER_CHILDREN;
     }
 
     /**
@@ -36,7 +36,7 @@ class UserChildren extends BaseModel
         return $this->hasOne(
             User::class,
             [
-                AttrRegistry::ID => AttrRegistry::USER_ID
+                RgAttribute::ID => RgAttribute::USER_ID
             ]
         );
     }
@@ -49,7 +49,7 @@ class UserChildren extends BaseModel
         return $this->hasOne(
             UserGender::class,
             [
-                AttrRegistry::ID => AttrRegistry::GENDER_ID
+                RgAttribute::ID => RgAttribute::GENDER_ID
             ]
         );
     }
@@ -60,12 +60,12 @@ class UserChildren extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID         => Yii::t('app', 'ID'),
-            AttrRegistry::USER_ID    => Yii::t('app', 'User ID'),
-            AttrRegistry::AGE        => Yii::t('app', 'Age'),
-            AttrRegistry::GENDER_ID  => Yii::t('app', 'Gender ID'),
-            AttrRegistry::CREATED_AT => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT => Yii::t('app', 'Updated At'),
+            RgAttribute::ID         => Yii::t('app', 'ID'),
+            RgAttribute::USER_ID    => Yii::t('app', 'User ID'),
+            RgAttribute::AGE        => Yii::t('app', 'Age'),
+            RgAttribute::GENDER_ID  => Yii::t('app', 'Gender ID'),
+            RgAttribute::CREATED_AT => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -77,33 +77,33 @@ class UserChildren extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::AGE,
-                    AttrRegistry::GENDER_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::AGE,
+                    RgAttribute::GENDER_ID
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::AGE,
-                    AttrRegistry::GENDER_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::AGE,
+                    RgAttribute::GENDER_ID
                 ],
                 'default',
                 'value' => null
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::AGE,
-                    AttrRegistry::GENDER_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::AGE,
+                    RgAttribute::GENDER_ID
                 ],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],

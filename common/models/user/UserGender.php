@@ -3,8 +3,8 @@
 namespace common\models\user;
 
 use common\components\ArrayHelper;
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use Yii;
 use common\models\base\BaseModel;
 use yii\behaviors\TimestampBehavior;
@@ -37,7 +37,7 @@ class UserGender extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_USER_GENDER;
+        return RgTable::NAME_USER_GENDER;
     }
 
     /**
@@ -46,8 +46,8 @@ class UserGender extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID   => Yii::t('app', 'ID'),
-            AttrRegistry::NAME => Yii::t('app', 'Name'),
+            RgAttribute::ID   => Yii::t('app', 'ID'),
+            RgAttribute::NAME => Yii::t('app', 'Name'),
         ];
     }
 
@@ -58,11 +58,11 @@ class UserGender extends BaseModel
     {
         return [
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'required'
             ],
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'string',
                 'max' => 255
             ],

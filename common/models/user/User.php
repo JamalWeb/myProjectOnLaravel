@@ -5,9 +5,9 @@ namespace common\models\user;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\PasswordHelper;
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
-use common\components\registry\UserRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
+use common\components\registry\RgUser;
 use common\models\base\BaseModel;
 use Yii;
 use yii\db\ActiveQuery;
@@ -47,7 +47,7 @@ class User extends BaseModel implements IdentityInterface
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_USER;
+        return RgTable::NAME_USER;
     }
 
     /**
@@ -76,7 +76,7 @@ class User extends BaseModel implements IdentityInterface
         if ($this->type_id == $type) {
             throw new BadRequestHttpException(
                 [
-                    AttrRegistry::TYPE_ID => 'Type is invalid'
+                    RgAttribute::TYPE_ID => 'Type is invalid'
                 ]
             );
         }
@@ -90,52 +90,52 @@ class User extends BaseModel implements IdentityInterface
     public function getPublicInfo(): array
     {
         $defaultUserInfo = [
-            AttrRegistry::ID         => $this->id,
-            AttrRegistry::EMAIL      => $this->email,
-            AttrRegistry::STATUS     => [
-                AttrRegistry::ID   => $this->status_id,
-                AttrRegistry::NAME => UserRegistry::getStatusNameById($this->status)
+            RgAttribute::ID         => $this->id,
+            RgAttribute::EMAIL      => $this->email,
+            RgAttribute::STATUS     => [
+                RgAttribute::ID   => $this->status_id,
+                RgAttribute::NAME => RgUser::getStatusNameById($this->status)
             ],
-            AttrRegistry::BANNED     => [
-                AttrRegistry::IS_BANNED     => $this->is_banned,
-                AttrRegistry::BANNED_REASON => $this->banned_reason,
-                AttrRegistry::BANNED_AT     => $this->banned_at,
+            RgAttribute::BANNED     => [
+                RgAttribute::IS_BANNED     => $this->is_banned,
+                RgAttribute::BANNED_REASON => $this->banned_reason,
+                RgAttribute::BANNED_AT     => $this->banned_at,
             ],
-            AttrRegistry::PROFILE    => [
-                AttrRegistry::FIRST_NAME   => $this->profile->first_name,
-                AttrRegistry::LAST_NAME    => $this->profile->last_name,
-                AttrRegistry::PHONE_NUMBER => $this->profile->phone_number,
-                AttrRegistry::ADDRESS      => $this->profile->address,
-                AttrRegistry::ABOUT        => $this->profile->about,
-                AttrRegistry::COUNTRY      => null,
-                AttrRegistry::CITY         => [
-                    AttrRegistry::ID   => $this->profile->city->id,
-                    AttrRegistry::NAME => $this->profile->city->name
+            RgAttribute::PROFILE    => [
+                RgAttribute::FIRST_NAME   => $this->profile->first_name,
+                RgAttribute::LAST_NAME    => $this->profile->last_name,
+                RgAttribute::PHONE_NUMBER => $this->profile->phone_number,
+                RgAttribute::ADDRESS      => $this->profile->address,
+                RgAttribute::ABOUT        => $this->profile->about,
+                RgAttribute::COUNTRY      => null,
+                RgAttribute::CITY         => [
+                    RgAttribute::ID   => $this->profile->city->id,
+                    RgAttribute::NAME => $this->profile->city->name
                 ],
-                AttrRegistry::CHILDREN     => [],
-                AttrRegistry::TYPE         => [
-                    AttrRegistry::ID          => $this->type->id,
-                    AttrRegistry::NAME        => $this->type->name,
-                    AttrRegistry::DESCRIPTION => $this->type->description
+                RgAttribute::CHILDREN     => [],
+                RgAttribute::TYPE         => [
+                    RgAttribute::ID          => $this->type->id,
+                    RgAttribute::NAME        => $this->type->name,
+                    RgAttribute::DESCRIPTION => $this->type->description
                 ],
-                AttrRegistry::LONGITUDE    => $this->profile->longitude,
-                AttrRegistry::LATITUDE     => $this->profile->latitude,
-                AttrRegistry::LANGUAGE     => $this->profile->language,
-                AttrRegistry::SHORT_LANG   => $this->profile->short_lang,
-                AttrRegistry::TIMEZONE     => $this->profile->timezone,
+                RgAttribute::LONGITUDE    => $this->profile->longitude,
+                RgAttribute::LATITUDE     => $this->profile->latitude,
+                RgAttribute::LANGUAGE     => $this->profile->language,
+                RgAttribute::SHORT_LANG   => $this->profile->short_lang,
+                RgAttribute::TIMEZONE     => $this->profile->timezone,
             ],
-            AttrRegistry::CREATED_AT => $this->created_at
+            RgAttribute::CREATED_AT => $this->created_at
         ];
 
         if (!empty($this->children) && $this->type_id == UserType::TYPE_DEFAULT_USER) {
             /** @var UserChildren $child */
             foreach (ArrayHelper::generator($this->children) as $child) {
-                $defaultUserInfo[AttrRegistry::PROFILE][AttrRegistry::CHILDREN][] = [
-                    AttrRegistry::ID     => $child->id,
-                    AttrRegistry::AGE    => $child->age,
-                    AttrRegistry::GENDER => [
-                        AttrRegistry::ID   => $child->gender->id,
-                        AttrRegistry::NAME => $child->gender->name
+                $defaultUserInfo[RgAttribute::PROFILE][RgAttribute::CHILDREN][] = [
+                    RgAttribute::ID     => $child->id,
+                    RgAttribute::AGE    => $child->age,
+                    RgAttribute::GENDER => [
+                        RgAttribute::ID   => $child->gender->id,
+                        RgAttribute::NAME => $child->gender->name
                     ]
                 ];
             }
@@ -157,7 +157,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserType::class,
             [
-                AttrRegistry::ID => AttrRegistry::TYPE_ID
+                RgAttribute::ID => RgAttribute::TYPE_ID
             ]
         );
     }
@@ -170,7 +170,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserRole::class,
             [
-                AttrRegistry::ID => AttrRegistry::ROLE_ID
+                RgAttribute::ID => RgAttribute::ROLE_ID
             ]
         );
     }
@@ -183,7 +183,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserProfile::class,
             [
-                AttrRegistry::USER_ID => AttrRegistry::ID
+                RgAttribute::USER_ID => RgAttribute::ID
             ]
         );
     }
@@ -196,7 +196,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasMany(
             UserChildren::class,
             [
-                AttrRegistry::USER_ID => AttrRegistry::ID
+                RgAttribute::USER_ID => RgAttribute::ID
             ]
         );
     }
@@ -207,24 +207,24 @@ class User extends BaseModel implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID            => Yii::t('app', 'ID'),
-            AttrRegistry::TYPE_ID       => Yii::t('app', 'Type ID'),
-            AttrRegistry::ROLE_ID       => Yii::t('app', 'Role ID'),
-            AttrRegistry::EMAIL         => Yii::t('app', 'Email'),
-            AttrRegistry::USERNAME      => Yii::t('app', 'Username'),
-            AttrRegistry::PASSWORD      => Yii::t('app', 'Password'),
-            AttrRegistry::AUTH_KEY      => Yii::t('app', 'Auth Key'),
-            AttrRegistry::STATUS_ID     => Yii::t('app', 'Status ID'),
-            AttrRegistry::LOGGED_IN_IP  => Yii::t('app', 'Logged In Ip'),
-            AttrRegistry::LOGGED_IN_AT  => Yii::t('app', 'Logged In At'),
-            AttrRegistry::LOGOUT_IN_IP  => Yii::t('app', 'Logout In Ip'),
-            AttrRegistry::LOGOUT_IN_AT  => Yii::t('app', 'Logout In At'),
-            AttrRegistry::CREATED_IP    => Yii::t('app', 'Created Ip'),
-            AttrRegistry::IS_BANNED     => Yii::t('app', 'Is Banned'),
-            AttrRegistry::BANNED_REASON => Yii::t('app', 'Banned Reason'),
-            AttrRegistry::BANNED_AT     => Yii::t('app', 'Banned At'),
-            AttrRegistry::CREATED_AT    => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT    => Yii::t('app', 'Updated At'),
+            RgAttribute::ID            => Yii::t('app', 'ID'),
+            RgAttribute::TYPE_ID       => Yii::t('app', 'Type ID'),
+            RgAttribute::ROLE_ID       => Yii::t('app', 'Role ID'),
+            RgAttribute::EMAIL         => Yii::t('app', 'Email'),
+            RgAttribute::USERNAME      => Yii::t('app', 'Username'),
+            RgAttribute::PASSWORD      => Yii::t('app', 'Password'),
+            RgAttribute::AUTH_KEY      => Yii::t('app', 'Auth Key'),
+            RgAttribute::STATUS_ID     => Yii::t('app', 'Status ID'),
+            RgAttribute::LOGGED_IN_IP  => Yii::t('app', 'Logged In Ip'),
+            RgAttribute::LOGGED_IN_AT  => Yii::t('app', 'Logged In At'),
+            RgAttribute::LOGOUT_IN_IP  => Yii::t('app', 'Logout In Ip'),
+            RgAttribute::LOGOUT_IN_AT  => Yii::t('app', 'Logout In At'),
+            RgAttribute::CREATED_IP    => Yii::t('app', 'Created Ip'),
+            RgAttribute::IS_BANNED     => Yii::t('app', 'Is Banned'),
+            RgAttribute::BANNED_REASON => Yii::t('app', 'Banned Reason'),
+            RgAttribute::BANNED_AT     => Yii::t('app', 'Banned At'),
+            RgAttribute::CREATED_AT    => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT    => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -236,54 +236,54 @@ class User extends BaseModel implements IdentityInterface
         return [
             [
                 [
-                    AttrRegistry::TYPE_ID,
-                    AttrRegistry::ROLE_ID,
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD
+                    RgAttribute::TYPE_ID,
+                    RgAttribute::ROLE_ID,
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::TYPE_ID,
-                    AttrRegistry::ROLE_ID,
-                    AttrRegistry::STATUS_ID
+                    RgAttribute::TYPE_ID,
+                    RgAttribute::ROLE_ID,
+                    RgAttribute::STATUS_ID
                 ],
                 'default',
                 'value' => null
             ],
             [
                 [
-                    AttrRegistry::TYPE_ID,
-                    AttrRegistry::ROLE_ID,
-                    AttrRegistry::STATUS_ID
+                    RgAttribute::TYPE_ID,
+                    RgAttribute::ROLE_ID,
+                    RgAttribute::STATUS_ID
                 ],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::LOGGED_IN_AT,
-                    AttrRegistry::LOGOUT_IN_AT,
-                    AttrRegistry::BANNED_AT,
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::LOGGED_IN_AT,
+                    RgAttribute::LOGOUT_IN_AT,
+                    RgAttribute::BANNED_AT,
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
-                [AttrRegistry::IS_BANNED],
+                [RgAttribute::IS_BANNED],
                 'boolean'
             ],
             [
                 [
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::USERNAME,
-                    AttrRegistry::PASSWORD,
-                    AttrRegistry::AUTH_KEY,
-                    AttrRegistry::LOGGED_IN_IP,
-                    AttrRegistry::LOGOUT_IN_IP,
-                    AttrRegistry::CREATED_IP,
-                    AttrRegistry::BANNED_REASON
+                    RgAttribute::EMAIL,
+                    RgAttribute::USERNAME,
+                    RgAttribute::PASSWORD,
+                    RgAttribute::AUTH_KEY,
+                    RgAttribute::LOGGED_IN_IP,
+                    RgAttribute::LOGOUT_IN_IP,
+                    RgAttribute::CREATED_IP,
+                    RgAttribute::BANNED_REASON
                 ],
                 'string',
                 'max' => 255
@@ -298,9 +298,9 @@ class User extends BaseModel implements IdentityInterface
     {
         return static::findOne(
             [
-                AttrRegistry::ID        => $id,
-                AttrRegistry::STATUS_ID => UserRegistry::USER_STATUS_ACTIVE,
-                AttrRegistry::IS_BANNED => false
+                RgAttribute::ID        => $id,
+                RgAttribute::STATUS_ID => RgUser::USER_STATUS_ACTIVE,
+                RgAttribute::IS_BANNED => false
             ]
         );
     }
@@ -314,8 +314,8 @@ class User extends BaseModel implements IdentityInterface
     {
         $userToken = UserToken::findOne(
             [
-                AttrRegistry::ACCESS_TOKEN => $accessToken,
-                AttrRegistry::TYPE_ID      => UserToken::TYPE_AUTH
+                RgAttribute::ACCESS_TOKEN => $accessToken,
+                RgAttribute::TYPE_ID      => UserToken::TYPE_AUTH
             ]
         );
 
@@ -325,10 +325,10 @@ class User extends BaseModel implements IdentityInterface
 
         return static::findOne(
             [
-                AttrRegistry::ID        => $userToken->user_id,
-                AttrRegistry::STATUS_ID => [
-                    UserRegistry::USER_STATUS_ACTIVE,
-                    UserRegistry::USER_STATUS_UNCONFIRMED_EMAIL
+                RgAttribute::ID        => $userToken->user_id,
+                RgAttribute::STATUS_ID => [
+                    RgUser::USER_STATUS_ACTIVE,
+                    RgUser::USER_STATUS_UNCONFIRMED_EMAIL
                 ]
             ]
         );

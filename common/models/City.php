@@ -3,8 +3,8 @@
 namespace common\models;
 
 use common\components\ArrayHelper;
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -35,7 +35,7 @@ class City extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_CITY;
+        return RgTable::NAME_CITY;
     }
 
     /**
@@ -45,11 +45,11 @@ class City extends BaseModel
     {
         return [
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'required'
             ],
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'string',
                 'max' => 255
             ],
@@ -62,8 +62,8 @@ class City extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID   => Yii::t('app', 'ID'),
-            AttrRegistry::NAME => Yii::t('app', 'Name'),
+            RgAttribute::ID   => Yii::t('app', 'ID'),
+            RgAttribute::NAME => Yii::t('app', 'Name'),
         ];
     }
 }

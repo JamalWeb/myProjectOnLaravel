@@ -1,7 +1,7 @@
 <?php
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use yii\db\Migration;
 
 /**
@@ -14,38 +14,42 @@ class m191126_082654_create_table_type_event extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::NAME_EVENT_TYPE, [
-            AttrRegistry::ID => $this->primaryKey()
-                ->comment('Идентификатор типа события'),
+        $this->createTable(
+            RgTable::NAME_EVENT_TYPE,
+            [
+                RgAttribute::ID => $this->primaryKey()
+                    ->comment('Идентификатор типа события'),
 
-            AttrRegistry::NAME => $this->string()
-                ->notNull()
-                ->comment('Наименование типа события'),
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование типа события'),
 
-            AttrRegistry::DESCRIPTION => $this->string()
-                ->comment('Описание типа события'),
-        ]);
+                RgAttribute::DESCRIPTION => $this->string()
+                    ->comment('Описание типа события'),
+            ]
+        );
 
         $this->batchInsert(
-            TableRegistry::NAME_EVENT_TYPE,
+            RgTable::NAME_EVENT_TYPE,
             [
-                AttrRegistry::NAME,
-                AttrRegistry::DESCRIPTION
+                RgAttribute::NAME,
+                RgAttribute::DESCRIPTION
             ],
             [
                 [
-                    AttrRegistry::NAME        => 'One-day event',
-                    AttrRegistry::DESCRIPTION => 'Событие на один день'
+                    RgAttribute::NAME        => 'One-day event',
+                    RgAttribute::DESCRIPTION => 'Событие на один день'
                 ],
                 [
-                    AttrRegistry::NAME        => 'Multiple-days event',
-                    AttrRegistry::DESCRIPTION => 'Событие на несколько дней'
+                    RgAttribute::NAME        => 'Multiple-days event',
+                    RgAttribute::DESCRIPTION => 'Событие на несколько дней'
                 ],
                 [
-                    AttrRegistry::NAME        => 'Regular event',
-                    AttrRegistry::DESCRIPTION => 'Повторяющееся событие'
+                    RgAttribute::NAME        => 'Regular event',
+                    RgAttribute::DESCRIPTION => 'Повторяющееся событие'
                 ],
-            ]);
+            ]
+        );
     }
 
     /**
@@ -53,6 +57,6 @@ class m191126_082654_create_table_type_event extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::NAME_EVENT_TYPE);
+        $this->dropTable(RgTable::NAME_EVENT_TYPE);
     }
 }

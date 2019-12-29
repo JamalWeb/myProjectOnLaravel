@@ -2,9 +2,8 @@
 
 namespace api\modules\v1\models\form;
 
-use common\components\registry\AttrRegistry;
+use common\components\registry\RgAttribute;
 use common\models\user\User;
-use Yii;
 use yii\base\Model;
 
 /**
@@ -48,49 +47,49 @@ class BusinessUserForm extends Model
         return [
             [
                 [
-                    AttrRegistry::CITY_ID,
-                    AttrRegistry::FIRST_NAME,
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD,
-                    AttrRegistry::PHONE_NUMBER,
-                    AttrRegistry::ABOUT
+                    RgAttribute::CITY_ID,
+                    RgAttribute::FIRST_NAME,
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD,
+                    RgAttribute::PHONE_NUMBER,
+                    RgAttribute::ABOUT
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::CITY_ID,
-                    AttrRegistry::COUNTRY_ID
+                    RgAttribute::CITY_ID,
+                    RgAttribute::COUNTRY_ID
                 ],
                 'integer'
             ],
             [
                 [
-                    AttrRegistry::FIRST_NAME,
-                    AttrRegistry::EMAIL,
-                    AttrRegistry::PASSWORD,
-                    AttrRegistry::PHONE_NUMBER,
-                    AttrRegistry::ABOUT,
-                    AttrRegistry::ADDRESS,
-                    AttrRegistry::LANGUAGE,
-                    AttrRegistry::SHORT_LANG,
-                    AttrRegistry::TIMEZONE
+                    RgAttribute::FIRST_NAME,
+                    RgAttribute::EMAIL,
+                    RgAttribute::PASSWORD,
+                    RgAttribute::PHONE_NUMBER,
+                    RgAttribute::ABOUT,
+                    RgAttribute::ADDRESS,
+                    RgAttribute::LANGUAGE,
+                    RgAttribute::SHORT_LANG,
+                    RgAttribute::TIMEZONE
                 ],
                 'string'
             ],
             [
                 [
-                    AttrRegistry::EMAIL
+                    RgAttribute::EMAIL
                 ],
                 'email'
             ],
             [
-                [AttrRegistry::EMAIL],
+                [RgAttribute::EMAIL],
                 function ($attribute) {
                     $user = User::find()
                         ->where(
                             [
-                                AttrRegistry::EMAIL => $this->email
+                                RgAttribute::EMAIL => $this->email
                             ]
                         )
                         ->exists();
@@ -100,15 +99,15 @@ class BusinessUserForm extends Model
                 }
             ],
             [
-                [AttrRegistry::PASSWORD],
+                [RgAttribute::PASSWORD],
                 'string',
                 'min' => 6,
                 'max' => 20
             ],
             [
                 [
-                    AttrRegistry::LONGITUDE,
-                    AttrRegistry::LATITUDE
+                    RgAttribute::LONGITUDE,
+                    RgAttribute::LATITUDE
                 ],
                 'number'
             ]

@@ -2,8 +2,8 @@
 
 namespace common\models\event;
 
-use common\components\registry\AttrRegistry;
-use common\components\registry\TableRegistry;
+use common\components\registry\RgAttribute;
+use common\components\registry\RgTable;
 use common\models\base\BaseModel;
 use common\models\City;
 use common\models\InterestCategory;
@@ -42,7 +42,7 @@ class Event extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::NAME_EVENT;
+        return RgTable::NAME_EVENT;
     }
 
     /**
@@ -53,7 +53,7 @@ class Event extends BaseModel
         return $this->hasOne(
             City::class,
             [
-                AttrRegistry::ID => AttrRegistry::CITY_ID
+                RgAttribute::ID => RgAttribute::CITY_ID
             ]
         );
     }
@@ -66,7 +66,7 @@ class Event extends BaseModel
         return $this->hasOne(
             EventType::class,
             [
-                AttrRegistry::ID => AttrRegistry::TYPE_ID
+                RgAttribute::ID => RgAttribute::TYPE_ID
             ]
         );
     }
@@ -79,7 +79,7 @@ class Event extends BaseModel
         return $this->hasOne(
             InterestCategory::class,
             [
-                AttrRegistry::ID => AttrRegistry::INTEREST_CATEGORY_ID
+                RgAttribute::ID => RgAttribute::INTEREST_CATEGORY_ID
             ]
         );
     }
@@ -92,7 +92,7 @@ class Event extends BaseModel
         return $this->hasOne(
             User::class,
             [
-                AttrRegistry::ID => AttrRegistry::USER_ID
+                RgAttribute::ID => RgAttribute::USER_ID
             ]
         );
     }
@@ -105,7 +105,7 @@ class Event extends BaseModel
         return $this->hasMany(
             EventPhotoGallery::class,
             [
-                AttrRegistry::EVENT_ID => AttrRegistry::ID
+                RgAttribute::EVENT_ID => RgAttribute::ID
             ]
         );
     }
@@ -116,23 +116,23 @@ class Event extends BaseModel
     public function attributeLabels()
     {
         return [
-            AttrRegistry::ID                     => Yii::t('app', 'ID'),
-            AttrRegistry::USER_ID                => Yii::t('app', 'User ID'),
-            AttrRegistry::TYPE_ID                => Yii::t('app', 'Type ID'),
-            AttrRegistry::STATUS_ID              => Yii::t('app', 'Status ID'),
-            AttrRegistry::NAME                   => Yii::t('app', 'Name'),
-            AttrRegistry::ABOUT                  => Yii::t('app', 'About'),
-            AttrRegistry::INTEREST_CATEGORY_ID   => Yii::t('app', 'Interest Category ID'),
-            AttrRegistry::CITY_ID                => Yii::t('app', 'City ID'),
-            AttrRegistry::ADDRESS                => Yii::t('app', 'Address'),
-            AttrRegistry::AGE_LIMIT              => Yii::t('app', 'Age Limit'),
-            AttrRegistry::TICKET_PRICE           => Yii::t('app', 'Ticket Price'),
-            AttrRegistry::TICKETS_NUMBER         => Yii::t('app', 'Tickets Number'),
-            AttrRegistry::ADDITIONAL_INFORMATION => Yii::t('app', 'Additional Information'),
-            AttrRegistry::IS_FREE                => Yii::t('app', 'Is Free'),
-            AttrRegistry::WALLPAPER              => Yii::t('app', 'Wallpaper'),
-            AttrRegistry::CREATED_AT             => Yii::t('app', 'Created At'),
-            AttrRegistry::UPDATED_AT             => Yii::t('app', 'Updated At'),
+            RgAttribute::ID                     => Yii::t('app', 'ID'),
+            RgAttribute::USER_ID                => Yii::t('app', 'User ID'),
+            RgAttribute::TYPE_ID                => Yii::t('app', 'Type ID'),
+            RgAttribute::STATUS_ID              => Yii::t('app', 'Status ID'),
+            RgAttribute::NAME                   => Yii::t('app', 'Name'),
+            RgAttribute::ABOUT                  => Yii::t('app', 'About'),
+            RgAttribute::INTEREST_CATEGORY_ID   => Yii::t('app', 'Interest Category ID'),
+            RgAttribute::CITY_ID                => Yii::t('app', 'City ID'),
+            RgAttribute::ADDRESS                => Yii::t('app', 'Address'),
+            RgAttribute::AGE_LIMIT              => Yii::t('app', 'Age Limit'),
+            RgAttribute::TICKET_PRICE           => Yii::t('app', 'Ticket Price'),
+            RgAttribute::TICKETS_NUMBER         => Yii::t('app', 'Tickets Number'),
+            RgAttribute::ADDITIONAL_INFORMATION => Yii::t('app', 'Additional Information'),
+            RgAttribute::IS_FREE                => Yii::t('app', 'Is Free'),
+            RgAttribute::WALLPAPER              => Yii::t('app', 'Wallpaper'),
+            RgAttribute::CREATED_AT             => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT             => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -144,103 +144,103 @@ class Event extends BaseModel
         return [
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::TYPE_ID,
-                    AttrRegistry::NAME,
-                    AttrRegistry::ABOUT,
-                    AttrRegistry::INTEREST_CATEGORY_ID,
-                    AttrRegistry::CITY_ID,
-                    AttrRegistry::ADDRESS,
-                    AttrRegistry::AGE_LIMIT,
-                    AttrRegistry::WALLPAPER,
-                    AttrRegistry::STATUS_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::TYPE_ID,
+                    RgAttribute::NAME,
+                    RgAttribute::ABOUT,
+                    RgAttribute::INTEREST_CATEGORY_ID,
+                    RgAttribute::CITY_ID,
+                    RgAttribute::ADDRESS,
+                    RgAttribute::AGE_LIMIT,
+                    RgAttribute::WALLPAPER,
+                    RgAttribute::STATUS_ID
                 ],
                 'required'
             ],
             [
                 [
-                    AttrRegistry::USER_ID,
-                    AttrRegistry::TYPE_ID,
-                    AttrRegistry::INTEREST_CATEGORY_ID,
-                    AttrRegistry::CITY_ID,
-                    AttrRegistry::AGE_LIMIT,
-                    AttrRegistry::TICKETS_NUMBER,
-                    AttrRegistry::STATUS_ID
+                    RgAttribute::USER_ID,
+                    RgAttribute::TYPE_ID,
+                    RgAttribute::INTEREST_CATEGORY_ID,
+                    RgAttribute::CITY_ID,
+                    RgAttribute::AGE_LIMIT,
+                    RgAttribute::TICKETS_NUMBER,
+                    RgAttribute::STATUS_ID
                 ],
                 'integer'
             ],
             [
-                [AttrRegistry::TICKET_PRICE],
+                [RgAttribute::TICKET_PRICE],
                 'number'
             ],
             [
-                [AttrRegistry::IS_FREE],
+                [RgAttribute::IS_FREE],
                 'boolean'
             ],
             [
                 [
-                    AttrRegistry::CREATED_AT,
-                    AttrRegistry::UPDATED_AT
+                    RgAttribute::CREATED_AT,
+                    RgAttribute::UPDATED_AT
                 ],
                 'safe'
             ],
             [
-                [AttrRegistry::NAME],
+                [RgAttribute::NAME],
                 'string',
                 'max' => 20
             ],
             [
-                [AttrRegistry::ABOUT],
+                [RgAttribute::ABOUT],
                 'string',
                 'max' => 60
             ],
             [
                 [
-                    AttrRegistry::ADDRESS,
-                    AttrRegistry::WALLPAPER
+                    RgAttribute::ADDRESS,
+                    RgAttribute::WALLPAPER
                 ],
                 'string',
                 'max' => 255
             ],
             [
-                [AttrRegistry::ADDITIONAL_INFORMATION],
+                [RgAttribute::ADDITIONAL_INFORMATION],
                 'string',
                 'max' => 200
             ],
             [
-                [AttrRegistry::CITY_ID],
+                [RgAttribute::CITY_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => City::class,
                 'targetAttribute' => [
-                    AttrRegistry::CITY_ID => AttrRegistry::ID
+                    RgAttribute::CITY_ID => RgAttribute::ID
                 ]
             ],
             [
-                [AttrRegistry::TYPE_ID],
+                [RgAttribute::TYPE_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => EventType::class,
                 'targetAttribute' => [
-                    AttrRegistry::TYPE_ID => AttrRegistry::ID
+                    RgAttribute::TYPE_ID => RgAttribute::ID
                 ]
             ],
             [
-                [AttrRegistry::INTEREST_CATEGORY_ID],
+                [RgAttribute::INTEREST_CATEGORY_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => InterestCategory::class,
                 'targetAttribute' => [
-                    AttrRegistry::INTEREST_CATEGORY_ID => AttrRegistry::ID
+                    RgAttribute::INTEREST_CATEGORY_ID => RgAttribute::ID
                 ]
             ],
             [
-                [AttrRegistry::USER_ID],
+                [RgAttribute::USER_ID],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => User::class,
                 'targetAttribute' => [
-                    AttrRegistry::USER_ID => AttrRegistry::ID
+                    RgAttribute::USER_ID => RgAttribute::ID
                 ]
             ],
         ];
