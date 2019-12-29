@@ -2,6 +2,8 @@
 
 namespace common\models\relations;
 
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use common\models\base\BaseModel;
 use common\models\InterestCategory;
 use common\models\user\User;
@@ -9,8 +11,6 @@ use Yii;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "relation_user_interest".
- *
  * @property int              $id                   Идентификатор связи пользователя с его интересами
  * @property int              $user_id              Идентификатор пользователя
  * @property int              $interest_category_id Идентификатор интереса
@@ -26,22 +26,33 @@ class RelationUserInterest extends BaseModel
      */
     public static function tableName()
     {
-        return 'relation_user_interest';
+        return TableRegistry::NAME_RELATION_USER_INTEREST;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getInterest()
     {
-        return [
-            [['user_id', 'interest_category_id'], 'required'],
-            [['user_id', 'interest_category_id'], 'default', 'value' => null],
-            [['user_id', 'interest_category_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['interest_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => InterestCategory::class, 'targetAttribute' => ['interest_category_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-        ];
+        return $this->hasOne(
+            InterestCategory::class,
+            [
+                AttrRegistry::ID => AttrRegistry::INTEREST_CATEGORY_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(
+            User::class,
+            [
+                AttrRegistry::ID => AttrRegistry::USER_ID
+            ]
+        );
     }
 
     /**
@@ -50,27 +61,67 @@ class RelationUserInterest extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'                   => Yii::t('app', 'ID'),
-            'user_id'              => Yii::t('app', 'User ID'),
-            'interest_category_id' => Yii::t('app', 'Interest Category ID'),
-            'created_at'           => Yii::t('app', 'Created At'),
-            'updated_at'           => Yii::t('app', 'Updated At'),
+            AttrRegistry::ID                   => Yii::t('app', 'ID'),
+            AttrRegistry::USER_ID              => Yii::t('app', 'User ID'),
+            AttrRegistry::INTEREST_CATEGORY_ID => Yii::t('app', 'Interest Category ID'),
+            AttrRegistry::CREATED_AT           => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT           => Yii::t('app', 'Updated At'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getInterest()
+    public function rules()
     {
-        return $this->hasOne(InterestCategory::class, ['id' => 'interest_category_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        return [
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::INTEREST_CATEGORY_ID
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::INTEREST_CATEGORY_ID
+                ],
+                'default',
+                'value' => null
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::INTEREST_CATEGORY_ID
+                ],
+                'integer'
+            ],
+            [
+                [
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+            [
+                [AttrRegistry::INTEREST_CATEGORY_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => InterestCategory::class,
+                'targetAttribute' => [
+                    AttrRegistry::INTEREST_CATEGORY_ID => AttrRegistry::ID
+                ]
+            ],
+            [
+                [AttrRegistry::USER_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => User::class,
+                'targetAttribute' => [
+                    AttrRegistry::USER_ID => AttrRegistry::ID
+                ]
+            ],
+        ];
     }
 }

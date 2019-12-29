@@ -2,33 +2,33 @@
 
 namespace api\modules\v1\models\form\base;
 
+use common\components\registry\AttrRegistry;
 use Yii;
 use yii\base\Model;
 
 class AbstractEventForm extends Model
 {
-
     /**
      * @return array
      */
     public function attributeLabels()
     {
         return [
-            'type_id'                => Yii::t('app', 'Type ID'),
-            'status_id'              => Yii::t('app', 'Status ID'),
-            'name'                   => Yii::t('app', 'Name'),
-            'about'                  => Yii::t('app', 'About'),
-            'interest_category_id'   => Yii::t('app', 'Interest Category ID'),
-            'city_id'                => Yii::t('app', 'City ID'),
-            'address'                => Yii::t('app', 'Address'),
-            'age_limit'              => Yii::t('app', 'Age Limit'),
-            'ticket_price'           => Yii::t('app', 'Ticket Price'),
-            'tickets_number'         => Yii::t('app', 'Tickets Number'),
-            'additional_information' => Yii::t('app', 'Additional Information'),
-            'is_free'                => Yii::t('app', 'Is Free'),
-            'wallpaper'              => Yii::t('app', 'Wallpaper'),
-            'created_at'             => Yii::t('app', 'Created At'),
-            'updated_at'             => Yii::t('app', 'Updated At'),
+            AttrRegistry::TYPE_ID                => Yii::t('app', 'Type ID'),
+            AttrRegistry::STATUS_ID              => Yii::t('app', 'Status ID'),
+            AttrRegistry::NAME                   => Yii::t('app', 'Name'),
+            AttrRegistry::ABOUT                  => Yii::t('app', 'About'),
+            AttrRegistry::INTEREST_CATEGORY_ID   => Yii::t('app', 'Interest Category ID'),
+            AttrRegistry::CITY_ID                => Yii::t('app', 'City ID'),
+            AttrRegistry::ADDRESS                => Yii::t('app', 'Address'),
+            AttrRegistry::AGE_LIMIT              => Yii::t('app', 'Age Limit'),
+            AttrRegistry::TICKET_PRICE           => Yii::t('app', 'Ticket Price'),
+            AttrRegistry::TICKETS_NUMBER         => Yii::t('app', 'Tickets Number'),
+            AttrRegistry::ADDITIONAL_INFORMATION => Yii::t('app', 'Additional Information'),
+            AttrRegistry::IS_FREE                => Yii::t('app', 'Is Free'),
+            AttrRegistry::WALLPAPER              => Yii::t('app', 'Wallpaper'),
+            AttrRegistry::CREATED_AT             => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT             => Yii::t('app', 'Updated At'),
         ];
     }
 }

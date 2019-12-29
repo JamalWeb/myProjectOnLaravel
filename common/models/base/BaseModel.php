@@ -4,6 +4,7 @@ namespace common\models\base;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
+use common\components\registry\AttrRegistry;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -19,8 +20,8 @@ class BaseModel extends ActiveRecord
         return ArrayHelper::merge(parent::behaviors(), [
             'timestamp' => [
                 'class'              => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
+                'createdAtAttribute' => AttrRegistry::CREATED_AT,
+                'updatedAtAttribute' => AttrRegistry::UPDATED_AT,
                 'value'              => gmdate('Y-m-d H:i:s'),
             ],
         ]);

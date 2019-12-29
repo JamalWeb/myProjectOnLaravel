@@ -2,13 +2,13 @@
 
 namespace common\models\translate;
 
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "source_message".
- *
  * @property int       $id
  * @property string    $category
  * @property string    $message
@@ -21,18 +21,20 @@ class SourceMessage extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'source_message';
+        return TableRegistry::NAME_SOURCE_MESSAGE;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getMessages()
     {
-        return [
-            [['message'], 'string'],
-            [['category'], 'string', 'max' => 255],
-        ];
+        return $this->hasMany(
+            Message::class,
+            [
+                AttrRegistry::ID => AttrRegistry::ID
+            ]
+        );
     }
 
     /**
@@ -41,17 +43,27 @@ class SourceMessage extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'       => Yii::t('api', 'ID'),
-            'category' => Yii::t('api', 'Category'),
-            'message'  => Yii::t('api', 'Message'),
+            AttrRegistry::ID       => Yii::t('api', 'ID'),
+            AttrRegistry::CATEGORY => Yii::t('api', 'Category'),
+            AttrRegistry::MESSAGE  => Yii::t('api', 'Message'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getMessages()
+    public function rules()
     {
-        return $this->hasMany(Message::class, ['id' => 'id']);
+        return [
+            [
+                [AttrRegistry::MESSAGE],
+                'string'
+            ],
+            [
+                [AttrRegistry::CATEGORY],
+                'string',
+                'max' => 255
+            ],
+        ];
     }
 }

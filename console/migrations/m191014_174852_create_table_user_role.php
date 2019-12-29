@@ -1,6 +1,6 @@
 <?php
 
-use common\components\registry\AttributeRegistry;
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use yii\db\Expression;
 use yii\db\Migration;
@@ -17,32 +17,32 @@ class m191014_174852_create_table_user_role extends Migration
     {
         $defaultDate = new Expression('CURRENT_TIMESTAMP');
 
-        $this->createTable(TableRegistry::TABLE_NAME_USER_ROLE, [
-            AttributeRegistry::ID => $this->primaryKey()
+        $this->createTable(TableRegistry::NAME_USER_ROLE, [
+            AttrRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор роли'),
 
-            AttributeRegistry::NAME => $this->string()
+            AttrRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование роли'),
 
-            AttributeRegistry::DESCRIPTION => $this->string()
+            AttrRegistry::DESCRIPTION => $this->string()
                 ->notNull()
                 ->comment('Описание роли'),
 
-            AttributeRegistry::CREATED_AT => $this->timestamp()
+            AttrRegistry::CREATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата создания'),
 
-            AttributeRegistry::UPDATED_AT => $this->timestamp()
+            AttrRegistry::UPDATED_AT => $this->timestamp()
                 ->defaultValue($defaultDate)
                 ->comment('Дата обновления')
         ]);
 
         $this->batchInsert(
-            TableRegistry::TABLE_NAME_USER_ROLE,
+            TableRegistry::NAME_USER_ROLE,
             [
-                AttributeRegistry::NAME,
-                AttributeRegistry::DESCRIPTION
+                AttrRegistry::NAME,
+                AttrRegistry::DESCRIPTION
             ],
             [
                 [
@@ -65,6 +65,6 @@ class m191014_174852_create_table_user_role extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable(TableRegistry::TABLE_NAME_USER_ROLE);
+        $this->dropTable(TableRegistry::NAME_USER_ROLE);
     }
 }

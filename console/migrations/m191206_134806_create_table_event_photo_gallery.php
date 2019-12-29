@@ -1,6 +1,6 @@
 <?php
 
-use common\components\registry\AttributeRegistry;
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
@@ -14,31 +14,31 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::TABLE_NAME_EVENT_PHOTO_GALLERY, [
-            AttributeRegistry::ID => $this->primaryKey()
+        $this->createTable(TableRegistry::NAME_EVENT_PHOTO_GALLERY, [
+            AttrRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор фотографии'),
 
-            AttributeRegistry::NAME => $this->string()
+            AttrRegistry::NAME => $this->string()
                 ->notNull()
                 ->comment('Наименование фотографии'),
 
-            AttributeRegistry::EVENT_ID => $this->integer()
+            AttrRegistry::EVENT_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор события'),
 
-            AttributeRegistry::CREATED_AT => $this->timestamp()
+            AttrRegistry::CREATED_AT => $this->timestamp()
                 ->comment('Дата создания'),
 
-            AttributeRegistry::UPDATED_AT => $this->timestamp()
+            AttrRegistry::UPDATED_AT => $this->timestamp()
                 ->comment('Дата обновления')
         ]);
 
         $this->addForeignKey(
             'FGK-event_id-event_photo_gallery',
-            TableRegistry::TABLE_NAME_EVENT_PHOTO_GALLERY,
-            AttributeRegistry::EVENT_ID,
-            TableRegistry::TABLE_NAME_EVENT,
-            AttributeRegistry::ID
+            TableRegistry::NAME_EVENT_PHOTO_GALLERY,
+            AttrRegistry::EVENT_ID,
+            TableRegistry::NAME_EVENT,
+            AttrRegistry::ID
         );
     }
 
@@ -47,7 +47,7 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-event_id-event_photo_gallery', TableRegistry::TABLE_NAME_EVENT_PHOTO_GALLERY);
-        $this->dropTable(TableRegistry::TABLE_NAME_EVENT_PHOTO_GALLERY);
+        $this->dropForeignKey('FGK-event_id-event_photo_gallery', TableRegistry::NAME_EVENT_PHOTO_GALLERY);
+        $this->dropTable(TableRegistry::NAME_EVENT_PHOTO_GALLERY);
     }
 }

@@ -3,31 +3,34 @@
 namespace common\models\event;
 
 use common\components\ArrayHelper;
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use common\models\base\BaseModel;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "event_status".
- *
- * @property int     $id   Идентификатор статуса события
- * @property string  $name Наименование статуса события
- * @property string  $desc Описание статуса события
+ * @property int     $id          Идентификатор статуса события
+ * @property string  $name        Наименование статуса события
+ * @property string  $description Описание статуса события
  * @property Event[] $events
  */
 class EventStatus extends BaseModel
 {
     public function behaviors(): array
     {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'timestamp' => [
-                'class'              => TimestampBehavior::class,
-                'createdAtAttribute' => false,
-                'updatedAtAttribute' => false,
-                'value'              => gmdate('Y-m-d H:i:s'),
-            ],
-        ]);
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'timestamp' => [
+                    'class'              => TimestampBehavior::class,
+                    'createdAtAttribute' => false,
+                    'updatedAtAttribute' => false,
+                    'value'              => gmdate('Y-m-d H:i:s'),
+                ],
+            ]
+        );
     }
 
     /**
@@ -35,17 +38,20 @@ class EventStatus extends BaseModel
      */
     public static function tableName()
     {
-        return 'event_status';
+        return TableRegistry::NAME_EVENT_STATUS;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getEvents()
     {
-        return [
-            [['name', 'desc'], 'string', 'max' => 255],
-        ];
+        return $this->hasMany(
+            Event::class,
+            [
+                AttrRegistry::STATUS_ID => AttrRegistry::ID
+            ]
+        );
     }
 
     /**
@@ -54,17 +60,26 @@ class EventStatus extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'   => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'desc' => Yii::t('app', 'Desc'),
+            AttrRegistry::ID          => Yii::t('app', 'ID'),
+            AttrRegistry::NAME        => Yii::t('app', 'Name'),
+            AttrRegistry::DESCRIPTION => Yii::t('app', 'Desc'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getEvents()
+    public function rules()
     {
-        return $this->hasMany(Event::class, ['status_id' => 'id']);
+        return [
+            [
+                [
+                    AttrRegistry::NAME,
+                    AttrRegistry::DESCRIPTION
+                ],
+                'string',
+                'max' => 255
+            ],
+        ];
     }
 }

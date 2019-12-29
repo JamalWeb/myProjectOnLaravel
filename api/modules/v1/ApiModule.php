@@ -20,15 +20,18 @@ class ApiModule extends Module
      */
     public function behaviors(): array
     {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'authenticator' => [
-                'class'       => CompositeAuth::class,
-                'except'      => Yii::$app->params['exceptApiMethods'],
-                'authMethods' => [
-                    HttpBearerAuth::class
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'authenticator' => [
+                    'class'       => CompositeAuth::class,
+                    'except'      => Yii::$app->params['exceptApiMethods'],
+                    'authMethods' => [
+                        HttpBearerAuth::class
+                    ]
                 ]
             ]
-        ]);
+        );
     }
 
     /**

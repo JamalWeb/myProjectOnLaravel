@@ -2,17 +2,20 @@
 
 namespace common\components\registry;
 
-class AttributeRegistry
+class AttrRegistry
 {
     const ID = 'id';
     const USER_ID = 'user_id';
+    const TYPE = 'type';
     const TYPE_ID = 'type_id';
     const ROLE_ID = 'role_id';
     const COUNTRY_ID = 'country_id';
     const CITY_ID = 'city_id';
     const INTEREST_CATEGORY_ID = 'interest_category_id';
+    const STATUS = 'status';
     const STATUS_ID = 'status_id';
     const EVENT_ID = 'event_id';
+    const GENDER = 'gender';
     const GENDER_ID = 'gender_id';
     const NAME = 'name';
     const AGE = 'age';
@@ -57,4 +60,12 @@ class AttributeRegistry
     const LOGOUT_IN_AT = 'logout_in_at';
     const BANNED_AT = 'banned_at';
     const EXPIRED_AT = 'expired_at';
+    const TRANSLATION = 'translation';
+    const MESSAGE = 'message';
+    const CATEGORY = 'category';
+    const BANNED = 'banned';
+    const PROFILE = 'profile';
+    const COUNTRY = 'country';
+    const CITY = 'city';
+    const CHILDREN = 'children';
 }

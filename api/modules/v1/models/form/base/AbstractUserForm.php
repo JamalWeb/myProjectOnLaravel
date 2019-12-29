@@ -3,6 +3,7 @@
 namespace api\modules\v1\models\form\base;
 
 use common\components\helpers\FileHelper;
+use common\components\registry\AttrRegistry;
 use common\models\user\User;
 use Yii;
 use yii\base\Exception;
@@ -22,21 +23,21 @@ abstract class AbstractUserForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'      => Yii::t('api', 'email'),
-            'password'   => Yii::t('api', 'password'),
-            'first_name' => Yii::t('api', 'first_name'),
-            'last_name'  => Yii::t('api', 'last_name'),
-            'avatar'     => Yii::t('api', 'avatar'),
-            'country_id' => Yii::t('api', 'country_id'),
-            'city_id'    => Yii::t('api', 'city_id'),
-            'is_closed'  => Yii::t('app', 'Is Closed'),
-            'is_notice'  => Yii::t('app', 'Is Notice'),
-            'children'   => Yii::t('api', 'children'),
-            'longitude'  => Yii::t('api', 'longitude'),
-            'latitude'   => Yii::t('api', 'latitude'),
-            'language'   => Yii::t('api', 'language'),
-            'short_lang' => Yii::t('api', 'short_lang'),
-            'timezone'   => Yii::t('api', 'timezone'),
+            AttrRegistry::EMAIL      => Yii::t('api', 'email'),
+            AttrRegistry::PASSWORD   => Yii::t('api', 'password'),
+            AttrRegistry::FIRST_NAME => Yii::t('api', 'first_name'),
+            AttrRegistry::LAST_NAME  => Yii::t('api', 'last_name'),
+            AttrRegistry::AVATAR     => Yii::t('api', 'avatar'),
+            AttrRegistry::COUNTRY_ID => Yii::t('api', 'country_id'),
+            AttrRegistry::CITY_ID    => Yii::t('api', 'city_id'),
+            AttrRegistry::IS_CLOSED  => Yii::t('app', 'Is Closed'),
+            AttrRegistry::IS_NOTICE  => Yii::t('app', 'Is Notice'),
+            AttrRegistry::CHILDREN   => Yii::t('api', 'children'),
+            AttrRegistry::LONGITUDE  => Yii::t('api', 'longitude'),
+            AttrRegistry::LATITUDE   => Yii::t('api', 'latitude'),
+            AttrRegistry::LANGUAGE   => Yii::t('api', 'language'),
+            AttrRegistry::SHORT_LANG => Yii::t('api', 'short_lang'),
+            AttrRegistry::TIMEZONE   => Yii::t('api', 'timezone'),
         ];
     }
 

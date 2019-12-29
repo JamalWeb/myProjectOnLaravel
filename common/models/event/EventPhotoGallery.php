@@ -2,13 +2,13 @@
 
 namespace common\models\event;
 
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use common\models\base\BaseModel;
 use Yii;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "event_photo_gallery".
- *
  * @property int    $id         Идентификатор фотографии
  * @property string $name       Наименование фотографии
  * @property int    $event_id   Идентификатор события
@@ -23,22 +23,20 @@ class EventPhotoGallery extends BaseModel
      */
     public static function tableName()
     {
-        return 'event_photo_gallery';
+        return TableRegistry::NAME_EVENT_PHOTO_GALLERY;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getEvent()
     {
-        return [
-            [['name', 'event_id'], 'required'],
-            [['event_id'], 'default', 'value' => null],
-            [['event_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['name'], 'string', 'max' => 255],
-            [['event_id'], 'exist', 'skipOnError' => true, 'targetClass' => Event::class, 'targetAttribute' => ['event_id' => 'id']],
-        ];
+        return $this->hasOne(
+            Event::class,
+            [
+                AttrRegistry::ID => AttrRegistry::EVENT_ID
+            ]
+        );
     }
 
     /**
@@ -47,19 +45,57 @@ class EventPhotoGallery extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('app', 'ID'),
-            'name'       => Yii::t('app', 'Name'),
-            'event_id'   => Yii::t('app', 'Event ID'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            AttrRegistry::ID         => Yii::t('app', 'ID'),
+            AttrRegistry::NAME       => Yii::t('app', 'Name'),
+            AttrRegistry::EVENT_ID   => Yii::t('app', 'Event ID'),
+            AttrRegistry::CREATED_AT => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT => Yii::t('app', 'Updated At'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getEvent()
+    public function rules()
     {
-        return $this->hasOne(Event::class, ['id' => 'event_id']);
+        return [
+            [
+                [
+                    AttrRegistry::NAME,
+                    AttrRegistry::EVENT_ID
+                ],
+                'required'
+            ],
+            [
+                [AttrRegistry::EVENT_ID],
+                'default',
+                'value' => null
+            ],
+            [
+                [AttrRegistry::EVENT_ID],
+                'integer'
+            ],
+            [
+                [
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+            [
+                [AttrRegistry::NAME],
+                'string',
+                'max' => 255
+            ],
+            [
+                [AttrRegistry::EVENT_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => Event::class,
+                'targetAttribute' => [
+                    AttrRegistry::EVENT_ID => AttrRegistry::ID
+                ]
+            ],
+        ];
     }
 }

@@ -2,6 +2,8 @@
 
 namespace common\models\event;
 
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use common\models\base\BaseModel;
 use common\models\City;
 use common\models\InterestCategory;
@@ -10,8 +12,6 @@ use Yii;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "event".
- *
  * @property int                 $id                     Идентификатор события
  * @property int                 $user_id                Идентификатор пользователя который создал событие
  * @property int                 $type_id                Тип события
@@ -42,29 +42,72 @@ class Event extends BaseModel
      */
     public static function tableName()
     {
-        return 'event';
+        return TableRegistry::NAME_EVENT;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getCity()
     {
-        return [
-            [['user_id', 'type_id', 'name', 'about', 'interest_category_id', 'city_id', 'address', 'age_limit', 'wallpaper', 'status_id'], 'required'],
-            [['user_id', 'type_id', 'interest_category_id', 'city_id', 'age_limit', 'tickets_number', 'status_id'], 'integer'],
-            [['ticket_price'], 'number'],
-            [['is_free'], 'boolean'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['name'], 'string', 'max' => 20],
-            [['about'], 'string', 'max' => 60],
-            [['address', 'wallpaper'], 'string', 'max' => 255],
-            [['additional_information'], 'string', 'max' => 200],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
-            [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => EventType::class, 'targetAttribute' => ['type_id' => 'id']],
-            [['interest_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => InterestCategory::class, 'targetAttribute' => ['interest_category_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-        ];
+        return $this->hasOne(
+            City::class,
+            [
+                AttrRegistry::ID => AttrRegistry::CITY_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getType()
+    {
+        return $this->hasOne(
+            EventType::class,
+            [
+                AttrRegistry::ID => AttrRegistry::TYPE_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getInterestCategory()
+    {
+        return $this->hasOne(
+            InterestCategory::class,
+            [
+                AttrRegistry::ID => AttrRegistry::INTEREST_CATEGORY_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(
+            User::class,
+            [
+                AttrRegistry::ID => AttrRegistry::USER_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getEventPhotoGalleries()
+    {
+        return $this->hasMany(
+            EventPhotoGallery::class,
+            [
+                AttrRegistry::EVENT_ID => AttrRegistry::ID
+            ]
+        );
     }
 
     /**
@@ -73,63 +116,133 @@ class Event extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'                     => Yii::t('app', 'ID'),
-            'user_id'                => Yii::t('app', 'User ID'),
-            'type_id'                => Yii::t('app', 'Type ID'),
-            'status_id'              => Yii::t('app', 'Status ID'),
-            'name'                   => Yii::t('app', 'Name'),
-            'about'                  => Yii::t('app', 'About'),
-            'interest_category_id'   => Yii::t('app', 'Interest Category ID'),
-            'city_id'                => Yii::t('app', 'City ID'),
-            'address'                => Yii::t('app', 'Address'),
-            'age_limit'              => Yii::t('app', 'Age Limit'),
-            'ticket_price'           => Yii::t('app', 'Ticket Price'),
-            'tickets_number'         => Yii::t('app', 'Tickets Number'),
-            'additional_information' => Yii::t('app', 'Additional Information'),
-            'is_free'                => Yii::t('app', 'Is Free'),
-            'wallpaper'              => Yii::t('app', 'Wallpaper'),
-            'created_at'             => Yii::t('app', 'Created At'),
-            'updated_at'             => Yii::t('app', 'Updated At'),
+            AttrRegistry::ID                     => Yii::t('app', 'ID'),
+            AttrRegistry::USER_ID                => Yii::t('app', 'User ID'),
+            AttrRegistry::TYPE_ID                => Yii::t('app', 'Type ID'),
+            AttrRegistry::STATUS_ID              => Yii::t('app', 'Status ID'),
+            AttrRegistry::NAME                   => Yii::t('app', 'Name'),
+            AttrRegistry::ABOUT                  => Yii::t('app', 'About'),
+            AttrRegistry::INTEREST_CATEGORY_ID   => Yii::t('app', 'Interest Category ID'),
+            AttrRegistry::CITY_ID                => Yii::t('app', 'City ID'),
+            AttrRegistry::ADDRESS                => Yii::t('app', 'Address'),
+            AttrRegistry::AGE_LIMIT              => Yii::t('app', 'Age Limit'),
+            AttrRegistry::TICKET_PRICE           => Yii::t('app', 'Ticket Price'),
+            AttrRegistry::TICKETS_NUMBER         => Yii::t('app', 'Tickets Number'),
+            AttrRegistry::ADDITIONAL_INFORMATION => Yii::t('app', 'Additional Information'),
+            AttrRegistry::IS_FREE                => Yii::t('app', 'Is Free'),
+            AttrRegistry::WALLPAPER              => Yii::t('app', 'Wallpaper'),
+            AttrRegistry::CREATED_AT             => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT             => Yii::t('app', 'Updated At'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getCity()
+    public function rules()
     {
-        return $this->hasOne(City::class, ['id' => 'city_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getType()
-    {
-        return $this->hasOne(EventType::class, ['id' => 'type_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getInterestCategory()
-    {
-        return $this->hasOne(InterestCategory::class, ['id' => 'interest_category_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getEventPhotoGalleries()
-    {
-        return $this->hasMany(EventPhotoGallery::class, ['event_id' => 'id']);
+        return [
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::TYPE_ID,
+                    AttrRegistry::NAME,
+                    AttrRegistry::ABOUT,
+                    AttrRegistry::INTEREST_CATEGORY_ID,
+                    AttrRegistry::CITY_ID,
+                    AttrRegistry::ADDRESS,
+                    AttrRegistry::AGE_LIMIT,
+                    AttrRegistry::WALLPAPER,
+                    AttrRegistry::STATUS_ID
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::TYPE_ID,
+                    AttrRegistry::INTEREST_CATEGORY_ID,
+                    AttrRegistry::CITY_ID,
+                    AttrRegistry::AGE_LIMIT,
+                    AttrRegistry::TICKETS_NUMBER,
+                    AttrRegistry::STATUS_ID
+                ],
+                'integer'
+            ],
+            [
+                [AttrRegistry::TICKET_PRICE],
+                'number'
+            ],
+            [
+                [AttrRegistry::IS_FREE],
+                'boolean'
+            ],
+            [
+                [
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+            [
+                [AttrRegistry::NAME],
+                'string',
+                'max' => 20
+            ],
+            [
+                [AttrRegistry::ABOUT],
+                'string',
+                'max' => 60
+            ],
+            [
+                [
+                    AttrRegistry::ADDRESS,
+                    AttrRegistry::WALLPAPER
+                ],
+                'string',
+                'max' => 255
+            ],
+            [
+                [AttrRegistry::ADDITIONAL_INFORMATION],
+                'string',
+                'max' => 200
+            ],
+            [
+                [AttrRegistry::CITY_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => City::class,
+                'targetAttribute' => [
+                    AttrRegistry::CITY_ID => AttrRegistry::ID
+                ]
+            ],
+            [
+                [AttrRegistry::TYPE_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => EventType::class,
+                'targetAttribute' => [
+                    AttrRegistry::TYPE_ID => AttrRegistry::ID
+                ]
+            ],
+            [
+                [AttrRegistry::INTEREST_CATEGORY_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => InterestCategory::class,
+                'targetAttribute' => [
+                    AttrRegistry::INTEREST_CATEGORY_ID => AttrRegistry::ID
+                ]
+            ],
+            [
+                [AttrRegistry::USER_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => User::class,
+                'targetAttribute' => [
+                    AttrRegistry::USER_ID => AttrRegistry::ID
+                ]
+            ],
+        ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use common\components\registry\AttributeRegistry;
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
@@ -14,44 +14,44 @@ class m191217_175557_create_table_user_status extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::TABLE_NAME_USER_STATUS, [
-            AttributeRegistry::ID => $this->primaryKey()
+        $this->createTable(TableRegistry::NAME_USER_STATUS, [
+            AttrRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор статуса пользователя'),
 
-            AttributeRegistry::NAME => $this->string()
+            AttrRegistry::NAME => $this->string()
                 ->comment('Наименование статуса пользователя'),
 
-            AttributeRegistry::DESCRIPTION => $this->string()
+            AttrRegistry::DESCRIPTION => $this->string()
                 ->comment('Описание статуса пользователя'),
         ]);
 
         $this->batchInsert(
-            TableRegistry::TABLE_NAME_USER_STATUS,
+            TableRegistry::NAME_USER_STATUS,
             [
-                AttributeRegistry::NAME,
-                AttributeRegistry::DESCRIPTION
+                AttrRegistry::NAME,
+                AttrRegistry::DESCRIPTION
             ],
             [
                 [
-                    AttributeRegistry::NAME        => 'Не активен',
-                    AttributeRegistry::DESCRIPTION => 'Пользователь не активен'
+                    AttrRegistry::NAME        => 'Не активен',
+                    AttrRegistry::DESCRIPTION => 'Пользователь не активен'
                 ],
                 [
-                    AttributeRegistry::NAME        => 'Активен',
-                    AttributeRegistry::DESCRIPTION => 'Пользователь активен'
+                    AttrRegistry::NAME        => 'Активен',
+                    AttrRegistry::DESCRIPTION => 'Пользователь активен'
                 ],
                 [
-                    AttributeRegistry::NAME        => 'Почта не подтверждена',
-                    AttributeRegistry::DESCRIPTION => 'Почта пользователя не подтверждена'
+                    AttrRegistry::NAME        => 'Почта не подтверждена',
+                    AttrRegistry::DESCRIPTION => 'Почта пользователя не подтверждена'
                 ]
             ]);
 
         $this->addForeignKey(
             'FGK-status_id-user',
-            TableRegistry::TABLE_NAME_USER,
-            AttributeRegistry::STATUS_ID,
-            TableRegistry::TABLE_NAME_USER_STATUS,
-            AttributeRegistry::ID
+            TableRegistry::NAME_USER,
+            AttrRegistry::STATUS_ID,
+            TableRegistry::NAME_USER_STATUS,
+            AttrRegistry::ID
         );
     }
 
@@ -60,7 +60,7 @@ class m191217_175557_create_table_user_status extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-status_id-user', TableRegistry::TABLE_NAME_USER);
-        $this->dropTable(TableRegistry::TABLE_NAME_USER);
+        $this->dropForeignKey('FGK-status_id-user', TableRegistry::NAME_USER);
+        $this->dropTable(TableRegistry::NAME_USER);
     }
 }

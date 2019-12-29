@@ -2,14 +2,13 @@
 
 namespace common\models\user;
 
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use Yii;
 use common\models\base\BaseModel;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "user_children".
- *
  * @property int        $id         Идентификатор ребенка пользователя
  * @property int        $user_id    Идентификатор пользователя
  * @property int        $age        Возраст
@@ -26,20 +25,33 @@ class UserChildren extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::TABLE_NAME_USER_CHILDREN;
+        return TableRegistry::NAME_USER_CHILDREN;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getParent()
     {
-        return [
-            [['user_id', 'age', 'gender_id'], 'required'],
-            [['user_id', 'age', 'gender_id'], 'default', 'value' => null],
-            [['user_id', 'age', 'gender_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
-        ];
+        return $this->hasOne(
+            User::class,
+            [
+                AttrRegistry::ID => AttrRegistry::USER_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getGender()
+    {
+        return $this->hasOne(
+            UserGender::class,
+            [
+                AttrRegistry::ID => AttrRegistry::GENDER_ID
+            ]
+        );
     }
 
     /**
@@ -48,28 +60,53 @@ class UserChildren extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('app', 'ID'),
-            'user_id'    => Yii::t('app', 'User ID'),
-            'age'        => Yii::t('app', 'Age'),
-            'gender_id'  => Yii::t('app', 'Gender ID'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            AttrRegistry::ID         => Yii::t('app', 'ID'),
+            AttrRegistry::USER_ID    => Yii::t('app', 'User ID'),
+            AttrRegistry::AGE        => Yii::t('app', 'Age'),
+            AttrRegistry::GENDER_ID  => Yii::t('app', 'Gender ID'),
+            AttrRegistry::CREATED_AT => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT => Yii::t('app', 'Updated At'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getParent()
+    public function rules()
     {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getGender()
-    {
-        return $this->hasOne(UserGender::class, ['id' => 'gender_id']);
+        return [
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::AGE,
+                    AttrRegistry::GENDER_ID
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::AGE,
+                    AttrRegistry::GENDER_ID
+                ],
+                'default',
+                'value' => null
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::AGE,
+                    AttrRegistry::GENDER_ID
+                ],
+                'integer'
+            ],
+            [
+                [
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+        ];
     }
 }

@@ -2,13 +2,13 @@
 
 namespace common\models\translate;
 
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "message".
- *
  * @property int           $id
  * @property string        $language
  * @property string        $translation
@@ -21,23 +21,20 @@ class Message extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'message';
+        return TableRegistry::NAME_MESSAGE;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getId0()
     {
-        return [
-            [['id', 'language'], 'required'],
-            [['id'], 'default', 'value' => null],
-            [['id'], 'integer'],
-            [['translation'], 'string'],
-            [['language'], 'string', 'max' => 16],
-            [['id', 'language'], 'unique', 'targetAttribute' => ['id', 'language']],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => SourceMessage::class, 'targetAttribute' => ['id' => 'id']],
-        ];
+        return $this->hasOne(
+            SourceMessage::class,
+            [
+                AttrRegistry::ID => AttrRegistry::ID
+            ]
+        );
     }
 
     /**
@@ -46,17 +43,63 @@ class Message extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'          => Yii::t('api', 'ID'),
-            'language'    => Yii::t('api', 'Language'),
-            'translation' => Yii::t('api', 'Translation'),
+            AttrRegistry::ID          => Yii::t('api', 'ID'),
+            AttrRegistry::LANGUAGE    => Yii::t('api', 'Language'),
+            AttrRegistry::TRANSLATION => Yii::t('api', 'Translation'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getId0()
+    public function rules()
     {
-        return $this->hasOne(SourceMessage::class, ['id' => 'id']);
+        return [
+            [
+                [
+                    AttrRegistry::ID,
+                    AttrRegistry::LANGUAGE
+                ],
+                'required'
+            ],
+            [
+                [AttrRegistry::ID],
+                'default',
+                'value' => null
+            ],
+            [
+                [AttrRegistry::ID],
+                'integer'
+            ],
+            [
+                [AttrRegistry::TRANSLATION],
+                'string'
+            ],
+            [
+                [AttrRegistry::LANGUAGE],
+                'string',
+                'max' => 16
+            ],
+            [
+                [
+                    AttrRegistry::ID,
+                    AttrRegistry::LANGUAGE
+                ],
+                'unique',
+                'targetAttribute' => [
+                    AttrRegistry::ID,
+                    AttrRegistry::LANGUAGE
+                ]
+            ],
+            [
+                [AttrRegistry::ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => SourceMessage::class,
+                'targetAttribute' => [
+                    AttrRegistry::ID => AttrRegistry::ID
+                ]
+            ],
+        ];
     }
 }

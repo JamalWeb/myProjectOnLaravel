@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\models\form;
 
+use common\components\registry\AttrRegistry;
 use common\models\user\User;
 use Yii;
 use yii\base\Model;
@@ -45,42 +46,72 @@ class BusinessUserForm extends Model
     public function rules()
     {
         return [
-            [['city_id', 'first_name', 'email', 'password', 'phone_number', 'about'], 'required'],
-            [['city_id', 'country_id'], 'integer'],
-            [['first_name', 'email', 'password', 'phone_number', 'about', 'address', 'language', 'short_lang', 'timezone'], 'string'],
-            [['email'], 'email'],
             [
-                ['email'], function ($attribute) {
-                $user = User::find()->where(['email' => $this->email])->exists();
-                if ($user) {
-                    $this->addError($attribute, 'This email is already in use.');
-                }
-            }
+                [
+                    AttrRegistry::CITY_ID,
+                    AttrRegistry::FIRST_NAME,
+                    AttrRegistry::EMAIL,
+                    AttrRegistry::PASSWORD,
+                    AttrRegistry::PHONE_NUMBER,
+                    AttrRegistry::ABOUT
+                ],
+                'required'
             ],
-            [['password'], 'string', 'min' => 6, 'max' => 20],
-            [['longitude', 'latitude'], 'number']
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function attributeLabels()
-    {
-        return [
-            'country_id'   => Yii::t('api', 'Country ID'),
-            'city_id'      => Yii::t('api', 'City ID'),
-            'first_name'   => Yii::t('api', 'First Name'),
-            'email'        => Yii::t('api', 'Email'),
-            'password'     => Yii::t('api', 'Password'),
-            'address'      => Yii::t('api', 'Address'),
-            'phone_number' => Yii::t('api', 'Phone Number'),
-            'about'        => Yii::t('api', 'About'),
-            'longitude'    => Yii::t('api', 'Longitude'),
-            'latitude'     => Yii::t('api', 'Latitude'),
-            'language'     => Yii::t('api', 'Language'),
-            'short_lang'   => Yii::t('api', 'Short Lang'),
-            'timezone'     => Yii::t('api', 'Timezone'),
+            [
+                [
+                    AttrRegistry::CITY_ID,
+                    AttrRegistry::COUNTRY_ID
+                ],
+                'integer'
+            ],
+            [
+                [
+                    AttrRegistry::FIRST_NAME,
+                    AttrRegistry::EMAIL,
+                    AttrRegistry::PASSWORD,
+                    AttrRegistry::PHONE_NUMBER,
+                    AttrRegistry::ABOUT,
+                    AttrRegistry::ADDRESS,
+                    AttrRegistry::LANGUAGE,
+                    AttrRegistry::SHORT_LANG,
+                    AttrRegistry::TIMEZONE
+                ],
+                'string'
+            ],
+            [
+                [
+                    AttrRegistry::EMAIL
+                ],
+                'email'
+            ],
+            [
+                [AttrRegistry::EMAIL],
+                function ($attribute) {
+                    $user = User::find()
+                        ->where(
+                            [
+                                AttrRegistry::EMAIL => $this->email
+                            ]
+                        )
+                        ->exists();
+                    if ($user) {
+                        $this->addError($attribute, 'This email is already in use.');
+                    }
+                }
+            ],
+            [
+                [AttrRegistry::PASSWORD],
+                'string',
+                'min' => 6,
+                'max' => 20
+            ],
+            [
+                [
+                    AttrRegistry::LONGITUDE,
+                    AttrRegistry::LATITUDE
+                ],
+                'number'
+            ]
         ];
     }
 }

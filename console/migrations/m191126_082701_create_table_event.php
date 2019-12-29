@@ -1,6 +1,6 @@
 <?php
 
-use common\components\registry\AttributeRegistry;
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
@@ -14,100 +14,100 @@ class m191126_082701_create_table_event extends Migration
      */
     public function safeUp()
     {
-        $this->createTable(TableRegistry::TABLE_NAME_EVENT, [
-            AttributeRegistry::ID => $this->primaryKey()
+        $this->createTable(TableRegistry::NAME_EVENT, [
+            AttrRegistry::ID => $this->primaryKey()
                 ->comment('Идентификатор события'),
 
-            AttributeRegistry::USER_ID => $this->integer()
+            AttrRegistry::USER_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор пользователя который создал событие'),
 
-            AttributeRegistry::TYPE_ID => $this->integer()
+            AttrRegistry::TYPE_ID => $this->integer()
                 ->notNull()
                 ->comment('Тип события'),
 
-            AttributeRegistry::STATUS_ID => $this->integer()
+            AttrRegistry::STATUS_ID => $this->integer()
                 ->notNull()
                 ->comment('Статус события'),
 
-            AttributeRegistry::NAME => $this->string(20)
+            AttrRegistry::NAME => $this->string(20)
                 ->notNull()
                 ->comment('Наименование'),
 
-            AttributeRegistry::ABOUT => $this->string(60)
+            AttrRegistry::ABOUT => $this->string(60)
                 ->notNull()
                 ->comment('Описание'),
 
-            AttributeRegistry::INTEREST_CATEGORY_ID => $this->integer()
+            AttrRegistry::INTEREST_CATEGORY_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор категории интереса'),
 
-            AttributeRegistry::CITY_ID => $this->integer()
+            AttrRegistry::CITY_ID => $this->integer()
                 ->notNull()
                 ->comment('Идентификатор города'),
 
-            AttributeRegistry::ADDRESS => $this->string()
+            AttrRegistry::ADDRESS => $this->string()
                 ->notNull()
                 ->comment('Адрес где будет происходить'),
 
-            AttributeRegistry::AGE_LIMIT => $this->integer()
+            AttrRegistry::AGE_LIMIT => $this->integer()
                 ->notNull()
                 ->comment('Возростное ограничение'),
 
-            AttributeRegistry::TICKET_PRICE => $this->decimal(10, 2)
+            AttrRegistry::TICKET_PRICE => $this->decimal(10, 2)
                 ->comment('Цена за один билет'),
 
-            AttributeRegistry::TICKETS_NUMBER => $this->integer()
+            AttrRegistry::TICKETS_NUMBER => $this->integer()
                 ->comment('Кол-во доступных билетов'),
 
-            AttributeRegistry::ADDITIONAL_INFORMATION => $this->string(200)
+            AttrRegistry::ADDITIONAL_INFORMATION => $this->string(200)
                 ->comment('Дополнительная информация'),
 
-            AttributeRegistry::IS_FREE => $this->boolean()
+            AttrRegistry::IS_FREE => $this->boolean()
                 ->defaultValue(false)
                 ->comment('Флаг бесплатно или нет (если да то цена не учитывается)'),
 
-            AttributeRegistry::WALLPAPER => $this->string()
+            AttrRegistry::WALLPAPER => $this->string()
                 ->notNull()
                 ->comment('Фоновое изображение'),
 
-            AttributeRegistry::CREATED_AT => $this->timestamp()
+            AttrRegistry::CREATED_AT => $this->timestamp()
                 ->comment('Дата создания'),
 
-            AttributeRegistry::UPDATED_AT => $this->timestamp()
+            AttrRegistry::UPDATED_AT => $this->timestamp()
                 ->comment('Дата обновления')
         ]);
 
         $this->addForeignKey(
             'FGK-user_id-event',
-            TableRegistry::TABLE_NAME_EVENT,
-            AttributeRegistry::USER_ID,
-            TableRegistry::TABLE_NAME_USER,
-            AttributeRegistry::ID
+            TableRegistry::NAME_EVENT,
+            AttrRegistry::USER_ID,
+            TableRegistry::NAME_USER,
+            AttrRegistry::ID
         );
 
         $this->addForeignKey(
             'FGK-type_id-event',
-            TableRegistry::TABLE_NAME_EVENT,
-            AttributeRegistry::TYPE_ID,
-            TableRegistry::TABLE_NAME_EVENT_TYPE,
-            AttributeRegistry::ID
+            TableRegistry::NAME_EVENT,
+            AttrRegistry::TYPE_ID,
+            TableRegistry::NAME_EVENT_TYPE,
+            AttrRegistry::ID
         );
 
         $this->addForeignKey(
             'FGK-interest_category_id-event',
-            TableRegistry::TABLE_NAME_EVENT,
-            AttributeRegistry::INTEREST_CATEGORY_ID,
-            TableRegistry::TABLE_NAME_INTEREST_CATEGORY,
-            AttributeRegistry::ID
+            TableRegistry::NAME_EVENT,
+            AttrRegistry::INTEREST_CATEGORY_ID,
+            TableRegistry::NAME_INTEREST_CATEGORY,
+            AttrRegistry::ID
         );
 
         $this->addForeignKey(
             'FGK-city_id-event',
-            TableRegistry::TABLE_NAME_EVENT,
-            AttributeRegistry::CITY_ID,
-            TableRegistry::TABLE_NAME_CITY,
-            AttributeRegistry::ID
+            TableRegistry::NAME_EVENT,
+            AttrRegistry::CITY_ID,
+            TableRegistry::NAME_CITY,
+            AttrRegistry::ID
         );
     }
 
@@ -116,10 +116,10 @@ class m191126_082701_create_table_event extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FGK-city_id-event', TableRegistry::TABLE_NAME_EVENT);
-        $this->dropForeignKey('FGK-user_id-event', TableRegistry::TABLE_NAME_EVENT);
-        $this->dropForeignKey('FGK-type_id-event', TableRegistry::TABLE_NAME_EVENT);
-        $this->dropForeignKey('FGK-interest_category_id-event', TableRegistry::TABLE_NAME_EVENT);
-        $this->dropTable(TableRegistry::TABLE_NAME_EVENT);
+        $this->dropForeignKey('FGK-city_id-event', TableRegistry::NAME_EVENT);
+        $this->dropForeignKey('FGK-user_id-event', TableRegistry::NAME_EVENT);
+        $this->dropForeignKey('FGK-type_id-event', TableRegistry::NAME_EVENT);
+        $this->dropForeignKey('FGK-interest_category_id-event', TableRegistry::NAME_EVENT);
+        $this->dropTable(TableRegistry::NAME_EVENT);
     }
 }

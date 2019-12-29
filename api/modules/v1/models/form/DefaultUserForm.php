@@ -3,6 +3,7 @@
 namespace api\modules\v1\models\form;
 
 use api\modules\v1\models\form\base\AbstractUserForm;
+use common\components\registry\AttrRegistry;
 use common\models\user\User;
 use yii\web\UploadedFile;
 
@@ -48,23 +49,70 @@ class DefaultUserForm extends AbstractUserForm
     public function rules()
     {
         return [
-            [['city_id', 'first_name'], 'required'],
-            [['email', 'password'], 'required', 'on' => self::SCENARIO_CREATE],
-            [['city_id', 'country_id'], 'integer'],
-            [['first_name', 'last_name', 'email', 'password', 'children', 'language', 'short_lang', 'timezone'], 'string'],
-            [['email'], 'email'],
             [
-                ['email'], function ($attribute) {
-                $user = User::find()->where(['email' => $this->email])->exists();
-                if ($user) {
-                    $this->addError($attribute, 'This email is already in use.');
-                }
-            }, 'on' => self::SCENARIO_CREATE
+                [
+                    AttrRegistry::CITY_ID,
+                    AttrRegistry::FIRST_NAME
+                ],
+                'required'
             ],
-            [['password'], 'string', 'min' => 6, 'max' => 20],
-            [['longitude', 'latitude'], 'number'],
             [
-                ['avatar'],
+                [
+                    AttrRegistry::EMAIL,
+                    AttrRegistry::PASSWORD
+                ],
+                'required',
+                'on' => self::SCENARIO_CREATE
+            ],
+            [
+                [
+                    AttrRegistry::CITY_ID,
+                    AttrRegistry::COUNTRY_ID
+                ],
+                'integer'
+            ],
+            [
+                [
+                    AttrRegistry::FIRST_NAME,
+                    AttrRegistry::LAST_NAME,
+                    AttrRegistry::EMAIL,
+                    AttrRegistry::PASSWORD,
+                    AttrRegistry::CHILDREN,
+                    AttrRegistry::LANGUAGE,
+                    AttrRegistry::SHORT_LANG,
+                    AttrRegistry::TIMEZONE
+                ],
+                'string'
+            ],
+            [
+                [AttrRegistry::EMAIL],
+                'email'
+            ],
+            [
+                [AttrRegistry::EMAIL],
+                function ($attribute) {
+                    $user = User::find()->where([AttrRegistry::EMAIL => $this->email])->exists();
+                    if ($user) {
+                        $this->addError($attribute, 'This email is already in use.');
+                    }
+                },
+                'on' => self::SCENARIO_CREATE
+            ],
+            [
+                [AttrRegistry::PASSWORD],
+                'string',
+                'min' => 6,
+                'max' => 20
+            ],
+            [
+                [
+                    AttrRegistry::LONGITUDE,
+                    AttrRegistry::LATITUDE
+                ],
+                'number'
+            ],
+            [
+                [AttrRegistry::AVATAR],
                 'image',
                 'skipOnEmpty' => true,
                 'extensions'  => 'png, jpg, jpeg',
@@ -72,7 +120,13 @@ class DefaultUserForm extends AbstractUserForm
                 'maxHeight'   => 500,
                 'maxSize'     => 5120 * 1024
             ],
-            [['is_closed', 'is_notice'], 'boolean']
+            [
+                [
+                    AttrRegistry::IS_CLOSED,
+                    AttrRegistry::IS_NOTICE
+                ],
+                'boolean'
+            ]
         ];
     }
 }

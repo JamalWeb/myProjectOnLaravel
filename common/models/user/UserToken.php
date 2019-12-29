@@ -4,14 +4,14 @@ namespace common\models\user;
 
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\DateHelper;
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use Yii;
 use common\models\base\BaseModel;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "user_token".
- *
  * @property int    $id           Идентификатор токена
  * @property int    $user_id      Идентификатор пользователя
  * @property int    $type         Тип токена
@@ -45,74 +45,42 @@ class UserToken extends BaseModel
      */
     public static function tableName()
     {
-        return 'user_token';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['user_id', 'type', 'access_token'], 'required'],
-            [['user_id', 'type'], 'default', 'value' => null],
-            [['user_id', 'type'], 'integer'],
-            [['data'], 'string'],
-            [['expired_at', 'created_at', 'updated_at'], 'safe'],
-            [['access_token'], 'string', 'max' => 255],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id'           => Yii::t('app', 'ID'),
-            'user_id'      => Yii::t('app', 'User ID'),
-            'type'         => Yii::t('app', 'Type'),
-            'access_token' => Yii::t('app', 'Access token'),
-            'data'         => Yii::t('app', 'Data'),
-            'expired_at'   => Yii::t('app', 'Expired At'),
-            'created_at'   => Yii::t('app', 'Created At'),
-            'updated_at'   => Yii::t('app', 'Updated At'),
-        ];
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        return TableRegistry::NAME_USER_TOKEN;
     }
 
     /**
      * Генерация токена
      *
      * @param User        $user
-     * @param int         $type
+     * @param int         $typeId
      * @param string|null $data
      * @param string      $expiring
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public static function generateAccessToken(User $user, int $type, ?string $data = null, string $expiring = ''): void
-    {
-        self::checkTypeAccessToken($type);
+    public static function generateAccessToken(
+        User $user,
+        int $typeId,
+        ?string $data = null,
+        string $expiring = ''
+    ): void {
+        self::checkTypeAccessToken($typeId);
 
-        $userToken = self::findOne([
-            'user_id' => $user->id,
-            'type'    => $type
-        ]);
+        $userToken = self::findOne(
+            [
+                AttrRegistry::USER_ID => $user->id,
+                AttrRegistry::TYPE_ID => $typeId
+            ]
+        );
 
         if (is_null($userToken)) {
-            $userToken = new UserToken([
-                'user_id' => $user->id,
-                'type'    => $type,
-                'data'    => $data
-            ]);
+            $userToken = new UserToken(
+                [
+                    AttrRegistry::USER_ID => $user->id,
+                    AttrRegistry::TYPE_ID => $typeId,
+                    AttrRegistry::DATA    => $data
+                ]
+            );
         }
 
         $userToken->access_token = Yii::$app->security->generateRandomString(34);
@@ -123,7 +91,7 @@ class UserToken extends BaseModel
 
         $userToken->saveModel();
 
-        if ($type === self::TYPE_AUTH) {
+        if ($typeId === self::TYPE_AUTH) {
             self::generateAccessToken($user, self::TYPE_RESET_AUTH, null, '');
         }
     }
@@ -132,18 +100,20 @@ class UserToken extends BaseModel
      * Получить токен
      *
      * @param User $user
-     * @param int  $type
+     * @param int  $typeId
      * @return UserToken
      * @throws BadRequestHttpException
      */
-    public static function getAccessToken(User $user, int $type): UserToken
+    public static function getAccessToken(User $user, int $typeId): UserToken
     {
-        self::checkTypeAccessToken($type);
+        self::checkTypeAccessToken($typeId);
 
-        $userToken = UserToken::findOne([
-            'user_id' => $user->id,
-            'type'    => $type
-        ]);
+        $userToken = UserToken::findOne(
+            [
+                AttrRegistry::USER_ID => $user->id,
+                AttrRegistry::TYPE_ID => $typeId
+            ]
+        );
 
         if (is_null($userToken)) {
             throw new BadRequestHttpException($userToken->getFirstErrors());
@@ -161,7 +131,90 @@ class UserToken extends BaseModel
     public static function checkTypeAccessToken(int $type): void
     {
         if (!in_array($type, self::$allowedTokens)) {
-            throw new BadRequestHttpException(['access_token' => 'not found']);
+            throw new BadRequestHttpException(
+                [
+                    AttrRegistry::ACCESS_TOKEN => 'not found'
+                ]
+            );
         }
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(
+            User::class,
+            [
+                AttrRegistry::ID => AttrRegistry::USER_ID
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            AttrRegistry::ID           => Yii::t('app', 'ID'),
+            AttrRegistry::USER_ID      => Yii::t('app', 'User ID'),
+            AttrRegistry::TYPE_ID      => Yii::t('app', 'Type ID'),
+            AttrRegistry::ACCESS_TOKEN => Yii::t('app', 'Access token'),
+            AttrRegistry::DATA         => Yii::t('app', 'Data'),
+            AttrRegistry::EXPIRED_AT   => Yii::t('app', 'Expired At'),
+            AttrRegistry::CREATED_AT   => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT   => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::TYPE_ID,
+                    AttrRegistry::ACCESS_TOKEN
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::TYPE_ID
+                ],
+                'default',
+                'value' => null
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::TYPE_ID
+                ],
+                'integer'
+            ],
+            [
+                ['data'],
+                'string'
+            ],
+            [
+                [
+                    AttrRegistry::EXPIRED_AT,
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+            [
+                [AttrRegistry::ACCESS_TOKEN],
+                'string',
+                'max' => 255
+            ],
+        ];
     }
 }

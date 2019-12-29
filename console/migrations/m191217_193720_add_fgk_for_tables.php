@@ -1,6 +1,6 @@
 <?php
 
-use common\components\registry\AttributeRegistry;
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use yii\db\Migration;
 
@@ -16,10 +16,10 @@ class m191217_193720_add_fgk_for_tables extends Migration
     {
         $this->addForeignKey(
             'FGK-user_id-user_children',
-            TableRegistry::TABLE_NAME_USER_CHILDREN,
-            AttributeRegistry::USER_ID,
-            TableRegistry::TABLE_NAME_USER,
-            AttributeRegistry::ID,
+            TableRegistry::NAME_USER_CHILDREN,
+            AttrRegistry::USER_ID,
+            TableRegistry::NAME_USER,
+            AttrRegistry::ID,
             'CASCADE',
             'CASCADE'
         );

@@ -2,6 +2,7 @@
 
 namespace common\models\user;
 
+use common\components\registry\AttrRegistry;
 use common\components\registry\TableRegistry;
 use common\models\City;
 use Yii;
@@ -42,37 +43,33 @@ class UserProfile extends BaseModel
      */
     public static function tableName()
     {
-        return TableRegistry::TABLE_NAME_USER_PROFILE;
+        return TableRegistry::NAME_USER_PROFILE;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getUser()
     {
-        return [
-            [['user_id', 'city_id'], 'required'],
-            [['user_id', 'gender_id', 'country_id', 'city_id'], 'default', 'value' => null],
-            [['user_id', 'gender_id', 'country_id', 'city_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+        return $this->hasOne(
+            User::class,
             [
-                [
-                    'first_name',
-                    'last_name',
-                    'patronymic',
-                    'avatar',
-                    'phone_number',
-                    'address',
-                    'about',
-                    'longitude',
-                    'latitude',
-                    'language',
-                    'short_lang',
-                    'timezone'
-                ], 'string', 'max' => 255
-            ],
-            [['is_closed', 'is_notice'], 'boolean']
-        ];
+                AttrRegistry::ID => AttrRegistry::USER_ID
+            ]
+        );
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(
+            City::class,
+            [
+                AttrRegistry::ID => AttrRegistry::CITY_ID
+            ]
+        );
     }
 
     /**
@@ -81,43 +78,94 @@ class UserProfile extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'           => Yii::t('app', 'ID'),
-            'user_id'      => Yii::t('app', 'User ID'),
-            'first_name'   => Yii::t('app', 'First Name'),
-            'last_name'    => Yii::t('app', 'Last Name'),
-            'patronymic'   => Yii::t('app', 'Patronymic'),
-            'avatar'       => Yii::t('app', 'Avatar'),
-            'phone_number' => Yii::t('app', 'Phone Number'),
-            'address'      => Yii::t('app', 'Address'),
-            'gender_id'    => Yii::t('app', 'Gender ID'),
-            'about'        => Yii::t('app', 'About'),
-            'country_id'   => Yii::t('app', 'Country ID'),
-            'city_id'      => Yii::t('app', 'City ID'),
-            'is_closed'    => Yii::t('app', 'Is Closed'),
-            'is_notice'    => Yii::t('app', 'Is Notice'),
-            'longitude'    => Yii::t('app', 'Longitude'),
-            'latitude'     => Yii::t('app', 'Latitude'),
-            'language'     => Yii::t('app', 'Language'),
-            'short_lang'   => Yii::t('app', 'Short Lang'),
-            'timezone'     => Yii::t('app', 'Timezone'),
-            'created_at'   => Yii::t('app', 'Created At'),
-            'updated_at'   => Yii::t('app', 'Updated At'),
+            AttrRegistry::ID           => Yii::t('app', 'ID'),
+            AttrRegistry::USER_ID      => Yii::t('app', 'User ID'),
+            AttrRegistry::FIRST_NAME   => Yii::t('app', 'First Name'),
+            AttrRegistry::LAST_NAME    => Yii::t('app', 'Last Name'),
+            AttrRegistry::PATRONYMIC   => Yii::t('app', 'Patronymic'),
+            AttrRegistry::AVATAR       => Yii::t('app', 'Avatar'),
+            AttrRegistry::PHONE_NUMBER => Yii::t('app', 'Phone Number'),
+            AttrRegistry::ADDRESS      => Yii::t('app', 'Address'),
+            AttrRegistry::GENDER_ID    => Yii::t('app', 'Gender ID'),
+            AttrRegistry::ABOUT        => Yii::t('app', 'About'),
+            AttrRegistry::COUNTRY_ID   => Yii::t('app', 'Country ID'),
+            AttrRegistry::CITY_ID      => Yii::t('app', 'City ID'),
+            AttrRegistry::IS_CLOSED    => Yii::t('app', 'Is Closed'),
+            AttrRegistry::IS_NOTICE    => Yii::t('app', 'Is Notice'),
+            AttrRegistry::LONGITUDE    => Yii::t('app', 'Longitude'),
+            AttrRegistry::LATITUDE     => Yii::t('app', 'Latitude'),
+            AttrRegistry::LANGUAGE     => Yii::t('app', 'Language'),
+            AttrRegistry::SHORT_LANG   => Yii::t('app', 'Short Lang'),
+            AttrRegistry::TIMEZONE     => Yii::t('app', 'Timezone'),
+            AttrRegistry::CREATED_AT   => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT   => Yii::t('app', 'Updated At'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getUser()
+    public function rules()
     {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getCity()
-    {
-        return $this->hasOne(City::class, ['id' => 'city_id']);
+        return [
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::CITY_ID
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::GENDER_ID,
+                    AttrRegistry::COUNTRY_ID,
+                    AttrRegistry::CITY_ID
+                ],
+                'default',
+                'value' => null
+            ],
+            [
+                [
+                    AttrRegistry::USER_ID,
+                    AttrRegistry::GENDER_ID,
+                    AttrRegistry::COUNTRY_ID,
+                    AttrRegistry::CITY_ID
+                ],
+                'integer'
+            ],
+            [
+                [
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+            [
+                [
+                    AttrRegistry::FIRST_NAME,
+                    AttrRegistry::LAST_NAME,
+                    AttrRegistry::PATRONYMIC,
+                    AttrRegistry::AVATAR,
+                    AttrRegistry::PHONE_NUMBER,
+                    AttrRegistry::ADDRESS,
+                    AttrRegistry::ABOUT,
+                    AttrRegistry::LONGITUDE,
+                    AttrRegistry::LATITUDE,
+                    AttrRegistry::LANGUAGE,
+                    AttrRegistry::SHORT_LANG,
+                    AttrRegistry::TIMEZONE
+                ],
+                'string',
+                'max' => 255
+            ],
+            [
+                [
+                    AttrRegistry::IS_CLOSED,
+                    AttrRegistry::IS_NOTICE
+                ],
+                'boolean'
+            ]
+        ];
     }
 }

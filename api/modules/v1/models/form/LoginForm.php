@@ -2,7 +2,7 @@
 
 namespace api\modules\v1\models\form;
 
-use common\components\registry\TableRegistry;
+use common\components\registry\AttrRegistry;
 use common\components\registry\UserRegistry;
 use Yii;
 use api\modules\v1\models\error\UnauthorizedHttpException;
@@ -47,25 +47,15 @@ class LoginForm extends Model
 
             $countAttempt = Yii::$app->cache->get($this->keyAttempts);
             if ($countAttempt >= self::COUNT_ATTEMPT) {
-                throw new UnauthorizedHttpException([
-                    'attempt_error' => 'Вы превысили лимит попыток авторизации'
-                ]);
+                throw new UnauthorizedHttpException(
+                    [
+                        'attempt_error' => 'Вы превысили лимит попыток авторизации'
+                    ]
+                );
             }
         }
 
         return $parent;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function rules(): array
-    {
-        return [
-            [['email', 'password'], 'required'],
-            [['email', 'password'], 'string'],
-            [['email'], 'email'],
-        ];
     }
 
     /**
@@ -79,21 +69,12 @@ class LoginForm extends Model
 
         if (is_null($this->user)) {
             $this->handleFailure();
-            throw new UnauthorizedHttpException([
-                'email' => Yii::t('app', 'Email not found')
-            ]);
+            throw new UnauthorizedHttpException(
+                [
+                    AttrRegistry::EMAIL => Yii::t('app', 'Email not found')
+                ]
+            );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function attributeLabels(): array
-    {
-        return [
-            'email'    => 'Email',
-            'password' => 'Password'
-        ];
     }
 
     /**
@@ -104,9 +85,12 @@ class LoginForm extends Model
     public function getUser(): ?User
     {
         if (is_null($this->user)) {
-
             $this->user = User::find()
-                ->where(['email' => $this->email])
+                ->where(
+                    [
+                        AttrRegistry::EMAIL => $this->email
+                    ]
+                )
                 ->one();
         }
 
@@ -127,22 +111,32 @@ class LoginForm extends Model
 
         if (!$this->user->validatePassword($this->password)) {
             $this->handleFailure();
-            throw new UnauthorizedHttpException([
-                'password' => Yii::t('app', 'Incorrect password')
-            ]);
+            throw new UnauthorizedHttpException(
+                [
+                    AttrRegistry::PASSWORD => Yii::t('app', 'Incorrect password')
+                ]
+            );
         }
 
         if ($this->user->is_banned) {
-            throw new UnauthorizedHttpException([
-                'email' => Yii::t('app', 'User is banned - {banReason}', [
-                    'banReason' => $this->user->banned_reason,
-                ])
-            ]);
+            throw new UnauthorizedHttpException(
+                [
+                    AttrRegistry::EMAIL => Yii::t(
+                        'app',
+                        'User is banned - {banReason}',
+                        [
+                            'banReason' => $this->user->banned_reason,
+                        ]
+                    )
+                ]
+            );
         }
 
-        switch ($this->user->status) {
+        switch ($this->user->status_id) {
             case UserRegistry::USER_STATUS_INACTIVE:
-                $error = ['email' => 'Ваш аккаунт отключен'];
+                $error = [
+                    AttrRegistry::EMAIL => 'Ваш аккаунт отключен'
+                ];
                 break;
 //            case User::STATUS_UNCONFIRMED_EMAIL:
 //                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
@@ -178,5 +172,43 @@ class LoginForm extends Model
     {
         $attempt = Yii::$app->cache->get($this->keyAttempts) ? 1 : 0;
         Yii::$app->cache->set($this->keyAttempts, ($attempt + 1), self::TIME_UNAUTHORIZED_DURATION);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            AttrRegistry::EMAIL    => 'Email',
+            AttrRegistry::PASSWORD => 'Password'
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rules(): array
+    {
+        return [
+            [
+                [
+                    AttrRegistry::EMAIL,
+                    AttrRegistry::PASSWORD
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::EMAIL,
+                    AttrRegistry::PASSWORD
+                ],
+                'string'
+            ],
+            [
+                [AttrRegistry::EMAIL],
+                'email'
+            ],
+        ];
     }
 }

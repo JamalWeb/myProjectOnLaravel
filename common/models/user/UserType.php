@@ -2,17 +2,17 @@
 
 namespace common\models\user;
 
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use Yii;
 use common\models\base\BaseModel;
 
 /**
- * This is the model class for table "user_type".
- *
- * @property int    $id         Идентификатор типа
- * @property string $name       Наименование
- * @property string $desc       Описание
- * @property string $created_at Дата создания
- * @property string $updated_at Дата обновления
+ * @property int    $id                Идентификатор типа
+ * @property string $name              Наименование
+ * @property string $description       Описание
+ * @property string $created_at        Дата создания
+ * @property string $updated_at        Дата обновления
  */
 class UserType extends BaseModel
 {
@@ -30,19 +30,7 @@ class UserType extends BaseModel
      */
     public static function tableName()
     {
-        return 'user_type';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['name'], 'required'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['name', 'desc'], 'string', 'max' => 255],
-        ];
+        return TableRegistry::NAME_USER_TYPE;
     }
 
     /**
@@ -51,11 +39,39 @@ class UserType extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('app', 'ID'),
-            'name'       => Yii::t('app', 'Name'),
-            'desc'       => Yii::t('app', 'Desc'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            AttrRegistry::ID          => Yii::t('app', 'ID'),
+            AttrRegistry::NAME        => Yii::t('app', 'Name'),
+            AttrRegistry::DESCRIPTION => Yii::t('app', 'Description'),
+            AttrRegistry::CREATED_AT  => Yii::t('app', 'Created At'),
+            AttrRegistry::UPDATED_AT  => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [
+                [AttrRegistry::NAME],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::CREATED_AT,
+                    AttrRegistry::UPDATED_AT
+                ],
+                'safe'
+            ],
+            [
+                [
+                    AttrRegistry::NAME,
+                    AttrRegistry::DESCRIPTION
+                ],
+                'string',
+                'max' => 255
+            ],
         ];
     }
 }

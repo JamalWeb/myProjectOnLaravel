@@ -3,14 +3,14 @@
 namespace common\models\event;
 
 use common\components\ArrayHelper;
+use common\components\registry\AttrRegistry;
+use common\components\registry\TableRegistry;
 use common\models\base\BaseModel;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "event_carrying_date".
- *
  * @property int    $id       Идентификатор даты проведения события
  * @property int    $event_id Идентификатор события
  * @property string $date     Дата проведения
@@ -21,14 +21,17 @@ class EventCarryingDate extends BaseModel
 {
     public function behaviors(): array
     {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'timestamp' => [
-                'class'              => TimestampBehavior::class,
-                'createdAtAttribute' => false,
-                'updatedAtAttribute' => false,
-                'value'              => gmdate('Y-m-d H:i:s'),
-            ],
-        ]);
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'timestamp' => [
+                    'class'              => TimestampBehavior::class,
+                    'createdAtAttribute' => false,
+                    'updatedAtAttribute' => false,
+                    'value'              => gmdate('Y-m-d H:i:s'),
+                ],
+            ]
+        );
     }
 
     /**
@@ -36,21 +39,20 @@ class EventCarryingDate extends BaseModel
      */
     public static function tableName()
     {
-        return 'event_carrying_date';
+        return TableRegistry::NAME_EVENT_CARRYING_DATE;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ActiveQuery
      */
-    public function rules()
+    public function getEvent()
     {
-        return [
-            [['event_id', 'date'], 'required'],
-            [['event_id', 'duration'], 'default', 'value' => null],
-            [['event_id', 'duration'], 'integer'],
-            [['date'], 'safe'],
-            [['event_id'], 'exist', 'skipOnError' => true, 'targetClass' => Event::class, 'targetAttribute' => ['event_id' => 'id']],
-        ];
+        return $this->hasOne(
+            Event::class,
+            [
+                AttrRegistry::ID => AttrRegistry::EVENT_ID
+            ]
+        );
     }
 
     /**
@@ -59,18 +61,54 @@ class EventCarryingDate extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id'       => Yii::t('app', 'ID'),
-            'event_id' => Yii::t('app', 'Event ID'),
-            'date'     => Yii::t('app', 'Date'),
-            'duration' => Yii::t('app', 'Duration'),
+            AttrRegistry::ID       => Yii::t('app', 'ID'),
+            AttrRegistry::EVENT_ID => Yii::t('app', 'Event ID'),
+            AttrRegistry::DATE     => Yii::t('app', 'Date'),
+            AttrRegistry::DURATION => Yii::t('app', 'Duration'),
         ];
     }
 
     /**
-     * @return ActiveQuery
+     * {@inheritdoc}
      */
-    public function getEvent()
+    public function rules()
     {
-        return $this->hasOne(Event::class, ['id' => 'event_id']);
+        return [
+            [
+                [
+                    AttrRegistry::EVENT_ID,
+                    AttrRegistry::DATE
+                ],
+                'required'
+            ],
+            [
+                [
+                    AttrRegistry::EVENT_ID,
+                    AttrRegistry::DURATION
+                ],
+                'default',
+                'value' => null
+            ],
+            [
+                [
+                    AttrRegistry::EVENT_ID,
+                    AttrRegistry::DURATION
+                ],
+                'integer'
+            ],
+            [
+                [AttrRegistry::DATE],
+                'safe'
+            ],
+            [
+                [AttrRegistry::EVENT_ID],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => Event::class,
+                'targetAttribute' => [
+                    AttrRegistry::EVENT_ID => AttrRegistry::ID
+                ]
+            ],
+        ];
     }
 }
