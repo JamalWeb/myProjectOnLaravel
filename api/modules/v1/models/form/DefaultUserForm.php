@@ -18,7 +18,6 @@ use yii\web\UploadedFile;
  * @property integer      $city_id    Идентификатор города
  * @property bool         $is_closed  Профиль закрыт
  * @property bool         $is_notice  Получать уведомления
- * @property integer      $country_id Идентификатор страны
  * @property float        $longitude  Координаты: Широта
  * @property float        $latitude   Координаты: Долгота
  * @property string       $language   Язык
@@ -32,7 +31,6 @@ class DefaultUserForm extends AbstractUserForm
     public $password;
     public $first_name;
     public $last_name;
-    public $country_id;
     public $city_id;
     public $is_closed;
     public $is_notice;
@@ -85,13 +83,23 @@ class DefaultUserForm extends AbstractUserForm
                 'string'
             ],
             [
-                [RgAttribute::EMAIL],
+                [
+                    RgAttribute::EMAIL
+                ],
                 'email'
             ],
             [
-                [RgAttribute::EMAIL],
+                [
+                    RgAttribute::EMAIL
+                ],
                 function ($attribute) {
-                    $user = User::find()->where([RgAttribute::EMAIL => $this->email])->exists();
+                    $user = User::find()
+                        ->where(
+                            [
+                                RgAttribute::EMAIL => $this->email
+                            ]
+                        )
+                        ->exists();
                     if ($user) {
                         $this->addError($attribute, 'This email is already in use.');
                     }
@@ -99,7 +107,9 @@ class DefaultUserForm extends AbstractUserForm
                 'on' => self::SCENARIO_CREATE
             ],
             [
-                [RgAttribute::PASSWORD],
+                [
+                    RgAttribute::PASSWORD
+                ],
                 'string',
                 'min' => 6,
                 'max' => 20
@@ -112,20 +122,24 @@ class DefaultUserForm extends AbstractUserForm
                 'number'
             ],
             [
-                [RgAttribute::AVATAR],
+                [
+                    RgAttribute::AVATAR
+                ],
                 'image',
                 'skipOnEmpty' => true,
                 'extensions'  => 'png, jpg, jpeg',
                 'maxWidth'    => 500,
                 'maxHeight'   => 500,
-                'maxSize'     => 5120 * 1024
+                'maxSize'     => 5120 * 1024,
+                'on'          => self::SCENARIO_UPDATE
             ],
             [
                 [
                     RgAttribute::IS_CLOSED,
                     RgAttribute::IS_NOTICE
                 ],
-                'boolean'
+                'boolean',
+                'on' => self::SCENARIO_UPDATE
             ]
         ];
     }

@@ -301,7 +301,7 @@ class UserController extends BaseController
      */
     public function actionRegistrationDefault(): array
     {
-        return $this->api->registrationDefault($this->post);
+        return $this->api->createDefault($this->post);
     }
 
     /**
@@ -732,7 +732,7 @@ class UserController extends BaseController
      */
     public function actionGet(): array
     {
-        return $this->api->get($this->get, $this->user);
+        return $this->api->get($this->user, $this->get);
     }
 
     /**

@@ -23,21 +23,21 @@ abstract class AbstractUserForm extends Model
     public function attributeLabels()
     {
         return [
-            RgAttribute::EMAIL      => Yii::t('api', 'email'),
-            RgAttribute::PASSWORD   => Yii::t('api', 'password'),
-            RgAttribute::FIRST_NAME => Yii::t('api', 'first_name'),
-            RgAttribute::LAST_NAME  => Yii::t('api', 'last_name'),
-            RgAttribute::AVATAR     => Yii::t('api', 'avatar'),
-            RgAttribute::COUNTRY_ID => Yii::t('api', 'country_id'),
-            RgAttribute::CITY_ID    => Yii::t('api', 'city_id'),
+            RgAttribute::EMAIL      => Yii::t('app', 'email'),
+            RgAttribute::PASSWORD   => Yii::t('app', 'password'),
+            RgAttribute::FIRST_NAME => Yii::t('app', 'first_name'),
+            RgAttribute::LAST_NAME  => Yii::t('app', 'last_name'),
+            RgAttribute::AVATAR     => Yii::t('app', 'avatar'),
+            RgAttribute::COUNTRY_ID => Yii::t('app', 'country_id'),
+            RgAttribute::CITY_ID    => Yii::t('app', 'city_id'),
             RgAttribute::IS_CLOSED  => Yii::t('app', 'Is Closed'),
             RgAttribute::IS_NOTICE  => Yii::t('app', 'Is Notice'),
-            RgAttribute::CHILDREN   => Yii::t('api', 'children'),
-            RgAttribute::LONGITUDE  => Yii::t('api', 'longitude'),
-            RgAttribute::LATITUDE   => Yii::t('api', 'latitude'),
-            RgAttribute::LANGUAGE   => Yii::t('api', 'language'),
-            RgAttribute::SHORT_LANG => Yii::t('api', 'short_lang'),
-            RgAttribute::TIMEZONE   => Yii::t('api', 'timezone'),
+            RgAttribute::CHILDREN   => Yii::t('app', 'children'),
+            RgAttribute::LONGITUDE  => Yii::t('app', 'longitude'),
+            RgAttribute::LATITUDE   => Yii::t('app', 'latitude'),
+            RgAttribute::LANGUAGE   => Yii::t('app', 'language'),
+            RgAttribute::SHORT_LANG => Yii::t('app', 'short_lang'),
+            RgAttribute::TIMEZONE   => Yii::t('app', 'timezone'),
         ];
     }
 

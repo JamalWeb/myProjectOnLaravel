@@ -4,6 +4,7 @@ namespace api\modules\v1\classes;
 
 use api\modules\v1\classes\base\Api;
 use common\components\ArrayHelper;
+use common\components\registry\RgAttribute;
 use common\models\user\User;
 use common\models\user\UserChildren;
 use Exception;
@@ -26,19 +27,15 @@ class UserChildrenApi extends Api
             return $children;
         }
 
+        $child = new UserChildren();
         $transaction = Yii::$app->db->beginTransaction();
         try {
             foreach ($childrenParams as $childParam) {
-                $childParam = ArrayHelper::merge($childParam, [
-                    'user_id' => $user->id
-                ]);
-
-                $child = new UserChildren();
+                $childParam[RgAttribute::USER_ID] = $user->id;
                 $child->saveModel($childParam);
 
                 $children[] = $child;
             }
-
             $transaction->commit();
 
             return $children;

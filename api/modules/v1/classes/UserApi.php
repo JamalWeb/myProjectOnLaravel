@@ -121,8 +121,23 @@ class UserApi extends Api
      * @return array
      * @throws Exception
      */
-    public final function registrationDefault(array $post): array
+    public final function createDefault(array $post): array
     {
+        ArrayHelper::cleaning(
+            $post,
+            [
+                RgAttribute::EMAIL,
+                RgAttribute::PASSWORD,
+                RgAttribute::FIRST_NAME,
+                RgAttribute::LAST_NAME,
+                RgAttribute::CITY_ID,
+                RgAttribute::LANGUAGE,
+                RgAttribute::SHORT_LANG,
+                RgAttribute::TIMEZONE,
+                RgAttribute::CHILDREN
+            ]
+        );
+
         $defaultUserForm = new DefaultUserForm($post);
         $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_CREATE);
 
@@ -321,10 +336,10 @@ class UserApi extends Api
      * @return array
      * @throws BadRequestHttpException
      */
-    public function get(array $get, User $user = null): array
+    public function get(User $user, array $get): array
     {
-        if (!empty($get['user_id'])) {
-            $user = $this->findUserById($get['user_id']);
+        if (!empty($get[RgAttribute::USER_ID])) {
+            $user = $this->findUserById($get[RgAttribute::USER_ID]);
         }
 
         return $user->publicInfo;
@@ -340,14 +355,14 @@ class UserApi extends Api
     public function findUserById(int $id): User
     {
         $typeList = RgUser::getTypeList();
-        $typeIdList = ArrayHelper::getColumn($typeList, 'id');
+        $typeIdList = ArrayHelper::getColumn($typeList, RgAttribute::ID);
 
         $user = User::findOne(
             [
-                'id'        => $id,
-                'type_id'   => $typeIdList,
-                'status'    => RgUser::STATUS_ACTIVE,
-                'is_banned' => false
+                RgAttribute::ID        => $id,
+                RgAttribute::TYPE_ID   => $typeIdList,
+                RgAttribute::STATUS_ID => RgUser::STATUS_ACTIVE,
+                RgAttribute::IS_BANNED => false
             ]
         );
 
