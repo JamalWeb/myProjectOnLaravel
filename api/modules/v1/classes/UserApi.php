@@ -50,7 +50,7 @@ class UserApi extends Api
             $user = $loginForm->authenticate();
             UserToken::generateAccessToken(
                 $user,
-                UserToken::TYPE_AUTH,
+                RgUser::TOKEN_TYPE_AUTH,
                 null,
                 '+ 1 day'
             );
@@ -61,8 +61,8 @@ class UserApi extends Api
         }
 
         return [
-            RgAttribute::AUTH_TOKEN       => UserToken::get($user, UserToken::TYPE_AUTH)->access_token,
-            RgAttribute::RESET_AUTH_TOKEN => UserToken::get($user, UserToken::TYPE_RESET_AUTH)->access_token
+            RgAttribute::AUTH_TOKEN       => UserToken::get($user, RgUser::TOKEN_TYPE_AUTH)->access_token,
+            RgAttribute::RESET_AUTH_TOKEN => UserToken::get($user, RgUser::TOKEN_TYPE_RESET_AUTH)->access_token
         ];
     }
 
@@ -78,7 +78,7 @@ class UserApi extends Api
     {
         $userToken = UserToken::findOne(
             [
-                RgAttribute::TYPE_ID      => UserToken::TYPE_RESET_AUTH,
+                RgAttribute::TYPE_ID      => RgUser::TOKEN_TYPE_RESET_AUTH,
                 RgAttribute::ACCESS_TOKEN => $headers[RgAttribute::HEADER_RESET_AUTH_TOKEN]
             ]
         );
@@ -93,10 +93,10 @@ class UserApi extends Api
 
         $user = $userToken->user;
 
-        UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, null, '+ 1 day');
+        UserToken::generateAccessToken($user, RgUser::TOKEN_TYPE_AUTH, null, '+ 1 day');
 
-        $authUserToken = UserToken::get($user, UserToken::TYPE_AUTH);
-        $resetAuthUserToken = UserToken::get($user, UserToken::TYPE_RESET_AUTH);
+        $authUserToken = UserToken::get($user, RgUser::TOKEN_TYPE_AUTH);
+        $resetAuthUserToken = UserToken::get($user, RgUser::TOKEN_TYPE_RESET_AUTH);
 
         return [
             RgAttribute::AUTH_TOKEN       => $authUserToken->access_token,
@@ -138,11 +138,11 @@ class UserApi extends Api
         try {
             $user->saveModel(
                 [
-                    RgAttribute::TYPE_ID    => UserType::TYPE_DEFAULT_USER,
-                    RgAttribute::ROLE_ID    => UserRole::ROLE_DEFAULT_USER,
+                    RgAttribute::TYPE_ID    => RgUser::TYPE_DEFAULT,
+                    RgAttribute::ROLE_ID    => RgUser::ROLE_DEFAULT,
                     RgAttribute::EMAIL      => $defaultUserForm->email,
                     RgAttribute::PASSWORD   => PasswordHelper::encrypt($defaultUserForm->password),
-                    RgAttribute::STATUS     => RgUser::USER_STATUS_UNCONFIRMED_EMAIL,
+                    RgAttribute::STATUS     => RgUser::STATUS_UNCONFIRMED_EMAIL,
                     RgAttribute::CREATED_IP => Yii::$app->request->remoteIP,
                 ]
             );
@@ -174,7 +174,7 @@ class UserApi extends Api
 
             return ArrayHelper::merge(
                 [
-                    'access' => $access
+                    RgAttribute::ACCESS => $access
                 ],
                 $user->publicInfo
             );
@@ -205,11 +205,11 @@ class UserApi extends Api
             $user = new User();
             $user->saveModel(
                 [
-                    'type_id'    => UserType::TYPE_BUSINESS_USER,
-                    'role_id'    => UserRole::ROLE_BUSINESS_USER,
+                    'type_id'    => RgUser::TYPE_BUSINESS,
+                    'role_id'    => RgUser::ROLE_BUSINESS,
                     'email'      => $businessUserForm->email,
                     'password'   => PasswordHelper::encrypt($businessUserForm->password),
-                    'status'     => RgUser::USER_STATUS_UNCONFIRMED_EMAIL,
+                    'status'     => RgUser::STATUS_UNCONFIRMED_EMAIL,
                     'created_ip' => Yii::$app->request->remoteIP,
                 ]
             );
@@ -246,27 +246,27 @@ class UserApi extends Api
         }
     }
 
-    /**
-     * Редактирование
-     *
-     * @param User  $user
-     * @param array $post
-     * @return array
-     * @throws BadRequestHttpException
-     * @throws Exception
-     */
-    public function updateDefault(User $user, array $post): array
-    {
-        $defaultUserForm = new DefaultUserForm($post);
-//        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_UPDATE);
-
-        $defaultUserForm->avatar = UploadedFile::getInstanceByName('avatar');
-        if ($defaultUserForm->validate()) {
-            $defaultUserForm->uploadAvatar($user);
-        } else {
-            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
-        }
-
+//    /**
+//     * Редактирование
+//     *
+//     * @param User  $user
+//     * @param array $post
+//     * @return array
+//     * @throws BadRequestHttpException
+//     * @throws Exception
+//     */
+//    public function updateDefault(User $user, array $post): array
+//    {
+//        $defaultUserForm = new DefaultUserForm($post);
+////        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_UPDATE);
+//
+//        $defaultUserForm->avatar = UploadedFile::getInstanceByName('avatar');
+//        if ($defaultUserForm->validate()) {
+//            $defaultUserForm->uploadAvatar($user);
+//        } else {
+//            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
+//        }
+//
 //        $transaction = Yii::$app->db->beginTransaction();
 //        try {
 //            if (!is_null($defaultUserForm->email)) {
@@ -310,8 +310,8 @@ class UserApi extends Api
 //            $transaction->rollBack();
 //            throw $e;
 //        }
-        return [];
-    }
+//        return [];
+//    }
 
     /**
      * Данные пользователя
@@ -339,11 +339,14 @@ class UserApi extends Api
      */
     public function findUserById(int $id): User
     {
+        $typeList = RgUser::getTypeList();
+        $typeIdList = ArrayHelper::getColumn($typeList, 'id');
+
         $user = User::findOne(
             [
                 'id'        => $id,
-                'type_id'   => UserType::$validTypeSearch,
-                'status'    => RgUser::USER_STATUS_ACTIVE,
+                'type_id'   => $typeIdList,
+                'status'    => RgUser::STATUS_ACTIVE,
                 'is_banned' => false
             ]
         );
@@ -365,12 +368,20 @@ class UserApi extends Api
      */
     public function recovery(array $post): array
     {
-        ArrayHelper::validateParams($post, ['email']);
+        ArrayHelper::validateParams($post, [RgAttribute::EMAIL]);
 
-        $user = User::findOne(['email' => $post['email']]);
+        $user = User::findOne(
+            [
+                RgAttribute::EMAIL => $post[RgAttribute::EMAIL]
+            ]
+        );
 
         if (is_null($user)) {
-            throw new BadRequestHttpException(['email' => 'Email is not found']);
+            throw new BadRequestHttpException(
+                [
+                    RgAttribute::EMAIL => 'Email is not found'
+                ]
+            );
         }
 
         $result = EmailSendler::userRecovery($user);

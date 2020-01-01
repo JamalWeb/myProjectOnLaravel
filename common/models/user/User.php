@@ -14,31 +14,32 @@ use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
 /**
- * @property int            $id                Идентификатор пользователя
- * @property int            $type_id           Идентификатор типа
- * @property int            $role_id           Идентификатор роли
- * @property string         $email             Электронная почта
- * @property string         $username          Никнейм
- * @property string         $password          Пароль
- * @property string         $auth_key          Ключ необходимый для авторизации
- * @property bool           $status_id         Статус активности (1 - вкл. 0 - выкл.) | default = 1
- * @property string         $logged_in_ip      IP адрес авторизации
- * @property string         $logged_in_at      Дата авторизации
- * @property string         $logout_in_ip      IP адрес выхода
- * @property string         $logout_in_at      Дата выхода
- * @property string         $created_ip        IP адрес с которого создали
- * @property bool           $is_banned         Бан (1 - вкл. 0 - выкл.) | default = 0
- * @property string         $banned_reason     Причина бана
- * @property string         $banned_at         Дата бана
- * @property string         $created_at        Дата создания
+ * @property int            $id                  Идентификатор пользователя
+ * @property int            $type_id             Идентификатор типа
+ * @property int            $role_id             Идентификатор роли
+ * @property string         $email               Электронная почта
+ * @property string         $username            Никнейм
+ * @property string         $password            Пароль
+ * @property string         $auth_key            Ключ необходимый для авторизации
+ * @property bool           $status_id           Статус активности (1 - вкл. 0 - выкл.) | default = 1
+ * @property string         $logged_in_ip        IP адрес авторизации
+ * @property string         $logged_in_at        Дата авторизации
+ * @property string         $logout_in_ip        IP адрес выхода
+ * @property string         $logout_in_at        Дата выхода
+ * @property string         $created_ip          IP адрес с которого создали
+ * @property bool           $is_banned           Бан (1 - вкл. 0 - выкл.) | default = 0
+ * @property string         $banned_reason       Причина бана
+ * @property string         $banned_at           Дата бана
+ * @property string         $created_at          Дата создания
  * @property string         $authKey
- * @property string         $updated_at        Дата обновления
- * @property array          $publicInfo        Информация о пользователи
- * @property UserType       $type              Тип
- * @property UserRole       $role              Роль
- * @property UserProfile    $profile           Профиль
- * @property UserChildren[] $children          Дети
- * @property string         $fullName          Полное имя
+ * @property string         $updated_at          Дата обновления
+ * @property array          $publicInfo          Информация о пользователи
+ * @property UserStatus     $status              Тип
+ * @property UserType       $type                Тип
+ * @property UserRole       $role                Роль
+ * @property UserProfile    $profile             Профиль
+ * @property UserChildren[] $children            Дети
+ * @property string         $fullName            Полное имя
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -93,8 +94,8 @@ class User extends BaseModel implements IdentityInterface
             RgAttribute::ID         => $this->id,
             RgAttribute::EMAIL      => $this->email,
             RgAttribute::STATUS     => [
-                RgAttribute::ID   => $this->status_id,
-                RgAttribute::NAME => RgUser::getStatusNameById($this->status)
+                RgAttribute::ID   => $this->status->id,
+                RgAttribute::NAME => $this->status->name
             ],
             RgAttribute::BANNED     => [
                 RgAttribute::IS_BANNED     => $this->is_banned,
@@ -127,7 +128,7 @@ class User extends BaseModel implements IdentityInterface
             RgAttribute::CREATED_AT => $this->created_at
         ];
 
-        if (!empty($this->children) && $this->type_id == UserType::TYPE_DEFAULT_USER) {
+        if (!empty($this->children) && $this->type_id == RgUser::TYPE_DEFAULT) {
             /** @var UserChildren $child */
             foreach (ArrayHelper::generator($this->children) as $child) {
                 $defaultUserInfo[RgAttribute::PROFILE][RgAttribute::CHILDREN][] = [
@@ -147,6 +148,19 @@ class User extends BaseModel implements IdentityInterface
     public function getFullName(): string
     {
         return "{$this->profile->first_name} {$this->profile->last_name}";
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getStatus()
+    {
+        return $this->hasOne(
+            UserStatus::class,
+            [
+                RgAttribute::ID => RgAttribute::STATUS_ID
+            ]
+        );
     }
 
     /**
@@ -299,7 +313,7 @@ class User extends BaseModel implements IdentityInterface
         return static::findOne(
             [
                 RgAttribute::ID        => $id,
-                RgAttribute::STATUS_ID => RgUser::USER_STATUS_ACTIVE,
+                RgAttribute::STATUS_ID => RgUser::STATUS_ACTIVE,
                 RgAttribute::IS_BANNED => false
             ]
         );
@@ -315,7 +329,7 @@ class User extends BaseModel implements IdentityInterface
         $userToken = UserToken::findOne(
             [
                 RgAttribute::ACCESS_TOKEN => $accessToken,
-                RgAttribute::TYPE_ID      => UserToken::TYPE_AUTH
+                RgAttribute::TYPE_ID      => RgUser::TOKEN_TYPE_AUTH
             ]
         );
 
@@ -327,8 +341,8 @@ class User extends BaseModel implements IdentityInterface
             [
                 RgAttribute::ID        => $userToken->user_id,
                 RgAttribute::STATUS_ID => [
-                    RgUser::USER_STATUS_ACTIVE,
-                    RgUser::USER_STATUS_UNCONFIRMED_EMAIL
+                    RgUser::STATUS_ACTIVE,
+                    RgUser::STATUS_UNCONFIRMED_EMAIL
                 ]
             ]
         );

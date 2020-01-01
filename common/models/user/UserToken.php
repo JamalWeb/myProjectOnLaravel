@@ -6,6 +6,7 @@ use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\DateHelper;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgTable;
+use common\components\registry\RgUser;
 use Yii;
 use common\models\base\BaseModel;
 use yii\base\Exception;
@@ -24,22 +25,6 @@ use yii\db\ActiveQuery;
  */
 class UserToken extends BaseModel
 {
-    const TYPE_AUTH = 1;
-    const TYPE_RESET_AUTH = 2;
-    const TYPE_PASSWORD_CHANGE = 3;
-    const TYPE_EMAIL_CONFIRM = 4;
-    const TYPE_EMAIL_CHANGE = 5;
-    const TYPE_USER_RECOVERY = 6;
-
-    public static $allowedTokens = [
-        self::TYPE_AUTH,
-        self::TYPE_RESET_AUTH,
-        self::TYPE_PASSWORD_CHANGE,
-        self::TYPE_EMAIL_CONFIRM,
-        self::TYPE_EMAIL_CHANGE,
-        self::TYPE_USER_RECOVERY,
-    ];
-
     /**
      * {@inheritdoc}
      */
@@ -117,8 +102,8 @@ class UserToken extends BaseModel
 
         $userToken->saveModel();
 
-        if ($typeId === self::TYPE_AUTH) {
-            self::generateAccessToken($user, self::TYPE_RESET_AUTH, null, '');
+        if ($typeId === RgUser::TOKEN_TYPE_AUTH) {
+            self::generateAccessToken($user, RgUser::TOKEN_TYPE_RESET_AUTH, null, '');
         }
     }
 
@@ -130,7 +115,7 @@ class UserToken extends BaseModel
      */
     public static function checkTypeAccessToken(int $type): void
     {
-        if (!in_array($type, self::$allowedTokens)) {
+        if (!in_array($type, RgUser::$tokenTypeList)) {
             throw new BadRequestHttpException(
                 [
                     RgAttribute::ACCESS_TOKEN => 'not found'
@@ -199,7 +184,9 @@ class UserToken extends BaseModel
                 'integer'
             ],
             [
-                ['data'],
+                [
+                    RgAttribute::DATA
+                ],
                 'string'
             ],
             [
@@ -211,7 +198,9 @@ class UserToken extends BaseModel
                 'safe'
             ],
             [
-                [RgAttribute::ACCESS_TOKEN],
+                [
+                    RgAttribute::ACCESS_TOKEN
+                ],
                 'string',
                 'max' => 255
             ],

@@ -2,6 +2,7 @@
 
 use common\components\registry\RgAttribute;
 use common\components\registry\RgTable;
+use yii\db\Expression;
 use yii\db\Migration;
 
 /**
@@ -14,6 +15,8 @@ class m191217_175557_create_table_user_status extends Migration
      */
     public function safeUp()
     {
+        $defaultDate = new Expression('CURRENT_TIMESTAMP');
+
         $this->createTable(
             RgTable::NAME_USER_STATUS,
             [
@@ -25,6 +28,14 @@ class m191217_175557_create_table_user_status extends Migration
 
                 RgAttribute::DESCRIPTION => $this->string()
                     ->comment('Описание статуса пользователя'),
+
+                RgAttribute::CREATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата создания'),
+
+                RgAttribute::UPDATED_AT => $this->timestamp()
+                    ->defaultValue($defaultDate)
+                    ->comment('Дата обновления')
             ]
         );
 

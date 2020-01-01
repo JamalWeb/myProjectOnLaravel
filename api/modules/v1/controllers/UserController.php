@@ -638,7 +638,9 @@ class UserController extends BaseController
      */
     public function actionUpdateDefault(): array
     {
-        return $this->api->updateDefault($this->user, $this->post);
+//        return $this->api->updateDefault($this->user, $this->post);
+
+        return ['Не реализовано'];
     }
 
     /**

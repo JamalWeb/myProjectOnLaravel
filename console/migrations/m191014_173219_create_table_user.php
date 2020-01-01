@@ -91,10 +91,10 @@ class m191014_173219_create_table_user extends Migration
             RgTable::NAME_USER,
             [
                 RgAttribute::TYPE_ID   => 1,
-                RgAttribute::ROLE_ID   => RgUser::USER_ROLE_ADMIN,
+                RgAttribute::ROLE_ID   => RgUser::ROLE_ADMIN,
                 RgAttribute::EMAIL     => 'arsen-web@yandex.ru',
                 RgAttribute::PASSWORD  => PasswordHelper::encrypt(123456),
-                RgAttribute::STATUS_ID => RgUser::USER_STATUS_ACTIVE
+                RgAttribute::STATUS_ID => RgUser::STATUS_ACTIVE
             ]
         );
     }

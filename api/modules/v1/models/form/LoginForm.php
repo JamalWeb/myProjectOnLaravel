@@ -133,7 +133,7 @@ class LoginForm extends Model
         }
 
         switch ($this->user->status_id) {
-            case RgUser::USER_STATUS_INACTIVE:
+            case RgUser::STATUS_INACTIVE:
                 $error = [
                     RgAttribute::EMAIL => 'Ваш аккаунт отключен'
                 ];

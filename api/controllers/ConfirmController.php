@@ -22,7 +22,7 @@ class ConfirmController extends Controller
     {
         $userToken = UserToken::findOne([
             'access_token' => $token,
-            'type'         => UserToken::TYPE_EMAIL_CONFIRM
+            'type'         => RgUser::TOKEN_TYPE_EMAIL_CONFIRM
         ]);
 
         if (is_null($userToken)) {
@@ -31,7 +31,7 @@ class ConfirmController extends Controller
 
         try {
             $userToken->user->saveModel([
-                'status' => RgUser::USER_STATUS_ACTIVE
+                'status' => RgUser::STATUS_ACTIVE
             ]);
             $userToken->delete();
         } catch (Exception $e) {

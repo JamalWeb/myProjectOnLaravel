@@ -3,6 +3,7 @@
 namespace common\components;
 
 use api\modules\v1\models\error\BadRequestHttpException;
+use common\components\registry\RgUser;
 use common\models\user\User;
 use common\models\user\UserToken;
 use Yii;
@@ -23,13 +24,16 @@ class EmailSendler
      */
     public static final function registrationConfirmDefaultUser(User $user): bool
     {
-        UserToken::generateAccessToken($user, UserToken::TYPE_EMAIL_CONFIRM);
-        $userToken = UserToken::get($user, UserToken::TYPE_EMAIL_CONFIRM);
+        UserToken::generateAccessToken($user, RgUser::TOKEN_TYPE_EMAIL_CONFIRM);
+        $userToken = UserToken::get($user, RgUser::TOKEN_TYPE_EMAIL_CONFIRM);
 
-        return Yii::$app->mailer->compose('confirmEmail-html.php', [
-            'user'      => $user,
-            'userToken' => $userToken
-        ])
+        return Yii::$app->mailer->compose(
+            'confirmEmail-html.php',
+            [
+                'user'      => $user,
+                'userToken' => $userToken
+            ]
+        )
             ->setFrom('info@mappa.one')
             ->setTo($user->email)
             ->setSubject('Подтверждение регистрации')
@@ -38,8 +42,6 @@ class EmailSendler
 
     /**
      * @param User $user
-     * @throws BadRequestHttpException
-     * @throws Exception
      */
     public static final function registrationConfirmBusinessUser(User $user): void
     {
@@ -72,13 +74,16 @@ class EmailSendler
      */
     public static function userRecovery($user): bool
     {
-        UserToken::generateAccessToken($user, UserToken::TYPE_USER_RECOVERY);
-        $userToken = UserToken::get($user, UserToken::TYPE_USER_RECOVERY);
+        UserToken::generateAccessToken($user, RgUser::TOKEN_TYPE_USER_RECOVERY);
+        $userToken = UserToken::get($user, RgUser::TOKEN_TYPE_USER_RECOVERY);
 
-        return Yii::$app->mailer->compose('userRecovery-html.php', [
-            'user'      => $user,
-            'userToken' => $userToken
-        ])
+        return Yii::$app->mailer->compose(
+            'userRecovery-html.php',
+            [
+                'user'      => $user,
+                'userToken' => $userToken
+            ]
+        )
             ->setFrom('info@mappa.one')
             ->setTo($user->email)
             ->setSubject('Восстановление аккаунта')
