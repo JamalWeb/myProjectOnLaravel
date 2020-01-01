@@ -2,6 +2,8 @@
 
 namespace common\components;
 
+use common\components\helpers\SystemFn;
+
 /**
  * Class DateHelper
  *
@@ -18,9 +20,9 @@ class DateHelper
     public static final function getTimestamp(string $changeDate = ''): string
     {
         if (empty($changeDate)) {
-            $timestamp = gmdate('Y-m-d H:i:s');
+            $timestamp = SystemFn::gmdate('Y-m-d H:i:s');
         } else {
-            $timestamp = gmdate('Y-m-d H:i:s', strtotime($changeDate));
+            $timestamp = SystemFn::gmdate('Y-m-d H:i:s', SystemFn::strtotime($changeDate));
         }
 
         return $timestamp;

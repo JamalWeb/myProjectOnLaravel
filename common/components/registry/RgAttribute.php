@@ -4,9 +4,11 @@ namespace common\components\registry;
 
 class RgAttribute
 {
+    /**
+     * Атрибуты моделей
+     */
     const ID = 'id';
     const USER_ID = 'user_id';
-    const TYPE = 'type';
     const TYPE_ID = 'type_id';
     const ROLE_ID = 'role_id';
     const COUNTRY_ID = 'country_id';
@@ -15,7 +17,6 @@ class RgAttribute
     const STATUS = 'status';
     const STATUS_ID = 'status_id';
     const EVENT_ID = 'event_id';
-    const GENDER = 'gender';
     const GENDER_ID = 'gender_id';
     const NAME = 'name';
     const AGE = 'age';
@@ -63,9 +64,19 @@ class RgAttribute
     const TRANSLATION = 'translation';
     const MESSAGE = 'message';
     const CATEGORY = 'category';
+
+    /**
+     * Системные атрибуты
+     */
+    const TYPE = 'type';
     const BANNED = 'banned';
     const PROFILE = 'profile';
     const COUNTRY = 'country';
     const CITY = 'city';
     const CHILDREN = 'children';
+    const GENDER = 'gender';
+    const AUTH_TOKEN = 'auth_token';
+    const RESET_AUTH_TOKEN = 'reset_auth_token';
+    const HEADER_RESET_AUTH_TOKEN = 'reset-auth-token';
+
 }

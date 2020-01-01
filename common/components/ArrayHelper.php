@@ -3,6 +3,7 @@
 namespace common\components;
 
 use api\modules\v1\models\error\BadRequestHttpException;
+use common\components\helpers\SystemFn;
 use Exception;
 use Generator;
 use Yii;
@@ -27,7 +28,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
             $array = [];
             if (!empty($json)) {
                 /** @var array $array */
-                $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+                $array = SystemFn::json_decode($json, true, 512, JSON_THROW_ON_ERROR);
             }
 
             return $array;
@@ -41,28 +42,60 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      *
      * @param       $array
      * @param array $keys
-     * @param bool  $checkForAvailabilityOnly
+     * @param bool  $checkForEmpty
      * @throws BadRequestHttpException
      */
-    public static final function validateRequestParams(array $array, array $keys, bool $checkForAvailabilityOnly = true): void
+    public static function validateParams(array &$array, array $keys, bool $checkForEmpty = true): void
     {
-        foreach ($keys as $key) {
-            if (!key_exists($key, $array)) {
-                throw new BadRequestHttpException([
-                    $key => Yii::t('yii', 'Missing required parameters: {params}', [
-                        'params' => "«" . ucfirst($key) . "»"
-                    ])
-                ]);
+        self::cleaning($array, $keys);
+
+        foreach (self::generator($keys) as $key) {
+            if (!SystemFn::key_exists($key, $array)) {
+                throw new BadRequestHttpException(
+                    [
+                        $key => Yii::t(
+                            'yii',
+                            'Missing required parameters: {params}',
+                            [
+                                'params' => "«{$key}»"
+                            ]
+                        )
+                    ]
+                );
             }
 
-            if ($checkForAvailabilityOnly && empty($array[$key])) {
-                throw new BadRequestHttpException([
-                    $key => Yii::t('yii', '{attribute} cannot be blank.', [
-                        'attribute' => $key
-                    ])
-                ]);
+            if ($checkForEmpty && empty($array[$key])) {
+                throw new BadRequestHttpException(
+                    [
+                        $key => Yii::t(
+                            'yii',
+                            '{attribute} cannot be blank.',
+                            [
+                                'attribute' => $key
+                            ]
+                        )
+                    ]
+                );
             }
         }
+    }
+
+    /**
+     * Удаляет ключей которых нет в массиве $keys
+     *
+     * @param $array
+     * @param $keys
+     */
+    public static function cleaning(array &$array, array $keys): void
+    {
+        $cleanParams = [];
+        foreach (self::generator($keys) as $key) {
+            if (!SystemFn::key_exists($key, $array)) {
+                continue;
+            }
+            $cleanParams[$key] = $array[$key];
+        }
+        $array = $cleanParams;
     }
 
     /**
@@ -71,9 +104,9 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      * @param $array
      * @return Generator
      */
-    public static function generator($array): Generator
+    public static function generator(array $array): Generator
     {
-        if (is_iterable($array)) {
+        if (SystemFn::is_iterable($array)) {
             foreach ($array as $item) {
                 yield $item;
             }

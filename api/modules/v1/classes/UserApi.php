@@ -6,6 +6,7 @@ use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\form\base\AbstractUserForm;
 use api\modules\v1\models\form\BusinessUserForm;
 use common\components\PasswordHelper;
+use common\components\registry\RgAttribute;
 use common\components\registry\RgUser;
 use common\models\user\UserGender;
 use common\models\user\UserRole;
@@ -33,19 +34,26 @@ class UserApi extends Api
      */
     public function login(array $post): array
     {
-        ArrayHelper::validateRequestParams($post, ['email', 'password'], false);
+        ArrayHelper::cleaning(
+            $post,
+            [
+                RgAttribute::EMAIL,
+                RgAttribute::PASSWORD
+            ]
+        );
 
-        /** @var LoginForm $loginForm */
-        $loginForm = new LoginForm([
-            'email'    => $post['email'],
-            'password' => $post['password']
-        ]);
+        $loginForm = new LoginForm($post);
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
             /** @var User $user */
             $user = $loginForm->authenticate();
-            UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, null, '+ 1 day');
+            UserToken::generateAccessToken(
+                $user,
+                UserToken::TYPE_AUTH,
+                null,
+                '+ 1 day'
+            );
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
@@ -53,8 +61,8 @@ class UserApi extends Api
         }
 
         return [
-            'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
-            'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
+            RgAttribute::AUTH_TOKEN       => UserToken::get($user, UserToken::TYPE_AUTH)->access_token,
+            RgAttribute::RESET_AUTH_TOKEN => UserToken::get($user, UserToken::TYPE_RESET_AUTH)->access_token
         ];
     }
 
@@ -68,26 +76,31 @@ class UserApi extends Api
      */
     public function resetAuthToken(HeaderCollection $headers)
     {
-        $headers = ArrayHelper::toArray($headers);
-        ArrayHelper::validateRequestParams($headers, ['reset-auth-token'], false);
-
-        $userToken = UserToken::findOne([
-            'type'         => UserToken::TYPE_RESET_AUTH,
-            'access_token' => $headers['reset-auth-token']
-        ]);
+        $userToken = UserToken::findOne(
+            [
+                RgAttribute::TYPE_ID      => UserToken::TYPE_RESET_AUTH,
+                RgAttribute::ACCESS_TOKEN => $headers[RgAttribute::HEADER_RESET_AUTH_TOKEN]
+            ]
+        );
 
         if (is_null($userToken)) {
-            throw new BadRequestHttpException([
-                'reset-auth-token' => 'Токен не является действительным'
-            ]);
+            throw new BadRequestHttpException(
+                [
+                    RgAttribute::HEADER_RESET_AUTH_TOKEN => 'Не является действительным'
+                ]
+            );
         }
 
         $user = $userToken->user;
+
         UserToken::generateAccessToken($user, UserToken::TYPE_AUTH, null, '+ 1 day');
 
+        $authUserToken = UserToken::get($user, UserToken::TYPE_AUTH);
+        $resetAuthUserToken = UserToken::get($user, UserToken::TYPE_RESET_AUTH);
+
         return [
-            'auth_token'       => UserToken::getAccessToken($user, UserToken::TYPE_AUTH)->access_token,
-            'reset_auth_token' => UserToken::getAccessToken($user, UserToken::TYPE_RESET_AUTH)->access_token
+            RgAttribute::AUTH_TOKEN       => $authUserToken->access_token,
+            RgAttribute::RESET_AUTH_TOKEN => $resetAuthUserToken->access_token
         ];
     }
 
@@ -117,41 +130,54 @@ class UserApi extends Api
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
 
+        $user = new User();
+        $userProfileApi = new UserProfileApi();
+        $userChildrenApi = new UserChildrenApi();
+
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $user = new User();
-            $user->saveModel([
-                'type_id'    => UserType::TYPE_DEFAULT_USER,
-                'role_id'    => UserRole::ROLE_DEFAULT_USER,
-                'email'      => $defaultUserForm->email,
-                'password'   => PasswordHelper::encrypt($defaultUserForm->password),
-                'status'     => RgUser::USER_STATUS_UNCONFIRMED_EMAIL,
-                'created_ip' => Yii::$app->request->remoteIP,
-            ]);
+            $user->saveModel(
+                [
+                    RgAttribute::TYPE_ID    => UserType::TYPE_DEFAULT_USER,
+                    RgAttribute::ROLE_ID    => UserRole::ROLE_DEFAULT_USER,
+                    RgAttribute::EMAIL      => $defaultUserForm->email,
+                    RgAttribute::PASSWORD   => PasswordHelper::encrypt($defaultUserForm->password),
+                    RgAttribute::STATUS     => RgUser::USER_STATUS_UNCONFIRMED_EMAIL,
+                    RgAttribute::CREATED_IP => Yii::$app->request->remoteIP,
+                ]
+            );
 
-            $userProfileApi = new UserProfileApi();
-            $userProfileApi->create($user, [
-                'city_id'    => $defaultUserForm->city_id,
-                'first_name' => $defaultUserForm->first_name,
-                'last_name'  => $defaultUserForm->last_name,
-                'language'   => $defaultUserForm->language,
-                'short_lang' => $defaultUserForm->short_lang,
-                'timezone'   => $defaultUserForm->timezone
-            ]);
+            $userProfileApi->create(
+                $user,
+                [
+                    RgAttribute::CITY_ID    => $defaultUserForm->city_id,
+                    RgAttribute::FIRST_NAME => $defaultUserForm->first_name,
+                    RgAttribute::LAST_NAME  => $defaultUserForm->last_name,
+                    RgAttribute::LANGUAGE   => $defaultUserForm->language,
+                    RgAttribute::SHORT_LANG => $defaultUserForm->short_lang,
+                    RgAttribute::TIMEZONE   => $defaultUserForm->timezone
+                ]
+            );
 
-            $userChildrenApi = new UserChildrenApi();
             $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
             $userChildrenApi->add($user, $childrenList);
 
             EmailSendler::registrationConfirmDefaultUser($user);
 
-            $access['access'] = $this->login([
-                'email'    => $defaultUserForm->email,
-                'password' => $defaultUserForm->password,
-            ]);
+            $access = $this->login(
+                [
+                    RgAttribute::EMAIL    => $defaultUserForm->email,
+                    RgAttribute::PASSWORD => $defaultUserForm->password,
+                ]
+            );
             $transaction->commit();
 
-            return ArrayHelper::merge($access, $user->publicInfo);
+            return ArrayHelper::merge(
+                [
+                    'access' => $access
+                ],
+                $user->publicInfo
+            );
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -177,33 +203,40 @@ class UserApi extends Api
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $user = new User();
-            $user->saveModel([
-                'type_id'    => UserType::TYPE_BUSINESS_USER,
-                'role_id'    => UserRole::ROLE_BUSINESS_USER,
-                'email'      => $businessUserForm->email,
-                'password'   => PasswordHelper::encrypt($businessUserForm->password),
-                'status'     => RgUser::USER_STATUS_UNCONFIRMED_EMAIL,
-                'created_ip' => Yii::$app->request->remoteIP,
-            ]);
+            $user->saveModel(
+                [
+                    'type_id'    => UserType::TYPE_BUSINESS_USER,
+                    'role_id'    => UserRole::ROLE_BUSINESS_USER,
+                    'email'      => $businessUserForm->email,
+                    'password'   => PasswordHelper::encrypt($businessUserForm->password),
+                    'status'     => RgUser::USER_STATUS_UNCONFIRMED_EMAIL,
+                    'created_ip' => Yii::$app->request->remoteIP,
+                ]
+            );
 
             $userProfileApi = new UserProfileApi();
-            $userProfileApi->create($user, [
-                'first_name'   => $businessUserForm->first_name,
-                'phone_number' => $businessUserForm->phone_number,
-                'address'      => $businessUserForm->address,
-                'about'        => $businessUserForm->about,
-                'city_id'      => $businessUserForm->city_id,
-                'language'     => $businessUserForm->language,
-                'short_lang'   => $businessUserForm->short_lang,
-                'timezone'     => $businessUserForm->timezone
-            ]);
+            $userProfileApi->create(
+                $user,
+                [
+                    'first_name'   => $businessUserForm->first_name,
+                    'phone_number' => $businessUserForm->phone_number,
+                    'address'      => $businessUserForm->address,
+                    'about'        => $businessUserForm->about,
+                    'city_id'      => $businessUserForm->city_id,
+                    'language'     => $businessUserForm->language,
+                    'short_lang'   => $businessUserForm->short_lang,
+                    'timezone'     => $businessUserForm->timezone
+                ]
+            );
 
             EmailSendler::registrationConfirmBusinessUser($user);
 
-            $access['access'] = $this->login([
-                'email'    => $businessUserForm->email,
-                'password' => $businessUserForm->password,
-            ]);
+            $access['access'] = $this->login(
+                [
+                    'email'    => $businessUserForm->email,
+                    'password' => $businessUserForm->password,
+                ]
+            );
             $transaction->commit();
 
             return ArrayHelper::merge($access, $user->publicInfo);
@@ -306,12 +339,14 @@ class UserApi extends Api
      */
     public function findUserById(int $id): User
     {
-        $user = User::findOne([
-            'id'        => $id,
-            'type_id'   => UserType::$validTypeSearch,
-            'status'    => RgUser::USER_STATUS_ACTIVE,
-            'is_banned' => false
-        ]);
+        $user = User::findOne(
+            [
+                'id'        => $id,
+                'type_id'   => UserType::$validTypeSearch,
+                'status'    => RgUser::USER_STATUS_ACTIVE,
+                'is_banned' => false
+            ]
+        );
 
         if (is_null($user)) {
             throw new BadRequestHttpException(['user' => 'User not found']);
@@ -330,7 +365,7 @@ class UserApi extends Api
      */
     public function recovery(array $post): array
     {
-        ArrayHelper::validateRequestParams($post, ['email']);
+        ArrayHelper::validateParams($post, ['email']);
 
         $user = User::findOne(['email' => $post['email']]);
 

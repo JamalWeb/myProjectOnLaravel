@@ -49,6 +49,32 @@ class UserToken extends BaseModel
     }
 
     /**
+     * Получить токен
+     *
+     * @param User $user
+     * @param int  $typeId
+     * @return UserToken
+     * @throws BadRequestHttpException
+     */
+    public static function get(User $user, int $typeId): UserToken
+    {
+        self::checkTypeAccessToken($typeId);
+
+        $userToken = UserToken::findOne(
+            [
+                RgAttribute::USER_ID => $user->id,
+                RgAttribute::TYPE_ID => $typeId
+            ]
+        );
+
+        if (is_null($userToken)) {
+            throw new BadRequestHttpException($userToken->getFirstErrors());
+        }
+
+        return $userToken;
+    }
+
+    /**
      * Генерация токена
      *
      * @param User        $user
@@ -94,32 +120,6 @@ class UserToken extends BaseModel
         if ($typeId === self::TYPE_AUTH) {
             self::generateAccessToken($user, self::TYPE_RESET_AUTH, null, '');
         }
-    }
-
-    /**
-     * Получить токен
-     *
-     * @param User $user
-     * @param int  $typeId
-     * @return UserToken
-     * @throws BadRequestHttpException
-     */
-    public static function getAccessToken(User $user, int $typeId): UserToken
-    {
-        self::checkTypeAccessToken($typeId);
-
-        $userToken = UserToken::findOne(
-            [
-                RgAttribute::USER_ID => $user->id,
-                RgAttribute::TYPE_ID => $typeId
-            ]
-        );
-
-        if (is_null($userToken)) {
-            throw new BadRequestHttpException($userToken->getFirstErrors());
-        }
-
-        return $userToken;
     }
 
     /**

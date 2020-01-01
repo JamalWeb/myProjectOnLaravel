@@ -91,7 +91,7 @@ class InterestApi extends Api
      */
     public function setInterestUser(User $user, array $post): array
     {
-        ArrayHelper::validateRequestParams($post, ['interest_ids']);
+        ArrayHelper::validateParams($post, ['interest_ids']);
         $interestIds = ArrayHelper::jsonToArray($post['interest_ids']);
 
         if (empty($interestIds)) {

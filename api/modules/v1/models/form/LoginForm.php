@@ -123,9 +123,9 @@ class LoginForm extends Model
                 [
                     RgAttribute::EMAIL => Yii::t(
                         'app',
-                        'User is banned - {banReason}',
+                        'User is banned - {banned_reason}',
                         [
-                            'banReason' => $this->user->banned_reason,
+                            RgAttribute::BANNED_REASON => $this->user->banned_reason,
                         ]
                     )
                 ]

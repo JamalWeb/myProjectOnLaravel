@@ -24,7 +24,7 @@ class EmailSendler
     public static final function registrationConfirmDefaultUser(User $user): bool
     {
         UserToken::generateAccessToken($user, UserToken::TYPE_EMAIL_CONFIRM);
-        $userToken = UserToken::getAccessToken($user, UserToken::TYPE_EMAIL_CONFIRM);
+        $userToken = UserToken::get($user, UserToken::TYPE_EMAIL_CONFIRM);
 
         return Yii::$app->mailer->compose('confirmEmail-html.php', [
             'user'      => $user,
@@ -73,7 +73,7 @@ class EmailSendler
     public static function userRecovery($user): bool
     {
         UserToken::generateAccessToken($user, UserToken::TYPE_USER_RECOVERY);
-        $userToken = UserToken::getAccessToken($user, UserToken::TYPE_USER_RECOVERY);
+        $userToken = UserToken::get($user, UserToken::TYPE_USER_RECOVERY);
 
         return Yii::$app->mailer->compose('userRecovery-html.php', [
             'user'      => $user,
