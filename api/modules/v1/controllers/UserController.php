@@ -233,24 +233,9 @@ class UserController extends BaseController
      *         example={
      *           "id": 4,
      *           "email": "neo4@neo.com",
-     *           "type": {
-     *             "id": 2,
-     *             "name": "User",
-     *             "desc": "Обычный пользователь"
-     *           },
-     *           "role": {
-     *             "id": 2,
-     *             "name": "User",
-     *             "desc": "Обычный пользователь"
-     *           },
-     *           "status": {
-     *             "id": 1,
-     *             "name": "Активен"
-     *           },
-     *           "banned": {
-     *             "is_banned": false,
-     *             "banned_reason": null,
-     *             "banned_at": null
+     *           "access": {
+     *             "auth_token": "3jGgrsbY9WfZe_6lzJVHLFrT4KPkRzYhEB",
+     *             "reset_auth_token": "nXj35NGV6bTxK6cOrIdWaEjrHAlbW6DR89"
      *           },
      *           "profile": {
      *             "first_name": "Иван",
@@ -263,31 +248,35 @@ class UserController extends BaseController
      *               "id": 1,
      *               "name": "Moscow"
      *             },
+     *             "children": {
+     *               {
+     *                 "id": 5,
+     *                 "age": 5,
+     *                 "gender": {
+     *                   "id": 1,
+     *                   "name": "Male"
+     *                 }
+     *               },
+     *               {
+     *                 "id": 6,
+     *                 "age": 11,
+     *                 "gender": {
+     *                   "id": 2,
+     *                   "name": "Female"
+     *                 }
+     *               }
+     *             },
      *             "longitude": "55.7522",
      *             "latitude": "37.6156",
      *             "language": "Russian",
      *             "short_lang": "ru-RU",
      *             "timezone": "Europe/Moscow"
      *           },
-     *           "children": {
-     *             {
-     *               "id": 5,
-     *               "age": 5,
-     *               "gender": {
-     *                 "id": 1,
-     *                 "name": "Male"
-     *               }
-     *             },
-     *             {
-     *               "id": 6,
-     *               "age": 11,
-     *               "gender": {
-     *                 "id": 2,
-     *                 "name": "Female"
-     *               }
-     *             }
+     *           "banned": {
+     *             "is_banned": false,
+     *             "banned_reason": null,
+     *             "banned_at": null
      *           },
-     *           "created_at": "2019-11-10 14:06:20"
      *         }
      *       ),
      *     ),
@@ -394,44 +383,33 @@ class UserController extends BaseController
      *         example={
      *           "id": 9,
      *           "email": "neo@neo.com",
-     *           "type": {
-     *               "id": 3,
-     *               "name": "Business",
-     *               "desc": "Бизнес пользователь"
-     *           },
-     *           "role": {
-     *               "id": 3,
-     *               "name": "Business",
-     *               "desc": "Бизнес пользователь"
-     *           },
-     *           "status": {
-     *               "id": 1,
-     *               "name": "Активен"
-     *           },
-     *           "banned": {
-     *               "is_banned": false,
-     *               "banned_reason": null,
-     *               "banned_at": null
+     *           "access": {
+     *             "auth_token": "3jGgrsbY9WfZe_6lzJVHLFrT4KPkRzYhEB",
+     *             "reset_auth_token": "nXj35NGV6bTxK6cOrIdWaEjrHAlbW6DR89"
      *           },
      *           "profile": {
-     *               "first_name": "vorchami",
-     *               "last_name": null,
-     *               "phone_number": "79886337711",
-     *               "address": "г.Москва ул.Гурьянова д.5 кв.129",
-     *               "about": "Бомбочка",
-     *               "country": null,
-     *               "city": {
-     *                   "id": 1,
-     *                   "name": "Moscow"
-     *               },
-     *               "longitude": "55.7522",
-     *               "latitude": "55.7522",
-     *               "language": "Russian",
-     *               "short_lang": "ru-RU",
-     *               "timezone": "Europe/Moscow"
+     *             "first_name": "vorchami",
+     *             "last_name": null,
+     *             "phone_number": "79886337711",
+     *             "address": "г.Москва ул.Гурьянова д.5 кв.129",
+     *             "about": "Бомбочка",
+     *             "country": null,
+     *             "city": {
+     *                 "id": 1,
+     *                 "name": "Moscow"
+     *             },
+     *             "children": {},
+     *             "longitude": "55.7522",
+     *             "latitude": "55.7522",
+     *             "language": "Russian",
+     *             "short_lang": "ru-RU",
+     *             "timezone": "Europe/Moscow"
      *           },
-     *           "children": {},
-     *           "created_at": "2019-10-19 19:23:40"
+     *           "banned": {
+     *             "is_banned": false,
+     *             "banned_reason": null,
+     *             "banned_at": null
+     *           }
      *         }
      *       ),
      *     ),
@@ -446,201 +424,6 @@ class UserController extends BaseController
     public function actionRegistrationBusiness()
     {
         return $this->api->registrationBusiness($this->post);
-    }
-
-    /**
-     * @OA\Post(
-     *   path="/user/update-default",
-     *   summary="Редактирование профиля обычного пользователя",
-     *   tags={"Пользователь | User"},
-     *   deprecated=true,
-     *   security={{"bearerAuth":{}}},
-     *   @OA\RequestBody(
-     *     @OA\MediaType(
-     *       mediaType="multipart/form-data",
-     *       @OA\Schema(
-     *         @OA\Property(
-     *           property="first_name",
-     *           description="Имя",
-     *           type="string",
-     *           example="Иван"
-     *         ),
-     *         @OA\Property(
-     *           property="last_name",
-     *           description="Фамилия",
-     *           type="string",
-     *           example="Иванов"
-     *         ),
-     *         @OA\Property(
-     *             property="avatar",
-     *             description="Аватар",
-     *             type="file",
-     *             format="file",
-     *         ),
-     *         @OA\Property(
-     *           property="country_id",
-     *           description="Идентификатор страны",
-     *           type="integer",
-     *           example=1
-     *         ),
-     *         @OA\Property(
-     *           property="city_id",
-     *           description="Идентификатор города",
-     *           type="integer",
-     *           example=1
-     *         ),
-     *         @OA\Property(
-     *           property="is_closed",
-     *           description="Профиль закрыт",
-     *           type="integer",
-     *           enum={0, 1},
-     *           example="0"
-     *         ),
-     *         @OA\Property(
-     *           property="is_notice",
-     *           description="Пуш уведомления",
-     *           type="integer",
-     *           enum={0, 1},
-     *           example="0"
-     *         ),
-     *         @OA\Property(
-     *           property="longitude",
-     *           description="Координаты: широта",
-     *           type="number",
-     *           example="55.7522"
-     *         ),
-     *         @OA\Property(
-     *           property="latitude",
-     *           description="Координаты: долгота",
-     *           type="number",
-     *           example="37.6156"
-     *         ),
-     *         @OA\Property(
-     *           property="language",
-     *           description="Язык",
-     *           type="string",
-     *           example="Russian"
-     *         ),
-     *         @OA\Property(
-     *           property="short_lang",
-     *           description="Код языка",
-     *           type="string",
-     *           example="ru-RU"
-     *         ),
-     *         @OA\Property(
-     *           property="timezone",
-     *           description="Часовой пояс",
-     *           type="string",
-     *           example="Europe/Moscow"
-     *         ),
-     *         @OA\Property(
-     *           property="children",
-     *           description="Список детей",
-     *           type="object",
-     *           example={
-     *             {
-     *               "age": 5,
-     *               "gender_id": 1
-     *             },
-     *             {
-     *               "age": 11,
-     *               "gender_id": 2
-     *             }
-     *           }
-     *         ),
-     *         required={
-     *             "email",
-     *             "password",
-     *             "city_id",
-     *             "first_name"
-     *         }
-     *       )
-     *     )
-     *   ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="success",
-     *     @OA\MediaType(
-     *       mediaType="application/json",
-     *       @OA\Schema(
-     *         type="object",
-     *         example={
-     *             "id": 8,
-     *             "email": "default_user@mamppa.com",
-     *             "type": {
-     *                 "id": 3,
-     *                 "name": "User",
-     *                 "desc": "Обычный пользователь"
-     *             },
-     *             "role": {
-     *                 "id": 3,
-     *                 "name": "User",
-     *                 "desc": "Обычный пользователь"
-     *             },
-     *             "status": {
-     *                 "id": 1,
-     *                 "name": "Активен"
-     *             },
-     *             "banned": {
-     *                 "is_banned": false,
-     *                 "banned_reason": null,
-     *                 "banned_at": null
-     *             },
-     *             "profile": {
-     *                 "first_name": "Иван",
-     *                 "last_name": "Иванов",
-     *                 "phone_number": null,
-     *                 "address": null,
-     *                 "about": null,
-     *                 "country": {
-     *                     "id": 1,
-     *                     "name": "Russia"
-     *                 },
-     *                 "city": {
-     *                     "id": 1,
-     *                     "name": "Moscow"
-     *                 },
-     *                 "longitude": "55.7522",
-     *                 "latitude": "55.7522",
-     *                 "language": "Russian",
-     *                 "short_lang": "ru-RU",
-     *                 "timezone": "Europe/Moscow"
-     *             },
-     *             "children": {
-     *                 {
-     *                     "id": 7,
-     *                     "age": 5,
-     *                     "gender": {
-     *                         "id": 1,
-     *                         "name": "Male"
-     *                     }
-     *                 },
-     *                 {
-     *                     "id": 8,
-     *                     "age": 11,
-     *                     "gender": {
-     *                         "id": 2,
-     *                         "name": "Female"
-     *                     }
-     *                 }
-     *              },
-     *             "created_at": "2019-10-19 19:23:40"
-     *         }
-     *       ),
-     *     ),
-     *   ),
-     *   @OA\Response(
-     *     response=400,
-     *     description="BadRequestHttpException"
-     *   )
-     * )
-     * @throws BadRequestHttpException
-     */
-    public function actionUpdateDefault(): array
-    {
-//        return $this->api->updateDefault($this->user, $this->post);
-
-        return ['Не реализовано'];
     }
 
     /**
@@ -668,25 +451,7 @@ class UserController extends BaseController
      *         example={
      *           "id": 4,
      *           "email": "neo4@neo.com",
-     *           "type": {
-     *             "id": 2,
-     *             "name": "User",
-     *             "desc": "Обычный пользователь"
-     *           },
-     *           "role": {
-     *             "id": 2,
-     *             "name": "User",
-     *             "desc": "Обычный пользователь"
-     *           },
-     *           "status": {
-     *             "id": 1,
-     *             "name": "Активен"
-     *           },
-     *           "banned": {
-     *             "is_banned": false,
-     *             "banned_reason": null,
-     *             "banned_at": null
-     *           },
+     *           "access": {},
      *           "profile": {
      *             "first_name": "Иван",
      *             "last_name": "Иванов",
@@ -698,37 +463,42 @@ class UserController extends BaseController
      *               "id": 1,
      *               "name": "Moscow"
      *             },
+     *             "children": {
+     *               {
+     *                 "id": 5,
+     *                 "age": 5,
+     *                 "gender": {
+     *                   "id": 1,
+     *                   "name": "Male"
+     *                 }
+     *               },
+     *               {
+     *                 "id": 6,
+     *                 "age": 11,
+     *                 "gender": {
+     *                   "id": 2,
+     *                   "name": "Female"
+     *                 }
+     *               }
+     *             },
      *             "longitude": "55.7522",
      *             "latitude": "37.6156",
      *             "language": "Russian",
      *             "short_lang": "ru-RU",
      *             "timezone": "Europe/Moscow"
      *           },
-     *           "children": {
-     *             {
-     *               "id": 5,
-     *               "age": 5,
-     *               "gender": {
-     *                 "id": 1,
-     *                 "name": "Male"
-     *               }
-     *             },
-     *             {
-     *               "id": 6,
-     *               "age": 11,
-     *               "gender": {
-     *                 "id": 2,
-     *                 "name": "Female"
-     *               }
-     *             }
+     *           "banned": {
+     *             "is_banned": false,
+     *             "banned_reason": null,
+     *             "banned_at": null
      *           },
-     *           "created_at": "2019-11-10 14:06:20"
      *         }
      *       ),
      *     ),
      *   ),
      * )
-     * @throws BadRequestHttpException
+     * @return array
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionGet(): array
     {

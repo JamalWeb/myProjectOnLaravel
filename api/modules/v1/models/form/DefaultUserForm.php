@@ -59,13 +59,11 @@ class DefaultUserForm extends AbstractUserForm
                     RgAttribute::EMAIL,
                     RgAttribute::PASSWORD
                 ],
-                'required',
-                'on' => self::SCENARIO_CREATE
+                'required'
             ],
             [
                 [
-                    RgAttribute::CITY_ID,
-                    RgAttribute::COUNTRY_ID
+                    RgAttribute::CITY_ID
                 ],
                 'integer'
             ],
@@ -103,8 +101,7 @@ class DefaultUserForm extends AbstractUserForm
                     if ($user) {
                         $this->addError($attribute, 'This email is already in use.');
                     }
-                },
-                'on' => self::SCENARIO_CREATE
+                }
             ],
             [
                 [
@@ -130,16 +127,14 @@ class DefaultUserForm extends AbstractUserForm
                 'extensions'  => 'png, jpg, jpeg',
                 'maxWidth'    => 500,
                 'maxHeight'   => 500,
-                'maxSize'     => 5120 * 1024,
-                'on'          => self::SCENARIO_UPDATE
+                'maxSize'     => 5120 * 1024
             ],
             [
                 [
                     RgAttribute::IS_CLOSED,
                     RgAttribute::IS_NOTICE
                 ],
-                'boolean',
-                'on' => self::SCENARIO_UPDATE
+                'boolean'
             ]
         ];
     }

@@ -3,13 +3,11 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\classes\base\Api;
-use api\modules\v1\models\form\base\AbstractUserForm;
 use api\modules\v1\models\form\BusinessUserForm;
 use common\components\PasswordHelper;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgUser;
 use common\models\user\UserGender;
-use common\models\user\UserRole;
 use Yii;
 use api\modules\v1\models\error\BadRequestHttpException;
 use api\modules\v1\models\form\LoginForm;
@@ -18,10 +16,8 @@ use common\components\ArrayHelper;
 use common\components\EmailSendler;
 use common\models\user\User;
 use common\models\user\UserToken;
-use common\models\user\UserType;
 use yii\web\HeaderCollection;
 use Exception;
-use yii\web\UploadedFile;
 
 class UserApi extends Api
 {
@@ -123,23 +119,20 @@ class UserApi extends Api
      */
     public final function createDefault(array $post): array
     {
-        ArrayHelper::cleaning(
-            $post,
-            [
-                RgAttribute::EMAIL,
-                RgAttribute::PASSWORD,
-                RgAttribute::FIRST_NAME,
-                RgAttribute::LAST_NAME,
-                RgAttribute::CITY_ID,
-                RgAttribute::LANGUAGE,
-                RgAttribute::SHORT_LANG,
-                RgAttribute::TIMEZONE,
-                RgAttribute::CHILDREN
-            ]
-        );
+        $allowedAttribute = [
+            RgAttribute::EMAIL,
+            RgAttribute::PASSWORD,
+            RgAttribute::FIRST_NAME,
+            RgAttribute::LAST_NAME,
+            RgAttribute::CITY_ID,
+            RgAttribute::LANGUAGE,
+            RgAttribute::SHORT_LANG,
+            RgAttribute::TIMEZONE,
+            RgAttribute::CHILDREN
+        ];
+        ArrayHelper::cleaning($post, $allowedAttribute);
 
         $defaultUserForm = new DefaultUserForm($post);
-        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_CREATE);
 
         if (!$defaultUserForm->validate()) {
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
@@ -148,51 +141,42 @@ class UserApi extends Api
         $user = new User();
         $userProfileApi = new UserProfileApi();
         $userChildrenApi = new UserChildrenApi();
+        $userData = [
+            RgAttribute::TYPE_ID    => RgUser::TYPE_DEFAULT,
+            RgAttribute::ROLE_ID    => RgUser::ROLE_DEFAULT,
+            RgAttribute::EMAIL      => $defaultUserForm->email,
+            RgAttribute::PASSWORD   => PasswordHelper::encrypt($defaultUserForm->password),
+            RgAttribute::STATUS_ID  => RgUser::STATUS_UNCONFIRMED_EMAIL,
+            RgAttribute::CREATED_IP => Yii::$app->request->remoteIP,
+        ];
+        $userProfileData = [
+            RgAttribute::CITY_ID    => $defaultUserForm->city_id,
+            RgAttribute::FIRST_NAME => $defaultUserForm->first_name,
+            RgAttribute::LAST_NAME  => $defaultUserForm->last_name,
+            RgAttribute::LANGUAGE   => $defaultUserForm->language,
+            RgAttribute::SHORT_LANG => $defaultUserForm->short_lang,
+            RgAttribute::TIMEZONE   => $defaultUserForm->timezone
+        ];
+        $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
+        $accessData = [
+            RgAttribute::EMAIL    => $defaultUserForm->email,
+            RgAttribute::PASSWORD => $defaultUserForm->password,
+        ];
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $user->saveModel(
-                [
-                    RgAttribute::TYPE_ID    => RgUser::TYPE_DEFAULT,
-                    RgAttribute::ROLE_ID    => RgUser::ROLE_DEFAULT,
-                    RgAttribute::EMAIL      => $defaultUserForm->email,
-                    RgAttribute::PASSWORD   => PasswordHelper::encrypt($defaultUserForm->password),
-                    RgAttribute::STATUS     => RgUser::STATUS_UNCONFIRMED_EMAIL,
-                    RgAttribute::CREATED_IP => Yii::$app->request->remoteIP,
-                ]
-            );
-
-            $userProfileApi->create(
-                $user,
-                [
-                    RgAttribute::CITY_ID    => $defaultUserForm->city_id,
-                    RgAttribute::FIRST_NAME => $defaultUserForm->first_name,
-                    RgAttribute::LAST_NAME  => $defaultUserForm->last_name,
-                    RgAttribute::LANGUAGE   => $defaultUserForm->language,
-                    RgAttribute::SHORT_LANG => $defaultUserForm->short_lang,
-                    RgAttribute::TIMEZONE   => $defaultUserForm->timezone
-                ]
-            );
-
-            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
+            $user->saveModel($userData);
+            $userProfileApi->create($user, $userProfileData);
             $userChildrenApi->add($user, $childrenList);
+            $access = $this->login($accessData);
+            $userData = $user->publicInfo;
+            $userData[RgAttribute::ACCESS] = $access;
 
             EmailSendler::registrationConfirmDefaultUser($user);
 
-            $access = $this->login(
-                [
-                    RgAttribute::EMAIL    => $defaultUserForm->email,
-                    RgAttribute::PASSWORD => $defaultUserForm->password,
-                ]
-            );
             $transaction->commit();
 
-            return ArrayHelper::merge(
-                [
-                    RgAttribute::ACCESS => $access
-                ],
-                $user->publicInfo
-            );
+            return $userData;
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
@@ -209,132 +193,77 @@ class UserApi extends Api
      */
     public function registrationBusiness(array $post): array
     {
+        $allowedAttribute = [
+            RgAttribute::EMAIL,
+            RgAttribute::PASSWORD,
+            RgAttribute::FIRST_NAME,
+            RgAttribute::PHONE_NUMBER,
+            RgAttribute::ADDRESS,
+            RgAttribute::ABOUT,
+            RgAttribute::CITY_ID,
+            RgAttribute::LANGUAGE,
+            RgAttribute::SHORT_LANG,
+            RgAttribute::TIMEZONE
+        ];
+        ArrayHelper::cleaning($post, $allowedAttribute);
+
         $businessUserForm = new BusinessUserForm($post);
 
         if (!$businessUserForm->validate()) {
             throw new BadRequestHttpException($businessUserForm->getFirstErrors());
         }
 
+        $user = new User();
+        $userProfileApi = new UserProfileApi();
+        $userData = [
+            RgAttribute::TYPE_ID    => RgUser::TYPE_BUSINESS,
+            RgAttribute::ROLE_ID    => RgUser::ROLE_BUSINESS,
+            RgAttribute::EMAIL      => $businessUserForm->email,
+            RgAttribute::PASSWORD   => PasswordHelper::encrypt($businessUserForm->password),
+            RgAttribute::STATUS_ID  => RgUser::STATUS_UNCONFIRMED_EMAIL,
+            RgAttribute::CREATED_IP => Yii::$app->request->remoteIP,
+        ];
+        $userProfileData = [
+            RgAttribute::FIRST_NAME   => $businessUserForm->first_name,
+            RgAttribute::PHONE_NUMBER => $businessUserForm->phone_number,
+            RgAttribute::ADDRESS      => $businessUserForm->address,
+            RgAttribute::ABOUT        => $businessUserForm->about,
+            RgAttribute::CITY_ID      => $businessUserForm->city_id,
+            RgAttribute::LANGUAGE     => $businessUserForm->language,
+            RgAttribute::SHORT_LANG   => $businessUserForm->short_lang,
+            RgAttribute::TIMEZONE     => $businessUserForm->timezone
+        ];
+        $accessData = [
+            RgAttribute::EMAIL    => $businessUserForm->email,
+            RgAttribute::PASSWORD => $businessUserForm->password,
+        ];
+
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $user = new User();
-            $user->saveModel(
-                [
-                    'type_id'    => RgUser::TYPE_BUSINESS,
-                    'role_id'    => RgUser::ROLE_BUSINESS,
-                    'email'      => $businessUserForm->email,
-                    'password'   => PasswordHelper::encrypt($businessUserForm->password),
-                    'status'     => RgUser::STATUS_UNCONFIRMED_EMAIL,
-                    'created_ip' => Yii::$app->request->remoteIP,
-                ]
-            );
-
-            $userProfileApi = new UserProfileApi();
-            $userProfileApi->create(
-                $user,
-                [
-                    'first_name'   => $businessUserForm->first_name,
-                    'phone_number' => $businessUserForm->phone_number,
-                    'address'      => $businessUserForm->address,
-                    'about'        => $businessUserForm->about,
-                    'city_id'      => $businessUserForm->city_id,
-                    'language'     => $businessUserForm->language,
-                    'short_lang'   => $businessUserForm->short_lang,
-                    'timezone'     => $businessUserForm->timezone
-                ]
-            );
+            $user->saveModel($userData);
+            $userProfileApi->create($user, $userProfileData);
+            $access = $this->login($accessData);
+            $userData = $user->publicInfo;
+            $userData[RgAttribute::ACCESS] = $access;
 
             EmailSendler::registrationConfirmBusinessUser($user);
 
-            $access['access'] = $this->login(
-                [
-                    'email'    => $businessUserForm->email,
-                    'password' => $businessUserForm->password,
-                ]
-            );
             $transaction->commit();
 
-            return ArrayHelper::merge($access, $user->publicInfo);
+            return $userData;
         } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
         }
     }
 
-//    /**
-//     * Редактирование
-//     *
-//     * @param User  $user
-//     * @param array $post
-//     * @return array
-//     * @throws BadRequestHttpException
-//     * @throws Exception
-//     */
-//    public function updateDefault(User $user, array $post): array
-//    {
-//        $defaultUserForm = new DefaultUserForm($post);
-////        $defaultUserForm->setScenario(AbstractUserForm::SCENARIO_UPDATE);
-//
-//        $defaultUserForm->avatar = UploadedFile::getInstanceByName('avatar');
-//        if ($defaultUserForm->validate()) {
-//            $defaultUserForm->uploadAvatar($user);
-//        } else {
-//            throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
-//        }
-//
-//        $transaction = Yii::$app->db->beginTransaction();
-//        try {
-//            if (!is_null($defaultUserForm->email)) {
-//                $emailExists = User::find()
-//                    ->where([
-//                        'AND',
-//                        ['<>', 'id', $user->id],
-//                        ['email' => $defaultUserForm->email],
-//                    ])
-//                    ->exists();
-//
-//                if (!$emailExists) {
-//                    EmailSendler::confirmChangeEmail($user, $defaultUserForm->email);
-//                }
-//            }
-//
-//            $userProfileApi = new UserProfileApi();
-//            $userProfileApi->update($user, [
-//                'first_name' => $defaultUserForm->first_name,
-//                'last_name'  => $defaultUserForm->last_name,
-//                'avatar'     => $defaultUserForm->avatar,
-//                'country_id' => $defaultUserForm->country_id,
-//                'city_id'    => $defaultUserForm->city_id,
-//                'is_closed'  => $defaultUserForm->is_closed,
-//                'is_notice'  => $defaultUserForm->is_notice,
-//                'longitude'  => $defaultUserForm->longitude,
-//                'latitude'   => $defaultUserForm->latitude,
-//                'language'   => $defaultUserForm->language,
-//                'short_lang' => $defaultUserForm->short_lang,
-//                'timezone'   => $defaultUserForm->timezone
-//            ]);
-//
-//            $childrenList = ArrayHelper::jsonToArray($defaultUserForm->children);
-//            $userChildrenApi = new UserChildrenApi();
-//            $userChildrenApi->add($user, $childrenList);
-//
-//            $transaction->commit();
-//
-//            return $user->publicInfo;
-//        } catch (Exception $e) {
-//            $transaction->rollBack();
-//            throw $e;
-//        }
-//        return [];
-//    }
-
     /**
      * Данные пользователя
      *
-     * @param array     $get
      * @param User|null $user
+     * @param array     $get
      * @return array
-     * @throws BadRequestHttpException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function get(User $user, array $get): array
     {
@@ -350,7 +279,7 @@ class UserApi extends Api
      *
      * @param int $id
      * @return User
-     * @throws BadRequestHttpException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function findUserById(int $id): User
     {
@@ -361,13 +290,16 @@ class UserApi extends Api
             [
                 RgAttribute::ID        => $id,
                 RgAttribute::TYPE_ID   => $typeIdList,
-                RgAttribute::STATUS_ID => RgUser::STATUS_ACTIVE,
+                RgAttribute::STATUS_ID => [
+                    RgUser::STATUS_ACTIVE,
+                    RgUser::STATUS_UNCONFIRMED_EMAIL
+                ],
                 RgAttribute::IS_BANNED => false
             ]
         );
 
         if (is_null($user)) {
-            throw new BadRequestHttpException(['user' => 'User not found']);
+            throw new \yii\web\BadRequestHttpException('User not found');
         }
 
         return $user;
@@ -402,7 +334,7 @@ class UserApi extends Api
         $result = EmailSendler::userRecovery($user);
 
         return [
-            'success' => $result
+            RgAttribute::SUCCESS => $result
         ];
     }
 }

@@ -91,18 +91,10 @@ class User extends BaseModel implements IdentityInterface
     public function getPublicInfo(): array
     {
         $defaultUserInfo = [
-            RgAttribute::ID         => $this->id,
-            RgAttribute::EMAIL      => $this->email,
-            RgAttribute::STATUS     => [
-                RgAttribute::ID   => $this->status->id,
-                RgAttribute::NAME => $this->status->name
-            ],
-            RgAttribute::BANNED     => [
-                RgAttribute::IS_BANNED     => $this->is_banned,
-                RgAttribute::BANNED_REASON => $this->banned_reason,
-                RgAttribute::BANNED_AT     => $this->banned_at,
-            ],
-            RgAttribute::PROFILE    => [
+            RgAttribute::ID      => $this->id,
+            RgAttribute::EMAIL   => $this->email,
+            RgAttribute::ACCESS  => [],
+            RgAttribute::PROFILE => [
                 RgAttribute::FIRST_NAME   => $this->profile->first_name,
                 RgAttribute::LAST_NAME    => $this->profile->last_name,
                 RgAttribute::PHONE_NUMBER => $this->profile->phone_number,
@@ -114,18 +106,17 @@ class User extends BaseModel implements IdentityInterface
                     RgAttribute::NAME => $this->profile->city->name
                 ],
                 RgAttribute::CHILDREN     => [],
-                RgAttribute::TYPE         => [
-                    RgAttribute::ID          => $this->type->id,
-                    RgAttribute::NAME        => $this->type->name,
-                    RgAttribute::DESCRIPTION => $this->type->description
-                ],
                 RgAttribute::LONGITUDE    => $this->profile->longitude,
                 RgAttribute::LATITUDE     => $this->profile->latitude,
                 RgAttribute::LANGUAGE     => $this->profile->language,
                 RgAttribute::SHORT_LANG   => $this->profile->short_lang,
                 RgAttribute::TIMEZONE     => $this->profile->timezone,
             ],
-            RgAttribute::CREATED_AT => $this->created_at
+            RgAttribute::BANNED  => [
+                RgAttribute::IS_BANNED     => $this->is_banned,
+                RgAttribute::BANNED_REASON => $this->banned_reason,
+                RgAttribute::BANNED_AT     => $this->banned_at
+            ]
         ];
 
         if (!empty($this->children) && $this->type_id == RgUser::TYPE_DEFAULT) {

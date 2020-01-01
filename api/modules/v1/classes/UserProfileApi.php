@@ -27,7 +27,7 @@ class UserProfileApi extends Api
         $shortLang = $userProfile->short_lang ?? $defaultValue[RgAttribute::SHORT_LANG];
         $timezone = $userProfile->timezone ?? $defaultValue[RgAttribute::TIMEZONE];
 
-        $params = ArrayHelper::merge(
+        $attribute = ArrayHelper::merge(
             $params,
             [
                 RgAttribute::USER_ID    => $user->id,
@@ -38,7 +38,7 @@ class UserProfileApi extends Api
         );
 
         $userProfile = new UserProfile();
-        $userProfile->saveModel($params);
+        $userProfile->saveModel($attribute);
 
         return $userProfile;
     }

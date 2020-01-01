@@ -79,5 +79,6 @@ class RgAttribute
     const RESET_AUTH_TOKEN = 'reset_auth_token';
     const HEADER_RESET_AUTH_TOKEN = 'reset-auth-token';
     const ACCESS = 'access';
+    const SUCCESS = 'success';
 
 }
