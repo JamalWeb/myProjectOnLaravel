@@ -94,6 +94,11 @@ class User extends BaseModel implements IdentityInterface
             RgAttribute::ID      => $this->id,
             RgAttribute::EMAIL   => $this->email,
             RgAttribute::ACCESS  => [],
+            RgAttribute::TYPE    => [
+                RgAttribute::ID          => $this->type->id,
+                RgAttribute::NAME        => $this->type->name,
+                RgAttribute::DESCRIPTION => $this->type->description
+            ],
             RgAttribute::PROFILE => [
                 RgAttribute::FIRST_NAME   => $this->profile->first_name,
                 RgAttribute::LAST_NAME    => $this->profile->last_name,
