@@ -32,11 +32,11 @@ class m191126_082701_create_table_event extends Migration
                     ->notNull()
                     ->comment('Статус события'),
 
-                RgAttribute::NAME => $this->string(20)
+                RgAttribute::NAME => $this->string()
                     ->notNull()
                     ->comment('Наименование'),
 
-                RgAttribute::ABOUT => $this->string(60)
+                RgAttribute::ABOUT => $this->string()
                     ->notNull()
                     ->comment('Описание'),
 
@@ -52,9 +52,12 @@ class m191126_082701_create_table_event extends Migration
                     ->notNull()
                     ->comment('Адрес где будет происходить'),
 
-                RgAttribute::AGE_LIMIT => $this->integer()
+                RgAttribute::MIN_AGE_CHILD => $this->integer()
                     ->notNull()
-                    ->comment('Возростное ограничение'),
+                    ->comment('Минимальный допустимый возраст ребенка'),
+
+                RgAttribute::MAX_AGE_CHILD => $this->integer()
+                    ->comment('Максимальный допустимый возраст ребенка'),
 
                 RgAttribute::TICKET_PRICE => $this->decimal(10, 2)
                     ->comment('Цена за один билет'),
@@ -62,15 +65,10 @@ class m191126_082701_create_table_event extends Migration
                 RgAttribute::TICKETS_NUMBER => $this->integer()
                     ->comment('Кол-во доступных билетов'),
 
-                RgAttribute::ADDITIONAL_INFORMATION => $this->string(200)
+                RgAttribute::ADDITIONAL_INFORMATION => $this->string()
                     ->comment('Дополнительная информация'),
 
-                RgAttribute::IS_FREE => $this->boolean()
-                    ->defaultValue(false)
-                    ->comment('Флаг бесплатно или нет (если да то цена не учитывается)'),
-
                 RgAttribute::WALLPAPER => $this->string()
-                    ->notNull()
                     ->comment('Фоновое изображение'),
 
                 RgAttribute::CREATED_AT => $this->timestamp()

@@ -41,7 +41,8 @@ class RgAttribute
     const ACCESS_TOKEN = 'access_token';
     const DATA = 'data';
     const IMG = 'img';
-    const AGE_LIMIT = 'age_limit';
+    const MIN_AGE_CHILD = 'min_age_child';
+    const MAX_AGE_CHILD = 'max_age_child';
     const TICKET_PRICE = 'ticket_price';
     const TICKETS_NUMBER = 'tickets_number';
     const ADDITIONAL_INFORMATION = 'additional_information';
@@ -51,7 +52,6 @@ class RgAttribute
     const IS_BANNED = 'is_banned';
     const IS_CLOSED = 'is_closed';
     const IS_NOTICE = 'is_notice';
-    const IS_FREE = 'is_free';
     const LOGGED_IN_IP = 'logged_in_ip';
     const LOGOUT_IN_IP = 'logout_in_ip';
     const CREATED_IP = 'created_ip';
@@ -64,6 +64,8 @@ class RgAttribute
     const TRANSLATION = 'translation';
     const MESSAGE = 'message';
     const CATEGORY = 'category';
+    const PHOTO_GALLERY = 'photo_gallery';
+    const CARRYING_DATE = 'carrying_date';
 
     /**
      * Системные атрибуты
@@ -80,5 +82,11 @@ class RgAttribute
     const HEADER_RESET_AUTH_TOKEN = 'reset-auth-token';
     const ACCESS = 'access';
     const SUCCESS = 'success';
-
+    const SELECTED = 'selected';
+    const USER = 'user';
+    const INTEREST_CATEGORY = 'interest_category';
+    const URL = 'url';
+    const AGE_CHILD = 'age_limit';
+    const MAX = 'max';
+    const MIN = 'min';
 }

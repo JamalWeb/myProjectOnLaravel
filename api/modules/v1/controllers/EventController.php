@@ -3,6 +3,8 @@
 namespace api\modules\v1\controllers;
 
 use api\modules\v1\classes\EventApi;
+use Exception;
+use yii\web\BadRequestHttpException;
 
 /**
  * @property EventApi $api
@@ -140,10 +142,16 @@ class EventController extends BaseController
      *           example="ул.Тергенева д.23 кв.15"
      *         ),
      *         @OA\Property(
-     *           property="age_limit",
+     *           property="min_age_child",
      *           description="Возрастная категория",
      *           type="integer",
      *           example=18
+     *         ),
+     *         @OA\Property(
+     *           property="max_age_child",
+     *           description="Бесплатное?",
+     *           type="integer",
+     *           example=21
      *         ),
      *         @OA\Property(
      *           property="ticket_price",
@@ -162,13 +170,6 @@ class EventController extends BaseController
      *           description="Дополнительная информация",
      *           type="string",
      *           example="Дополнительная информация"
-     *         ),
-     *         @OA\Property(
-     *           property="is_free",
-     *           description="Бесплатное?",
-     *           type="integer",
-     *           enum={0, 1},
-     *           example="0"
      *         ),
      *         @OA\Property(
      *             property="wallpaper",
@@ -219,9 +220,125 @@ class EventController extends BaseController
      *     description="BadRequestHttpException"
      *   )
      * )
+     * @throws Exception
      */
     public function actionCreate()
     {
-        return $this->api->create($this->post);
+        return $this->api->create($this->user, $this->post);
+    }
+
+    /**
+     * @OA\Get(
+     *   path="/event/get/",
+     *   summary="Получить информацию о событии",
+     *   tags={"Событие | Event"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Parameter(
+     *       description="ID события",
+     *       in="query",
+     *       name="id",
+     *       @OA\Schema(
+     *           type="integer",
+     *           format="int64"
+     *       )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           "id": 1,
+     *           "name": "7 f f .",
+     *           "about": "ОписаниеОписание",
+     *           "address": "Адрес проведения",
+     *           "ticket_price": "0.00",
+     *           "tickets_number": 2000,
+     *           "additional_information": "Дополнительная информация",
+     *           "wallpaper": "http://project.loc/upload/events/1/1/wallpaper/__A9h_yHLs.jpg",
+     *           "user": {
+     *             "id": 1,
+     *             "email": "arsen-web@yandex.ru",
+     *             "access": {},
+     *             "profile": {
+     *               "first_name": "Admin",
+     *               "last_name": null,
+     *               "phone_number": null,
+     *               "address": null,
+     *               "about": null,
+     *               "country": null,
+     *               "city": {
+     *                 "id": 1,
+     *                 "name": "Moscow"
+     *               },
+     *               "children": {},
+     *               "longitude": null,
+     *               "latitude": null,
+     *                 "language": "Russian",
+     *                 "short_lang": "ru-RU",
+     *                 "timezone": "Europe/Moscow"
+     *             },
+     *             "banned": {
+     *                 "is_banned": false,
+     *                 "banned_reason": null,
+     *                 "banned_at": null
+     *             }
+     *           },
+     *           "age_limit": {
+     *             "min": 0,
+     *             "max": 3
+     *           },
+     *           "type": {
+     *             "id": 1,
+     *             "name": "One-day event"
+     *           },
+     *           "status": {
+     *             "id": 1,
+     *             "name": "На модерации"
+     *           },
+     *           "interest_category": {
+     *             "id": 1,
+     *             "name": "Entertainment"
+     *           },
+     *           "city": {
+     *             "id": 1,
+     *             "name": "Moscow"
+     *           },
+     *           "carrying_date": {
+     *             {
+     *               "id": 1,
+     *               "date": "2019-12-09 16:00:00",
+     *               "duration": "02:30:00"
+     *             },
+     *             {
+     *               "id": 2,
+     *               "date": "2019-12-08 16:00:00",
+     *               "duration": "01:00:00"
+     *             }
+     *           },
+     *           "photo_gallery": {
+     *             {
+     *               "id": 1,
+     *               "url": "http://project.loc/upload/events/1/1/photo_gallery/FZFTtO6dLX.jpg"
+     *             },
+     *             {
+     *               "id": 2,
+     *               "url": "http://project.loc/upload/events/1/1/photo_gallery/zLShhWC3oq.jpg"
+     *             }
+     *           }
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     * )
+     * @return array
+     * @throws \api\modules\v1\models\error\BadRequestHttpException
+     * @throws BadRequestHttpException
+     */
+    public function actionGet(): array
+    {
+        return $this->api->get($this->user, $this->get);
     }
 }

@@ -6,6 +6,7 @@ use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
 use common\components\DateHelper;
+use common\components\registry\RgAttribute;
 use common\models\InterestCategory;
 use common\models\relations\RelationUserInterest;
 use common\models\user\User;
@@ -36,7 +37,7 @@ class InterestApi extends Api
         $interestPath = Yii::getAlias('@interestPath');
 
         foreach (ArrayHelper::generator($interests) as $interest) {
-            $interest['img'] = "{$urlManagerFront->baseUrl}/$interestPath/{$interest['img']}";
+            $interest[RgAttribute::IMG] = "{$urlManagerFront->baseUrl}/$interestPath/{$interest[RgAttribute::IMG]}";
         }
 
         return $interests;
@@ -54,17 +55,23 @@ class InterestApi extends Api
         /** @var InterestCategory[] $interests */
         $interests = (new Query())
             ->from(['i' => InterestCategory::tableName()])
-            ->select([
-                'id'       => 'i.id',
-                'name'     => 'i.name',
-                'img'      => 'i.img',
-                'selected' => new Expression('CASE WHEN "rui"."id" IS NOT NULL THEN true ELSE false END')
-            ])
-            ->leftJoin([
-                'rui' => RelationUserInterest::tableName()
-            ], 'i.id = rui.interest_id AND rui.user_id = :user_id', [
-                ':user_id' => $user->id
-            ])
+            ->select(
+                [
+                    RgAttribute::ID       => 'i.id',
+                    RgAttribute::NAME     => 'i.name',
+                    RgAttribute::IMG      => 'i.img',
+                    RgAttribute::SELECTED => new Expression('CASE WHEN "rui"."id" IS NOT NULL THEN true ELSE false END')
+                ]
+            )
+            ->leftJoin(
+                [
+                    'rui' => RelationUserInterest::tableName()
+                ],
+                'i.id = rui.interest_id AND rui.user_id = :user_id',
+                [
+                    ':user_id' => $user->id
+                ]
+            )
             ->all();
 
         /** @var UrlManager $urlManagerFront */
@@ -74,7 +81,7 @@ class InterestApi extends Api
         $interestPath = Yii::getAlias('@interestPath');
 
         foreach (ArrayHelper::generator($interests) as $interest) {
-            $interest['img'] = "{$urlManagerFront->baseUrl}/$interestPath/{$interest['img']}";
+            $interest[RgAttribute::IMG] = "{$urlManagerFront->baseUrl}/$interestPath/{$interest[RgAttribute::IMG]}";
         }
 
         return $interests;
@@ -105,20 +112,24 @@ class InterestApi extends Api
             $interests = [];
             foreach ($interestIds as $interestId) {
                 $interests[] = [
-                    'user_id'     => $user->id,
-                    'interest_id' => $interestId,
-                    'created_at'  => DateHelper::getTimestamp(),
-                    'updated_at'  => DateHelper::getTimestamp()
+                    RgAttribute::USER_ID              => $user->id,
+                    RgAttribute::INTEREST_CATEGORY_ID => $interestId,
+                    RgAttribute::CREATED_AT           => DateHelper::getTimestamp(),
+                    RgAttribute::UPDATED_AT           => DateHelper::getTimestamp()
                 ];
             }
 
             Yii::$app->db->createCommand()
-                ->batchInsert(RelationUserInterest::tableName(), [
-                    'user_id',
-                    'interest_id',
-                    'created_at',
-                    'updated_at'
-                ], $interests)
+                ->batchInsert(
+                    RelationUserInterest::tableName(),
+                    [
+                        RgAttribute::USER_ID,
+                        RgAttribute::INTEREST_CATEGORY_ID,
+                        RgAttribute::CREATED_AT,
+                        RgAttribute::UPDATED_AT
+                    ],
+                    $interests
+                )
                 ->execute();
             $transaction->commit();
 

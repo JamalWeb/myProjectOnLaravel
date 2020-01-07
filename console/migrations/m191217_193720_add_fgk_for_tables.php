@@ -72,13 +72,6 @@ class m191217_193720_add_fgk_for_tables extends Migration
             RgAttribute::ID
         );
         $this->addForeignKey(
-            'FGK-type_id-event',
-            RgTable::NAME_EVENT,
-            RgAttribute::TYPE_ID,
-            RgTable::NAME_EVENT_TYPE,
-            RgAttribute::ID
-        );
-        $this->addForeignKey(
             'FGK-interest_category_id-event',
             RgTable::NAME_EVENT,
             RgAttribute::INTEREST_CATEGORY_ID,
@@ -97,21 +90,18 @@ class m191217_193720_add_fgk_for_tables extends Migration
             RgTable::NAME_EVENT_PHOTO_GALLERY,
             RgAttribute::EVENT_ID,
             RgTable::NAME_EVENT,
-            RgAttribute::ID
+            RgAttribute::ID,
+            'CASCADE',
+            'CASCADE'
         );
         $this->addForeignKey(
             'FGK-event_id-event_carrying_date',
             RgTable::NAME_EVENT_CARRYING_DATE,
             RgAttribute::EVENT_ID,
             RgTable::NAME_EVENT,
-            RgAttribute::ID
-        );
-        $this->addForeignKey(
-            'FGK-status_id-event',
-            RgTable::NAME_EVENT,
-            RgAttribute::STATUS_ID,
-            RgTable::NAME_EVENT_STATUS,
-            RgAttribute::ID
+            RgAttribute::ID,
+            'CASCADE',
+            'CASCADE'
         );
         $this->addForeignKey(
             'FGK-status_id-user',
@@ -143,10 +133,6 @@ class m191217_193720_add_fgk_for_tables extends Migration
             RgTable::NAME_USER
         );
         $this->dropForeignKey(
-            'FGK-status_id-event',
-            RgTable::NAME_EVENT
-        );
-        $this->dropForeignKey(
             'FGK-event_id-event_carrying_date',
             RgTable::NAME_EVENT_CARRYING_DATE
         );
@@ -160,10 +146,6 @@ class m191217_193720_add_fgk_for_tables extends Migration
         );
         $this->dropForeignKey(
             'FGK-user_id-event',
-            RgTable::NAME_EVENT
-        );
-        $this->dropForeignKey(
-            'FGK-type_id-event',
             RgTable::NAME_EVENT
         );
         $this->dropForeignKey(

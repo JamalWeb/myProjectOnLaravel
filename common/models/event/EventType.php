@@ -2,87 +2,59 @@
 
 namespace common\models\event;
 
-use common\components\ArrayHelper;
 use common\components\registry\RgAttribute;
-use common\components\registry\RgTable;
-use common\models\base\BaseModel;
-use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveQuery;
+use yii\web\BadRequestHttpException;
 
-/**
- * @property int     $id          Идентификатор типа события
- * @property string  $name        Наименование типа события
- * @property string  $description Описание типа события
- * @property Event[] $events
- */
-class EventType extends BaseModel
+class EventType
 {
-    public function behaviors(): array
+    const ONE_DAY = 1;
+    const MULTIPLE_DAYS = 2;
+    const REGULAR = 3;
+
+    private static $typeList = [
+        self::ONE_DAY       => 'One-day event',
+        self::MULTIPLE_DAYS => 'Multiple-days event',
+        self::REGULAR       => 'Regular event',
+    ];
+
+    /**
+     * Получить наименование типа
+     *
+     * @param int $id
+     * @return string
+     * @throws BadRequestHttpException
+     */
+    public static function getName(int $id): string
     {
-        return ArrayHelper::merge(
-            parent::behaviors(),
-            [
-                'timestamp' => [
-                    'class'              => TimestampBehavior::class,
-                    'createdAtAttribute' => false,
-                    'updatedAtAttribute' => false,
-                    'value'              => gmdate('Y-m-d H:i:s'),
-                ],
-            ]
-        );
+        if (!isset(self::$typeList[$id])) {
+            throw new BadRequestHttpException('Event type not found');
+        }
+
+        return self::$typeList[$id];
     }
 
     /**
-     * {@inheritdoc}
+     * Получить список типов
+     *
+     * @return array
      */
-    public static function tableName()
-    {
-        return RgTable::NAME_EVENT_TYPE;
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getEvents()
-    {
-        return $this->hasMany(
-            Event::class,
-            [
-                RgAttribute::TYPE_ID => RgAttribute::ID
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            RgAttribute::ID          => Yii::t('app', 'ID'),
-            RgAttribute::NAME        => Yii::t('app', 'Name'),
-            RgAttribute::DESCRIPTION => Yii::t('app', 'Desc'),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
+    public static function getList(): array
     {
         return [
             [
-                [RgAttribute::NAME],
-                'required'
+                RgAttribute::ID          => self::ONE_DAY,
+                RgAttribute::NAME        => 'One-day event',
+                RgAttribute::DESCRIPTION => 'Событие на один день'
             ],
             [
-                [
-                    RgAttribute::NAME,
-                    RgAttribute::DESCRIPTION
-                ],
-                'string',
-                'max' => 255
+                RgAttribute::ID          => self::MULTIPLE_DAYS,
+                RgAttribute::NAME        => 'Multiple-days event',
+                RgAttribute::DESCRIPTION => 'Событие на несколько дней'
+            ],
+            [
+                RgAttribute::ID          => self::REGULAR,
+                RgAttribute::NAME        => 'Regular event',
+                RgAttribute::DESCRIPTION => 'Повторяющееся событие'
             ],
         ];
     }

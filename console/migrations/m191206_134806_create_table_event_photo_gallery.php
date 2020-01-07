@@ -20,13 +20,13 @@ class m191206_134806_create_table_event_photo_gallery extends Migration
                 RgAttribute::ID => $this->primaryKey()
                     ->comment('Идентификатор фотографии'),
 
-                RgAttribute::NAME => $this->string()
-                    ->notNull()
-                    ->comment('Наименование фотографии'),
-
                 RgAttribute::EVENT_ID => $this->integer()
                     ->notNull()
                     ->comment('Идентификатор события'),
+
+                RgAttribute::NAME => $this->string()
+                    ->notNull()
+                    ->comment('Наименование фотографии'),
 
                 RgAttribute::CREATED_AT => $this->timestamp()
                     ->comment('Дата создания'),

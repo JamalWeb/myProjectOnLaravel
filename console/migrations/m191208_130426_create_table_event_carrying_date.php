@@ -28,7 +28,7 @@ class m191208_130426_create_table_event_carrying_date extends Migration
                     ->notNull()
                     ->comment('Дата проведения'),
 
-                RgAttribute::DURATION => $this->integer()
+                RgAttribute::DURATION => $this->time()
                     ->comment('Продолжительность')
             ]
         );

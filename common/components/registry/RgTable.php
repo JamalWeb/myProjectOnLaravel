@@ -18,8 +18,6 @@ class RgTable
     const NAME_RELATION_USER_INTEREST = '{{%relation_user_interest}}';
     const NAME_CITY = '{{%city}}';
     const NAME_EVENT = '{{%event}}';
-    const NAME_EVENT_TYPE = '{{%event_type}}';
-    const NAME_EVENT_STATUS = '{{%event_status}}';
     const NAME_EVENT_PHOTO_GALLERY = '{{%event_photo_gallery}}';
     const NAME_EVENT_CARRYING_DATE = '{{%event_carrying_date}}';
     const NAME_MESSAGE = '{{%message}}';

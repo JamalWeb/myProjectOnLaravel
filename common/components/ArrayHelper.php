@@ -31,7 +31,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
                 $array = SystemFn::json_decode($json, true, 512, JSON_THROW_ON_ERROR);
             }
 
-            return $array;
+            return (array)$array;
         } catch (Exception $e) {
             throw $e;
         }

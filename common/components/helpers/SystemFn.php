@@ -2,6 +2,8 @@
 
 namespace common\components\helpers;
 
+use common\components\ArrayHelper;
+
 class SystemFn
 {
     /**
@@ -39,7 +41,7 @@ class SystemFn
      */
     public static function json_decode($json, $assoc = false, $depth = 512, $options = 0)
     {
-        return json_decode($json, $assoc = false, $depth = 512, $options = 0);
+        return json_decode($json, $assoc, $depth, $options);
     }
 
     /**

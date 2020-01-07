@@ -11,8 +11,7 @@ return [
         'city/get-list',
         'interest/get-list',
         'event/get-type-list',
-        'event/get-status-list',
-        'event/create',
+        'event/get-status-list'
     ],
     'defaultValue'     => [
         'language'   => 'Russian',

@@ -2,84 +2,69 @@
 
 namespace common\models\event;
 
-use common\components\ArrayHelper;
 use common\components\registry\RgAttribute;
-use common\components\registry\RgTable;
-use common\models\base\BaseModel;
-use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveQuery;
+use yii\web\BadRequestHttpException;
 
-/**
- * @property int     $id          Идентификатор статуса события
- * @property string  $name        Наименование статуса события
- * @property string  $description Описание статуса события
- * @property Event[] $events
- */
-class EventStatus extends BaseModel
+class EventStatus
 {
-    public function behaviors(): array
-    {
-        return ArrayHelper::merge(
-            parent::behaviors(),
-            [
-                'timestamp' => [
-                    'class'              => TimestampBehavior::class,
-                    'createdAtAttribute' => false,
-                    'updatedAtAttribute' => false,
-                    'value'              => gmdate('Y-m-d H:i:s'),
-                ],
-            ]
-        );
-    }
+    const MODERATION = 1;
+    const NEW = 2;
+    const COMPLETED = 3;
+    const CANCELED = 4;
+    const NOT_ACTIVE = 5;
+
+    private static $statusList = [
+        self::MODERATION => 'На модерации',
+        self::NEW        => 'Новое',
+        self::COMPLETED  => 'Завершено',
+        self::CANCELED   => 'Отменено',
+        self::NOT_ACTIVE => 'Не активно'
+    ];
 
     /**
-     * {@inheritdoc}
+     * Получить наименование типа
+     *
+     * @param int $id
+     * @return string
+     * @throws BadRequestHttpException
      */
-    public static function tableName()
+    public static function getName(int $id): string
     {
-        return RgTable::NAME_EVENT_STATUS;
+        if (!isset(self::$statusList[$id])) {
+            throw new BadRequestHttpException('Event status not found');
+        }
+
+        return self::$statusList[$id];
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getEvents()
-    {
-        return $this->hasMany(
-            Event::class,
-            [
-                RgAttribute::STATUS_ID => RgAttribute::ID
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            RgAttribute::ID          => Yii::t('app', 'ID'),
-            RgAttribute::NAME        => Yii::t('app', 'Name'),
-            RgAttribute::DESCRIPTION => Yii::t('app', 'Desc'),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
+    public static function all()
     {
         return [
             [
-                [
-                    RgAttribute::NAME,
-                    RgAttribute::DESCRIPTION
-                ],
-                'string',
-                'max' => 255
+                RgAttribute::ID          => self::MODERATION,
+                RgAttribute::NAME        => 'На модерации',
+                RgAttribute::DESCRIPTION => 'Проходит модерацию админами'
             ],
+            [
+                RgAttribute::ID          => self::NEW,
+                RgAttribute::NAME        => 'Новое',
+                RgAttribute::DESCRIPTION => 'Новое событие'
+            ],
+            [
+                RgAttribute::ID          => self::COMPLETED,
+                RgAttribute::NAME        => 'Завершено',
+                RgAttribute::DESCRIPTION => 'Событие было завершено'
+            ],
+            [
+                RgAttribute::ID          => self::CANCELED,
+                RgAttribute::NAME        => 'Отменено',
+                RgAttribute::DESCRIPTION => 'Событие было отменено'
+            ],
+            [
+                RgAttribute::ID          => self::NOT_ACTIVE,
+                RgAttribute::NAME        => 'Не активно',
+                RgAttribute::DESCRIPTION => 'Событие временно не активно'
+            ]
         ];
     }
 }

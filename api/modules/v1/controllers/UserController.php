@@ -435,7 +435,7 @@ class UserController extends BaseController
      *   @OA\Parameter(
      *       description="ID пользователя (если ID не установлен, то вернется профиль текущего пользователя)",
      *       in="query",
-     *       name="user_id",
+     *       name="id",
      *       @OA\Schema(
      *           type="integer",
      *           format="int64"

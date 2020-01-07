@@ -16,6 +16,7 @@ use yii\db\ActiveQuery;
  * @property string $date     Дата проведения
  * @property int    $duration Продолжительность
  * @property Event  $event
+ * @property array  $publicInfo
  */
 class EventCarryingDate extends BaseModel
 {
@@ -40,6 +41,15 @@ class EventCarryingDate extends BaseModel
     public static function tableName()
     {
         return RgTable::NAME_EVENT_CARRYING_DATE;
+    }
+
+    public function getPublicInfo(): array
+    {
+        return [
+            RgAttribute::ID       => $this->id,
+            RgAttribute::DATE     => $this->date,
+            RgAttribute::DURATION => $this->duration
+        ];
     }
 
     /**
@@ -83,25 +93,21 @@ class EventCarryingDate extends BaseModel
             ],
             [
                 [
-                    RgAttribute::EVENT_ID,
-                    RgAttribute::DURATION
-                ],
-                'default',
-                'value' => null
-            ],
-            [
-                [
-                    RgAttribute::EVENT_ID,
-                    RgAttribute::DURATION
+                    RgAttribute::EVENT_ID
                 ],
                 'integer'
             ],
             [
-                [RgAttribute::DATE],
+                [
+                    RgAttribute::DATE,
+                    RgAttribute::DURATION
+                ],
                 'safe'
             ],
             [
-                [RgAttribute::EVENT_ID],
+                [
+                    RgAttribute::EVENT_ID
+                ],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => Event::class,

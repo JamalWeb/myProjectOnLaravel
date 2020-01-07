@@ -1,20 +1,23 @@
 <?php
+
 return [
     'aliases'    => [
         '@bower'        => '@vendor/bower-asset',
         '@npm'          => '@vendor/npm-asset',
         '@interestPath' => 'upload/system/interest',
+        '@setEventImg'  => '@frontend/web/upload/events',
+        '@getEventImg'  => 'upload/events',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'language'   => 'ru-RU',
     'components' => [
-        'user'   => [
+        'user'  => [
             'class' => 'common\components\User',
         ],
-        'cache'  => [
+        'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'i18n'   => [
+        'i18n'  => [
             'translations' => [
                 'api' => [
                     'class' => 'yii\i18n\DbMessageSource',

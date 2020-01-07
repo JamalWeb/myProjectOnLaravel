@@ -133,7 +133,6 @@ class UserApi extends Api
         ArrayHelper::cleaning($post, $allowedAttribute);
 
         $defaultUserForm = new DefaultUserForm($post);
-
         if (!$defaultUserForm->validate()) {
             throw new BadRequestHttpException($defaultUserForm->getFirstErrors());
         }
@@ -208,7 +207,6 @@ class UserApi extends Api
         ArrayHelper::cleaning($post, $allowedAttribute);
 
         $businessUserForm = new BusinessUserForm($post);
-
         if (!$businessUserForm->validate()) {
             throw new BadRequestHttpException($businessUserForm->getFirstErrors());
         }
@@ -267,8 +265,8 @@ class UserApi extends Api
      */
     public function get(User $user, array $get): array
     {
-        if (!empty($get[RgAttribute::USER_ID])) {
-            $user = $this->findUserById($get[RgAttribute::USER_ID]);
+        if (!empty($get[RgAttribute::ID])) {
+            $user = self::findUserById($get[RgAttribute::ID]);
         }
 
         return $user->publicInfo;
@@ -281,7 +279,7 @@ class UserApi extends Api
      * @return User
      * @throws \yii\web\BadRequestHttpException
      */
-    public function findUserById(int $id): User
+    public static function findUserById(int $id): User
     {
         $typeList = RgUser::getTypeList();
         $typeIdList = ArrayHelper::getColumn($typeList, RgAttribute::ID);
