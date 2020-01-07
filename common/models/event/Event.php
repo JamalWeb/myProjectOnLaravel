@@ -63,7 +63,7 @@ class Event extends BaseModel
             RgAttribute::NAME                   => $this->name,
             RgAttribute::ABOUT                  => $this->about,
             RgAttribute::ADDRESS                => $this->address,
-            RgAttribute::TICKET_PRICE           => $this->ticket_price,
+            RgAttribute::TICKET_PRICE           => (float)$this->ticket_price,
             RgAttribute::TICKETS_NUMBER         => $this->tickets_number,
             RgAttribute::ADDITIONAL_INFORMATION => $this->additional_information,
             RgAttribute::WALLPAPER              => $this->getWallpaperUrl(),
