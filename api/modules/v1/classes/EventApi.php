@@ -24,7 +24,7 @@ class EventApi extends Api
      */
     public function getTypeList(): array
     {
-        return EventType::find()->all();
+        return EventType::getList();
     }
 
     /**
@@ -34,7 +34,7 @@ class EventApi extends Api
      */
     public function getStatusList(): array
     {
-        return EventStatus::all();
+        return EventStatus::getList();
     }
 
     /**

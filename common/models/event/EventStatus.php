@@ -37,7 +37,7 @@ class EventStatus
         return self::$statusList[$id];
     }
 
-    public static function all()
+    public static function getList()
     {
         return [
             [
