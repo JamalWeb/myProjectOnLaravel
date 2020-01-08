@@ -11,20 +11,29 @@ use yii\db\ActiveRecord;
 /**
  * Class BaseModel
  *
+ * @property array $publicInfo Общая информация
  * @package common\models\system
  */
-class BaseModel extends ActiveRecord
+abstract class BaseModel extends ActiveRecord
 {
     public function behaviors(): array
     {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'timestamp' => [
-                'class'              => TimestampBehavior::class,
-                'createdAtAttribute' => RgAttribute::CREATED_AT,
-                'updatedAtAttribute' => RgAttribute::UPDATED_AT,
-                'value'              => gmdate('Y-m-d H:i:s'),
-            ],
-        ]);
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'timestamp' => [
+                    'class'              => TimestampBehavior::class,
+                    'createdAtAttribute' => RgAttribute::CREATED_AT,
+                    'updatedAtAttribute' => RgAttribute::UPDATED_AT,
+                    'value'              => gmdate('Y-m-d H:i:s'),
+                ],
+            ]
+        );
+    }
+
+    public function getPublicInfo(): array
+    {
+        return [];
     }
 
     /**
@@ -43,6 +52,8 @@ class BaseModel extends ActiveRecord
         if (!$this->save()) {
             throw new BadRequestHttpException($this->getFirstErrors());
         }
+
+        $this->refresh();
 
         return true;
     }

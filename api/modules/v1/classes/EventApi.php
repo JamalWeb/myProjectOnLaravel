@@ -5,6 +5,7 @@ namespace api\modules\v1\classes;
 use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
+use common\components\helpers\DataProviderHelper;
 use common\components\registry\RgAttribute;
 use common\models\event\Event;
 use common\models\event\EventStatus;
@@ -65,7 +66,6 @@ class EventApi extends Api
         $eventForm->setAttributes(
             [
                 RgAttribute::USER_ID       => $user->id,
-                RgAttribute::STATUS_ID     => EventStatus::MODERATION,
                 RgAttribute::WALLPAPER     => UploadedFile::getInstanceByName(RgAttribute::WALLPAPER),
                 RgAttribute::PHOTO_GALLERY => UploadedFile::getInstancesByName(RgAttribute::PHOTO_GALLERY)
             ]
@@ -77,10 +77,10 @@ class EventApi extends Api
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $eventForm->createEvent();
+            $event = $eventForm->createEvent();
             $transaction->commit();
 
-            return [$eventForm];
+            return $event->publicInfo;
         } catch (Exception $ex) {
             $transaction->rollBack();
             throw $ex;
@@ -90,13 +90,12 @@ class EventApi extends Api
     /**
      * Получить событие по его идентификатору
      *
-     * @param User  $user
      * @param array $get
      * @return array
      * @throws BadRequestHttpException
      * @throws \yii\web\BadRequestHttpException
      */
-    public function get(User $user, array $get): array
+    public function get(array $get): array
     {
         ArrayHelper::validateParams($get, [RgAttribute::ID]);
 
@@ -121,5 +120,29 @@ class EventApi extends Api
         }
 
         return $event;
+    }
+
+    /**
+     * @param User  $user
+     * @param array $get
+     * @return array
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function getListByUser(User $user, array $get): array
+    {
+        $userId = $get[RgAttribute::USER_ID] ?? null;
+
+        if (!is_null($userId)) {
+            $user = UserApi::findUserById($userId);
+        }
+
+        $eventList = Event::find()
+            ->where(
+                [
+                    RgAttribute::USER_ID => $user->id
+                ]
+            );
+
+        return DataProviderHelper::active($eventList, $get);
     }
 }

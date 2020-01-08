@@ -266,6 +266,11 @@ class UserController extends BaseController
      *                 }
      *               }
      *             },
+     *             "type": {
+     *                 "id": 2,
+     *                 "name": "User",
+     *                 "description": "Обычный пользователь"
+     *             },
      *             "longitude": "55.7522",
      *             "latitude": "37.6156",
      *             "language": "Russian",
@@ -399,6 +404,11 @@ class UserController extends BaseController
      *                 "name": "Moscow"
      *             },
      *             "children": {},
+     *             "type": {
+     *                 "id": 3,
+     *                 "name": "Business",
+     *                 "description": "Бизнес пользователь"
+     *             },
      *             "longitude": "55.7522",
      *             "latitude": "55.7522",
      *             "language": "Russian",
@@ -480,6 +490,11 @@ class UserController extends BaseController
      *                   "name": "Female"
      *                 }
      *               }
+     *             },
+     *             "type": {
+     *                 "id": 2,
+     *                 "name": "User",
+     *                 "description": "Обычный пользователь"
      *             },
      *             "longitude": "55.7522",
      *             "latitude": "37.6156",

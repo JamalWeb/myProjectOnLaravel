@@ -89,4 +89,11 @@ class RgAttribute
     const AGE_CHILD = 'age_limit';
     const MAX = 'max';
     const MIN = 'min';
+    const PAGE = 'page';
+    const PAGE_SIZE = 'page_size';
+    const ITEMS = 'items';
+    const QUERY = 'query';
+    const PAGINATION = 'pagination';
+    const TOTAL_PAGE = 'total_page';
+    const TOTAL_COUNT = 'total_count';
 }

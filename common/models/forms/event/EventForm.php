@@ -11,7 +11,6 @@ use common\models\event\Event;
 use common\models\event\EventCarryingDate;
 use common\models\event\EventPhotoGallery;
 use common\models\event\EventStatus;
-use common\models\event\EventType;
 use common\models\InterestCategory;
 use common\models\user\User;
 use Yii;
@@ -22,7 +21,6 @@ use yii\web\UploadedFile;
 /**
  * @var int            $user_id
  * @var int            $type_id
- * @var int            $status_id
  * @var string         $name
  * @var string         $about
  * @var int            $interest_category_id
@@ -42,7 +40,6 @@ class EventForm extends Model
 {
     public $user_id;
     public $type_id;
-    public $status_id;
     public $name;
     public $about;
     public $interest_category_id;
@@ -65,18 +62,18 @@ class EventForm extends Model
     }
 
     /**
-     * @return array
+     * @return Event
      * @throws BadRequestHttpException
      * @throws Exception
      * @throws \yii\web\BadRequestHttpException
      * @throws \Exception
      */
-    public function createEvent(): array
+    public function createEvent(): Event
     {
         $attribute = [
             RgAttribute::USER_ID                => $this->user_id,
             RgAttribute::TYPE_ID                => $this->type_id,
-            RgAttribute::STATUS_ID              => $this->status_id,
+            RgAttribute::STATUS_ID              => EventStatus::MODERATION,
             RgAttribute::NAME                   => $this->name,
             RgAttribute::ABOUT                  => $this->about,
             RgAttribute::INTEREST_CATEGORY_ID   => $this->interest_category_id,
@@ -94,7 +91,7 @@ class EventForm extends Model
         $this->savePhotoGallery($event);
         $this->setCarryingDate($event);
 
-        return [];
+        return $event;
     }
 
     /**
@@ -160,7 +157,6 @@ class EventForm extends Model
         return [
             RgAttribute::USER_ID                => Yii::t('app', 'User ID'),
             RgAttribute::TYPE_ID                => Yii::t('app', 'Type ID'),
-            RgAttribute::STATUS_ID              => Yii::t('app', 'Status ID'),
             RgAttribute::NAME                   => Yii::t('app', 'Name'),
             RgAttribute::ABOUT                  => Yii::t('app', 'About'),
             RgAttribute::INTEREST_CATEGORY_ID   => Yii::t('app', 'Interest Category ID'),
@@ -194,7 +190,6 @@ class EventForm extends Model
                     RgAttribute::ADDRESS,
                     RgAttribute::MIN_AGE_CHILD,
                     RgAttribute::WALLPAPER,
-                    RgAttribute::STATUS_ID,
                     RgAttribute::CARRYING_DATE,
                 ],
                 'required'
@@ -205,7 +200,6 @@ class EventForm extends Model
                     RgAttribute::TYPE_ID,
                     RgAttribute::INTEREST_CATEGORY_ID,
                     RgAttribute::CITY_ID,
-                    RgAttribute::STATUS_ID
                 ],
                 'integer'
             ],
