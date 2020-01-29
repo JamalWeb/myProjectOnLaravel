@@ -101,6 +101,7 @@ class EventController extends BaseController
      *   path="/event/create",
      *   summary="Создать",
      *   tags={"Событие | Event"},
+     *   security={{"bearerAuth":{}}},
      *   @OA\RequestBody(
      *     @OA\MediaType(
      *       mediaType="multipart/form-data",
@@ -190,15 +191,24 @@ class EventController extends BaseController
      *           example={
      *             {
      *               "date": "2019-12-09 16:00:00",
-     *               "duration": 2
+     *               "duration": "2:30"
      *             },
      *             {
-     *               "date": "2019-12-08 16:00:00",
-     *               "duration": 3
+     *               "date": "2019-12-09 16:00:00",
+     *               "duration": "3:00"
      *             },
      *           }
      *         ),
      *         required={
+     *             "type_id",
+     *             "name",
+     *             "about",
+     *             "interest_category_id",
+     *             "city_id",
+     *             "address",
+     *             "min_age_child",
+     *             "wallpaper",
+     *             "carrying_date"
      *         }
      *       )
      *     )
@@ -211,6 +221,89 @@ class EventController extends BaseController
      *       @OA\Schema(
      *         type="object",
      *         example={
+     *           "id": 1,
+     *           "name": "7 f f .",
+     *           "about": "ОписаниеОписание",
+     *           "address": "Адрес проведения",
+     *           "ticket_price": "0.00",
+     *           "tickets_number": 2000,
+     *           "additional_information": "Дополнительная информация",
+     *           "wallpaper": "http://project.loc/upload/events/1/1/wallpaper/__A9h_yHLs.jpg",
+     *           "user": {
+     *             "id": 1,
+     *             "email": "arsen-web@yandex.ru",
+     *             "access": {},
+     *             "profile": {
+     *               "first_name": "Admin",
+     *               "last_name": null,
+     *               "phone_number": null,
+     *               "address": null,
+     *               "about": null,
+     *               "country": null,
+     *               "city": {
+     *                 "id": 1,
+     *                 "name": "Moscow"
+     *               },
+     *               "children": {},
+     *               "type": {
+     *                   "id": 2,
+     *                   "name": "User",
+     *                   "description": "Обычный пользователь"
+     *               },
+     *               "longitude": null,
+     *               "latitude": null,
+     *                 "language": "Russian",
+     *                 "short_lang": "ru-RU",
+     *                 "timezone": "Europe/Moscow"
+     *             },
+     *             "banned": {
+     *                 "is_banned": false,
+     *                 "banned_reason": null,
+     *                 "banned_at": null
+     *             }
+     *           },
+     *           "age_limit": {
+     *             "min": 0,
+     *             "max": 3
+     *           },
+     *           "type": {
+     *             "id": 1,
+     *             "name": "One-day event"
+     *           },
+     *           "status": {
+     *             "id": 1,
+     *             "name": "На модерации"
+     *           },
+     *           "interest_category": {
+     *             "id": 1,
+     *             "name": "Entertainment"
+     *           },
+     *           "city": {
+     *             "id": 1,
+     *             "name": "Moscow"
+     *           },
+     *           "carrying_date": {
+     *             {
+     *               "id": 1,
+     *               "date": "2019-12-09 16:00:00",
+     *               "duration": "02:30:00"
+     *             },
+     *             {
+     *               "id": 2,
+     *               "date": "2019-12-08 16:00:00",
+     *               "duration": "01:00:00"
+     *             }
+     *           },
+     *           "photo_gallery": {
+     *             {
+     *               "id": 1,
+     *               "url": "http://project.loc/upload/events/1/1/photo_gallery/FZFTtO6dLX.jpg"
+     *             },
+     *             {
+     *               "id": 2,
+     *               "url": "http://project.loc/upload/events/1/1/photo_gallery/zLShhWC3oq.jpg"
+     *             }
+     *           }
      *         }
      *       ),
      *     ),
