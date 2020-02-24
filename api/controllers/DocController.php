@@ -5,6 +5,8 @@ namespace api\controllers;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
+use genxoft\swagger\ViewAction;
+use genxoft\swagger\JsonAction;
 
 /**
  * Site controller
@@ -15,21 +17,16 @@ class DocController extends Controller
     {
         return [
             'index' => [
-                'class'      => 'genxoft\swagger\ViewAction',
+                'class'      => ViewAction::class,
                 'apiJsonUrl' => Url::to(['/doc/json'], true),
             ],
             'json'  => [
-                'class' => 'genxoft\swagger\JsonAction',
+                'class' => JsonAction::class,
                 'dirs'  => [
 //                    Yii::getAlias('@api/swagger/definitions/'),
                     Yii::getAlias('@api/modules/v1/controllers'),
                 ],
             ],
         ];
-    }
-
-    public function actionTest()
-    {
-
     }
 }
