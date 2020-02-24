@@ -18,14 +18,14 @@ class ConfirmController extends Controller
      * @throws BadRequestHttpException
      * @throws Throwable
      */
-    public function actionEmail($token)
+    public function actionEmail($token): void
     {
         $userToken = UserToken::findOne([
             'access_token' => $token,
             'type'         => RgUser::TOKEN_TYPE_EMAIL_CONFIRM
         ]);
 
-        if (is_null($userToken)) {
+        if ($userToken === null) {
             throw new NotFoundHttpException('Страница не найдена');
         }
 
