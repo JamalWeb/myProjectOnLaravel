@@ -71,7 +71,7 @@ class UserProfileApi extends Api
     {
         $userProfile = UserProfile::findOne([RgAttribute::ID => $id]);
 
-        if (is_null($userProfile)) {
+        if ($userProfile === null) {
             throw new \yii\web\BadRequestHttpException('Профиль не найден');
         }
 
