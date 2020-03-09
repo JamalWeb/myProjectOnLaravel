@@ -7,9 +7,9 @@ use yii\web\BadRequestHttpException;
 
 class EventType
 {
-    const ONE_DAY = 1;
-    const MULTIPLE_DAYS = 2;
-    const REGULAR = 3;
+    public const ONE_DAY = 1;
+    public const MULTIPLE_DAYS = 2;
+    public const REGULAR = 3;
 
     private static $typeList = [
         self::ONE_DAY       => 'One-day event',
