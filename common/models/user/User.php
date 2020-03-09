@@ -9,37 +9,39 @@ use common\components\registry\RgAttribute;
 use common\components\registry\RgTable;
 use common\components\registry\RgUser;
 use common\models\base\BaseModel;
+use common\models\relations\RelationUserInterest;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
 /**
- * @property int            $id                  Идентификатор пользователя
- * @property int            $type_id             Идентификатор типа
- * @property int            $role_id             Идентификатор роли
- * @property string         $email               Электронная почта
- * @property string         $username            Никнейм
- * @property string         $password            Пароль
- * @property string         $auth_key            Ключ необходимый для авторизации
- * @property bool           $status_id           Статус активности (1 - вкл. 0 - выкл.) | default = 1
- * @property string         $logged_in_ip        IP адрес авторизации
- * @property string         $logged_in_at        Дата авторизации
- * @property string         $logout_in_ip        IP адрес выхода
- * @property string         $logout_in_at        Дата выхода
- * @property string         $created_ip          IP адрес с которого создали
- * @property bool           $is_banned           Бан (1 - вкл. 0 - выкл.) | default = 0
- * @property string         $banned_reason       Причина бана
- * @property string         $banned_at           Дата бана
- * @property string         $created_at          Дата создания
- * @property string         $authKey
- * @property string         $updated_at          Дата обновления
- * @property array          $publicInfo          Информация о пользователи
- * @property UserStatus     $status              Тип
- * @property UserType       $type                Тип
- * @property UserRole       $role                Роль
- * @property UserProfile    $profile             Профиль
- * @property UserChildren[] $children            Дети
- * @property string         $fullName            Полное имя
+ * @property int                    $id                  Идентификатор пользователя
+ * @property int                    $type_id             Идентификатор типа
+ * @property int                    $role_id             Идентификатор роли
+ * @property string                 $email               Электронная почта
+ * @property string                 $username            Никнейм
+ * @property string                 $password            Пароль
+ * @property string                 $auth_key            Ключ необходимый для авторизации
+ * @property bool                   $status_id           Статус активности (1 - вкл. 0 - выкл.) | default = 1
+ * @property string                 $logged_in_ip        IP адрес авторизации
+ * @property string                 $logged_in_at        Дата авторизации
+ * @property string                 $logout_in_ip        IP адрес выхода
+ * @property string                 $logout_in_at        Дата выхода
+ * @property string                 $created_ip          IP адрес с которого создали
+ * @property bool                   $is_banned           Бан (1 - вкл. 0 - выкл.) | default = 0
+ * @property string                 $banned_reason       Причина бана
+ * @property string                 $banned_at           Дата бана
+ * @property string                 $created_at          Дата создания
+ * @property string                 $authKey
+ * @property string                 $updated_at          Дата обновления
+ * @property array                  $publicInfo          Информация о пользователи
+ * @property UserStatus             $status              Тип
+ * @property UserType               $type                Тип
+ * @property UserRole               $role                Роль
+ * @property UserProfile            $profile             Профиль
+ * @property UserChildren[]         $children            Дети
+ * @property RelationUserInterest[] $relationUserInterests
+ * @property string                 $fullName            Полное имя
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -74,7 +76,7 @@ class User extends BaseModel implements IdentityInterface
      */
     public function checkType(int $type): bool
     {
-        if ($this->type_id == $type) {
+        if ($this->type_id === $type) {
             throw new BadRequestHttpException(
                 [
                     RgAttribute::TYPE_ID => 'Type is invalid'
@@ -106,7 +108,7 @@ class User extends BaseModel implements IdentityInterface
                     RgAttribute::NAME => $this->profile->city->name
                 ],
                 RgAttribute::CHILDREN     => [],
-                RgAttribute::TYPE    => [
+                RgAttribute::TYPE         => [
                     RgAttribute::ID          => $this->type->id,
                     RgAttribute::NAME        => $this->type->name,
                     RgAttribute::DESCRIPTION => $this->type->description
@@ -149,7 +151,7 @@ class User extends BaseModel implements IdentityInterface
     /**
      * @return ActiveQuery
      */
-    public function getStatus()
+    public function getStatus(): ActiveQuery
     {
         return $this->hasOne(
             UserStatus::class,
@@ -162,7 +164,7 @@ class User extends BaseModel implements IdentityInterface
     /**
      * @return ActiveQuery
      */
-    public function getType()
+    public function getType(): ActiveQuery
     {
         return $this->hasOne(
             UserType::class,
@@ -175,7 +177,7 @@ class User extends BaseModel implements IdentityInterface
     /**
      * @return ActiveQuery
      */
-    public function getRole()
+    public function getRole(): ActiveQuery
     {
         return $this->hasOne(
             UserRole::class,
@@ -188,7 +190,7 @@ class User extends BaseModel implements IdentityInterface
     /**
      * @return ActiveQuery
      */
-    public function getProfile()
+    public function getProfile(): ActiveQuery
     {
         return $this->hasOne(
             UserProfile::class,
@@ -199,9 +201,19 @@ class User extends BaseModel implements IdentityInterface
     }
 
     /**
+     * Gets query for [[RelationUserInterests]].
+     *
      * @return ActiveQuery
      */
-    public function getChildren()
+    public function getRelationUserInterests(): ActiveQuery
+    {
+        return $this->hasMany(RelationUserInterest::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getChildren(): ActiveQuery
     {
         return $this->hasMany(
             UserChildren::class,
@@ -329,7 +341,7 @@ class User extends BaseModel implements IdentityInterface
             ]
         );
 
-        if (is_null($userToken)) {
+        if ($userToken === null) {
             return null;
         }
 
