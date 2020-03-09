@@ -16,30 +16,33 @@ use yii\web\BadRequestHttpException;
 use yii\web\UrlManager;
 
 /**
- * @property int                 $id                         Идентификатор события
- * @property int                 $user_id                    Идентификатор пользователя который создал событие
- * @property int                 $type_id                    Тип события
- * @property int                 $status_id                  Статус события
- * @property string              $name                       Наименование
- * @property string              $about                      Описание
- * @property int                 $interest_category_id       Идентификатор категории интереса
- * @property int                 $city_id                    Идентификатор города
- * @property string              $address                    Адрес где будет происходить
- * @property int                 $min_age_child              Минимальный допустимый возраст ребенка
- * @property int                 $max_age_child              Максимальный допустимый возраст ребенка
- * @property string              $ticket_price               Цена за один билет
- * @property int                 $tickets_number             Кол-во доступных билетов
- * @property string              $additional_information     Дополнительная информация
- * @property string              $wallpaper                  Фоновое изображение
- * @property string              $created_at                 Дата создания
- * @property string              $updated_at                 Дата обновления
- * @property City                $city
- * @property EventType           $type
- * @property InterestCategory    $interestCategory
- * @property User                $user
+ * @property int $id                         Идентификатор события
+ * @property int $user_id                    Идентификатор пользователя который создал событие
+ * @property int $type_id                    Тип события
+ * @property int $status_id                  Статус события
+ * @property string $name                       Наименование
+ * @property string $about                      Описание
+ * @property int $interest_category_id       Идентификатор категории интереса
+ * @property int $city_id                    Идентификатор города
+ * @property string $address                    Адрес где будет происходить
+ * @property int $min_age_child              Минимальный допустимый возраст ребенка
+ * @property int $max_age_child              Максимальный допустимый возраст ребенка
+ * @property string $ticket_price               Цена за один билет
+ * @property int $tickets_number             Кол-во доступных билетов
+ * @property string $additional_information     Дополнительная информация
+ * @property string $wallpaper                  Фоновое изображение
+ * @property string $created_at                 Дата создания
+ * @property string $updated_at                 Дата обновления
+ * @property City $city
+ * @property EventType $type
+ * @property InterestCategory $interestCategory
+ * @property User $user
  * @property EventPhotoGallery[] $eventPhotoGallery
  * @property EventCarryingDate[] $eventCarryingDates
- * @property array               $publicInfo
+ * @property array $carryingDates
+ * @property string $wallpaperUrl
+ * @property array $photoGallery
+ * @property array $publicInfo
  */
 class Event extends BaseModel
 {
@@ -158,7 +161,7 @@ class Event extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getCity()
+    public function getCity(): ActiveQuery
     {
         return $this->hasOne(
             City::class,
@@ -171,7 +174,7 @@ class Event extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getType()
+    public function getType(): ActiveQuery
     {
         return $this->hasOne(
             EventType::class,
@@ -184,7 +187,7 @@ class Event extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getInterestCategory()
+    public function getInterestCategory(): ActiveQuery
     {
         return $this->hasOne(
             InterestCategory::class,
@@ -197,7 +200,7 @@ class Event extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(
             User::class,
@@ -210,7 +213,7 @@ class Event extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getEventPhotoGallery()
+    public function getEventPhotoGallery(): ActiveQuery
     {
         return $this->hasMany(
             EventPhotoGallery::class,
