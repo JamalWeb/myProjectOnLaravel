@@ -43,3 +43,4 @@ phpunit.phar
 /backend/web/index-test.php
 /backend/web/robots.txt
 ubuntu-bionic-18.04-cloudimg-console.log
+!/frontend/web/upload/
