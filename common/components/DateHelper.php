@@ -3,6 +3,7 @@
 namespace common\components;
 
 use common\components\helpers\SystemFn;
+use DateTimeImmutable;
 
 /**
  * Class DateHelper
@@ -17,7 +18,7 @@ class DateHelper
      * @param string $changeDate
      * @return string
      */
-    public static final function getTimestamp(string $changeDate = ''): string
+    final public static function getTimestamp(string $changeDate = ''): string
     {
         if (empty($changeDate)) {
             $timestamp = SystemFn::gmdate('Y-m-d H:i:s');
@@ -26,5 +27,12 @@ class DateHelper
         }
 
         return $timestamp;
+    }
+
+    public static function checkFormatDate(string $date, string $format): bool
+    {
+        $date = DateTimeImmutable::createFromFormat($format, $date);
+
+        return $date && $date->format($format) === $date;
     }
 }
