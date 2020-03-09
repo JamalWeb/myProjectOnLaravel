@@ -89,7 +89,7 @@ class EventFilter extends Model
         }
 
         if (!empty($this->interest)) {
-            $this->eventQuery->andWhere(['in', 'interest_category_id', ArrayHelper::jsonToArray($this->interest)]);
+            $this->eventQuery->andFilterWhere(['in', 'interest_category_id', ArrayHelper::jsonToArray($this->interest)]);
         }
 
         if ($this->forYou) {
@@ -107,7 +107,13 @@ class EventFilter extends Model
 
         //TODO Фильтр по дате
 
+        $this->addOrderBy();
         return $this;
+    }
+
+    public function addOrderBy(): void
+    {
+        $this->eventQuery->addOrderBy(['created_at' => SORT_DESC]);
     }
 
     /**
