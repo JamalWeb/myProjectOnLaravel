@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\classes;
 
+use api\filters\event\EventFilter;
 use api\modules\v1\classes\base\Api;
 use api\modules\v1\models\error\BadRequestHttpException;
 use common\components\ArrayHelper;
@@ -99,9 +100,7 @@ class EventApi extends Api
     {
         ArrayHelper::validateParams($get, [RgAttribute::ID]);
 
-        $event = self::findEventById($get[RgAttribute::ID]);
-
-        return $event->publicInfo;
+        return self::findEventById($get[RgAttribute::ID])->publicInfo;
     }
 
     /**
@@ -115,7 +114,7 @@ class EventApi extends Api
     {
         $event = Event::findOne([RgAttribute::ID => $id]);
 
-        if (is_null($event)) {
+        if ($event === null) {
             throw new \yii\web\BadRequestHttpException('Event not found');
         }
 
@@ -132,7 +131,7 @@ class EventApi extends Api
     {
         $userId = $get[RgAttribute::USER_ID] ?? null;
 
-        if (!is_null($userId)) {
+        if ($userId !== null) {
             $user = UserApi::findUserById($userId);
         }
 
@@ -144,5 +143,13 @@ class EventApi extends Api
             );
 
         return DataProviderHelper::active($eventList, $get);
+    }
+
+    public function list(array $get)
+    {
+        $filter = new EventFilter();
+        $filter->setAttributes($get);
+
+        return $filter;
     }
 }
