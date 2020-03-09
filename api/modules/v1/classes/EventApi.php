@@ -40,7 +40,7 @@ class EventApi extends Api
     }
 
     /**
-     * @param User  $user
+     * @param User $user
      * @param array $post
      * @return array
      * @throws Exception
@@ -66,8 +66,8 @@ class EventApi extends Api
         $eventForm = new EventForm($post);
         $eventForm->setAttributes(
             [
-                RgAttribute::USER_ID       => $user->id,
-                RgAttribute::WALLPAPER     => UploadedFile::getInstanceByName(RgAttribute::WALLPAPER),
+                RgAttribute::USER_ID => $user->id,
+                RgAttribute::WALLPAPER => UploadedFile::getInstanceByName(RgAttribute::WALLPAPER),
                 RgAttribute::PHOTO_GALLERY => UploadedFile::getInstancesByName(RgAttribute::PHOTO_GALLERY)
             ]
         );
@@ -122,7 +122,7 @@ class EventApi extends Api
     }
 
     /**
-     * @param User  $user
+     * @param User $user
      * @param array $get
      * @return array
      * @throws \yii\web\BadRequestHttpException
@@ -145,11 +145,13 @@ class EventApi extends Api
         return DataProviderHelper::active($eventList, $get);
     }
 
-    public function list(array $get)
+    public function list(User $user, array $get): array
     {
         $filter = new EventFilter();
+        $filter->setUser($user);
+
         $filter->setAttributes($get);
 
-        return $filter;
+        return DataProviderHelper::active($filter->search()->eventQuery, $get);
     }
 }
