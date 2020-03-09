@@ -105,6 +105,8 @@ class EventFilter extends Model
             $this->eventQuery->andWhere(['city_id' => $this->city]);
         }
 
+        //TODO Фильтр по дате
+
         return $this;
     }
 
