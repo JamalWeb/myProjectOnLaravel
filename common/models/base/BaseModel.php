@@ -43,7 +43,7 @@ abstract class BaseModel extends ActiveRecord
      * @return bool
      * @throws BadRequestHttpException
      */
-    public final function saveModel(array $attributes = []): bool
+    final public function saveModel(array $attributes = []): bool
     {
         if (!empty($attributes)) {
             $this->setAttributes($attributes);
