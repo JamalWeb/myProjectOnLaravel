@@ -22,7 +22,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      * @return array
      * @throws Exception
      */
-    public static final function jsonToArray(?string $json): array
+    final public static function jsonToArray(?string $json): array
     {
         try {
             $array = [];
