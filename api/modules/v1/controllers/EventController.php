@@ -315,7 +315,7 @@ class EventController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionCreate()
+    public function actionCreate(): ?array
     {
         return $this->api->create($this->user, $this->post);
     }
@@ -654,8 +654,8 @@ class EventController extends BaseController
         return $this->api->getListByUser($this->user, $this->get);
     }
 
-    public function actionList()
+    public function actionList(): array
     {
-        return $this->api->list($this->get);
+        return $this->api->list($this->user, $this->get);
     }
 }
