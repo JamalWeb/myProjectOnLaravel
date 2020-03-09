@@ -653,4 +653,9 @@ class EventController extends BaseController
     {
         return $this->api->getListByUser($this->user, $this->get);
     }
+
+    public function actionList()
+    {
+        return $this->api->list($this->get);
+    }
 }
