@@ -63,11 +63,11 @@ class InterestApi extends Api
                     RgAttribute::SELECTED => new Expression('CASE WHEN "rui"."id" IS NOT NULL THEN true ELSE false END')
                 ]
             )
-            ->leftJoin(
+            ->innerJoin(
                 [
                     'rui' => RelationUserInterest::tableName()
                 ],
-                'i.id = rui.interest_id AND rui.user_id = :user_id',
+                'i.id = rui.interest_category_id AND rui.user_id = :user_id',
                 [
                     ':user_id' => $user->id
                 ]
