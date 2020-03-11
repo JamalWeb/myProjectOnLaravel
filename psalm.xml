@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<psalm
+        totallyTyped="true"
+        resolveFromConfigFile="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="api" />
+        <directory name="common" />
+        <directory name="console" />
+        <directory name="backend" />
+        <directory name="frontend" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <LessSpecificReturnType errorLevel="info" />
+
+        <!-- https://github.com/sebastianbergmann/phpunit/issues/3742 -->
+        <InternalMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method" />
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with" />
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn" />
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturnCallback" />
+            </errorLevel>
+        </InternalMethod>
+    </issueHandlers>
+</psalm>
