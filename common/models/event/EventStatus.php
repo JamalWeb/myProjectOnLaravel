@@ -7,11 +7,11 @@ use yii\web\BadRequestHttpException;
 
 class EventStatus
 {
-    const MODERATION = 1;
-    const NEW = 2;
-    const COMPLETED = 3;
-    const CANCELED = 4;
-    const NOT_ACTIVE = 5;
+    public const MODERATION = 1;
+    public const NEW = 2;
+    public const COMPLETED = 3;
+    public const CANCELED = 4;
+    public const NOT_ACTIVE = 5;
 
     private static $statusList = [
         self::MODERATION => 'На модерации',

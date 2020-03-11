@@ -31,7 +31,7 @@ class UserChildren extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getParent()
+    public function getParent(): ActiveQuery
     {
         return $this->hasOne(
             User::class,
@@ -44,7 +44,7 @@ class UserChildren extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getGender()
+    public function getGender(): ActiveQuery
     {
         return $this->hasOne(
             UserGender::class,

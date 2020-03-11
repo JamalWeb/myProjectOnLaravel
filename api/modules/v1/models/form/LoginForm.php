@@ -17,10 +17,10 @@ use yii\base\Model;
 class LoginForm extends Model
 {
     /** @var int */
-    const COUNT_ATTEMPT = 10;
+    public const COUNT_ATTEMPT = 10;
 
     /** @var int */
-    const TIME_UNAUTHORIZED_DURATION = 600;
+    public const TIME_UNAUTHORIZED_DURATION = 600;
 
     /** @var string $keyAttempts */
     private $keyAttempts;
@@ -84,7 +84,7 @@ class LoginForm extends Model
      */
     public function getUser(): ?User
     {
-        if (is_null($this->user)) {
+        if ($this->user === null) {
             $this->user = User::find()
                 ->where(
                     [

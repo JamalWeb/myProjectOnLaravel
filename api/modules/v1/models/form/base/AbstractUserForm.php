@@ -12,8 +12,8 @@ use yii\web\UploadedFile;
 
 abstract class AbstractUserForm extends Model
 {
-    const SCENARIO_CREATE = 'create';
-    const SCENARIO_UPDATE = 'update';
+    public const SCENARIO_CREATE = 'create';
+    public const SCENARIO_UPDATE = 'update';
 
     /**
      * @var UploadedFile
@@ -66,7 +66,7 @@ abstract class AbstractUserForm extends Model
             /**
              * Создание директории
              */
-            FileHelper::createDirectory($userAvatarPath,755);
+            FileHelper::createDirectory($userAvatarPath, 755);
 
             $avatarPath = "{$userAvatarPath}/{$avatarName}";
             $this->avatar->saveAs($avatarPath);

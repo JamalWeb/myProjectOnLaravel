@@ -53,7 +53,7 @@ class UserToken extends BaseModel
         );
 
         if ($userToken === null) {
-            throw new BadRequestHttpException($userToken->getFirstErrors());
+            throw new BadRequestHttpException([]);
         }
 
         return $userToken;
@@ -127,7 +127,7 @@ class UserToken extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(
             User::class,
