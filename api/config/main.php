@@ -1,6 +1,9 @@
 <?php
 
+use api\modules\v1\ApiModule;
 use api\modules\v1\handler\ErrorHandler;
+use common\models\user\User;
+use yii\log\FileTarget;
 
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
@@ -16,7 +19,7 @@ return [
     'bootstrap'           => ['log'],
     'modules'             => [
         'v1' => [
-            'class' => 'api\modules\v1\ApiModule',
+            'class' => ApiModule::class,
         ],
     ],
     'components'          => [
@@ -24,7 +27,7 @@ return [
             'csrfParam' => '_csrf-api',
         ],
         'user'         => [
-            'identityClass'   => 'common\models\user\User',
+            'identityClass'   => User::class,
             'enableSession'   => false,
             'enableAutoLogin' => true,
             'identityCookie'  => ['name' => '_identity-api', 'httpOnly' => true],
@@ -37,7 +40,7 @@ return [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets'    => [
                 [
-                    'class'  => 'yii\log\FileTarget',
+                    'class'  => FileTarget::class,
                     'levels' => ['error', 'warning'],
                 ],
             ],

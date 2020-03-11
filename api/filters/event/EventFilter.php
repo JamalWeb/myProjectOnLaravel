@@ -18,10 +18,10 @@ class EventFilter extends Model
     /** @var string */
     public $query;
 
-    /** @var integer ID города */
+    /** @var int ID города */
     public $city;
 
-    /** @var boolean Учитывать интересы пользователя */
+    /** @var bool Учитывать интересы пользователя */
     public $forYou;
 
     /** @var string */
@@ -106,8 +106,6 @@ class EventFilter extends Model
         if ($this->city) {
             $this->eventQuery->andWhere(['city_id' => $this->city]);
         }
-
-        //TODO Фильтр по дате
 
         $this->addOrderBy();
         return $this;
