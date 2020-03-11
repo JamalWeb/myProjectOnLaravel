@@ -23,7 +23,7 @@
     <exclude-pattern>*/_bootstrap.php</exclude-pattern>
     <file>api</file>
     <file>backend</file>
-<!--    <file>common</file>-->
+    <file>common</file>
 <!--    <file>console</file>-->
 <!--    <file>frontend</file>-->
 </ruleset>

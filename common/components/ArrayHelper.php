@@ -28,7 +28,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
             $array = [];
             if (!empty($json)) {
                 /** @var array $array */
-                $array = SystemFn::json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+                $array = SystemFn::jsonDecode($json, true, 512, JSON_THROW_ON_ERROR);
             }
 
             return (array)$array;
@@ -50,7 +50,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
         self::cleaning($array, $keys);
 
         foreach (self::generator($keys) as $key) {
-            if (!SystemFn::key_exists($key, $array)) {
+            if (!SystemFn::keyExists($key, $array)) {
                 throw new BadRequestHttpException(
                     [
                         $key => Yii::t(
@@ -90,7 +90,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
     {
         $cleanParams = [];
         foreach (self::generator($keys) as $key) {
-            if (!SystemFn::key_exists($key, $array)) {
+            if (!SystemFn::keyExists($key, $array)) {
                 continue;
             }
             $cleanParams[$key] = $array[$key];
@@ -106,7 +106,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      */
     public static function generator(array $array): Generator
     {
-        if (SystemFn::is_iterable($array)) {
+        if (SystemFn::isIterable($array)) {
             foreach ($array as $item) {
                 yield $item;
             }

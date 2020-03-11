@@ -12,7 +12,7 @@ class SystemFn
      * @return bool верно при успехе или false при неудаче
      * @return bool
      */
-    public static function key_exists(string $key, array $search): bool
+    public static function keyExists(string $key, array $search): bool
     {
         return array_key_exists($key, $search);
     }
@@ -23,7 +23,7 @@ class SystemFn
      * @param $value
      * @return bool верно при успехе или false при неудаче
      */
-    public static function is_iterable($value): bool
+    public static function isIterable($value): bool
     {
         return is_iterable($value);
     }
@@ -37,9 +37,9 @@ class SystemFn
      * @param int  $options
      * @return mixed
      */
-    public static function json_decode($json, $assoc = false, $depth = 512, $options = 0)
+    public static function jsonDecode($json, $assoc = false, $depth = 512, $options = 0)
     {
-        return json_decode($json, $assoc, $depth, $options);
+        return json_decode($json, $assoc, $depth, JSON_THROW_ON_ERROR | $options);
     }
 
     /**
