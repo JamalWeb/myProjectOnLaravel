@@ -1,7 +1,9 @@
 <?php
 
+use common\models\user\User;
+
 /* @var $this yii\web\View */
-/* @var $user common\models\User */
+/* @var $user User */
 
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
 ?>

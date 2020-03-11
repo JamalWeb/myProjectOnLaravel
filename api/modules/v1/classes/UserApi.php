@@ -3,21 +3,21 @@
 namespace api\modules\v1\classes;
 
 use api\modules\v1\classes\base\Api;
+use api\modules\v1\models\error\BadRequestHttpException;
 use api\modules\v1\models\form\BusinessUserForm;
+use api\modules\v1\models\form\DefaultUserForm;
+use api\modules\v1\models\form\LoginForm;
+use common\components\ArrayHelper;
+use common\components\EmailSendler;
 use common\components\PasswordHelper;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgUser;
-use common\models\user\UserGender;
-use Yii;
-use api\modules\v1\models\error\BadRequestHttpException;
-use api\modules\v1\models\form\LoginForm;
-use api\modules\v1\models\form\DefaultUserForm;
-use common\components\ArrayHelper;
-use common\components\EmailSendler;
 use common\models\user\User;
+use common\models\user\UserGender;
 use common\models\user\UserToken;
-use yii\web\HeaderCollection;
 use Exception;
+use Yii;
+use yii\web\HeaderCollection;
 
 class UserApi extends Api
 {
@@ -79,7 +79,7 @@ class UserApi extends Api
             ]
         );
 
-        if (is_null($userToken)) {
+        if ($userToken === null) {
             throw new BadRequestHttpException(
                 [
                     RgAttribute::HEADER_RESET_AUTH_TOKEN => 'Не является действительным'
@@ -105,7 +105,7 @@ class UserApi extends Api
      *
      * @return array
      */
-    public final function getGenderList(): array
+    final public function getGenderList(): array
     {
         return UserGender::find()->all();
     }
@@ -117,7 +117,7 @@ class UserApi extends Api
      * @return array
      * @throws Exception
      */
-    public final function createDefault(array $post): array
+    final public function createDefault(array $post): array
     {
         $allowedAttribute = [
             RgAttribute::EMAIL,
@@ -296,7 +296,7 @@ class UserApi extends Api
             ]
         );
 
-        if (is_null($user)) {
+        if ($user === null) {
             throw new \yii\web\BadRequestHttpException('User not found');
         }
 
@@ -321,7 +321,7 @@ class UserApi extends Api
             ]
         );
 
-        if (is_null($user)) {
+        if ($user === null) {
             throw new BadRequestHttpException(
                 [
                     RgAttribute::EMAIL => 'Email is not found'

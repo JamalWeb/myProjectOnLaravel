@@ -1,11 +1,12 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\ErrorAction;
 
 /**
  * Site controller
@@ -48,7 +49,7 @@ class SiteController extends Controller
     {
         return [
             'error' => [
-                'class' => 'yii\web\ErrorAction',
+                'class' => ErrorAction::class,
             ],
         ];
     }
@@ -58,43 +59,20 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         return $this->render('index');
     }
 
-    /**
-     * Login action.
-     *
-     * @return string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
 
     /**
      * Logout action.
      *
      * @return string
      */
-    public function actionLogout()
+    public function actionLogout(): string
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 }

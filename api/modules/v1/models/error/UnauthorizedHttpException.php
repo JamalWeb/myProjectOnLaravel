@@ -2,8 +2,6 @@
 
 namespace api\modules\v1\models\error;
 
-use Exception;
-
 class UnauthorizedHttpException extends HttpException
 {
     public function __construct(array $firstErrors = [])

@@ -10,7 +10,7 @@ class StringHelper extends \yii\helpers\StringHelper
      * @param string $gender
      * @return string
      */
-    public static final function getFirstLetter(string $gender): string
+    final public static function getFirstLetter(string $gender): string
     {
         /**
          * Получаем первую букву строки

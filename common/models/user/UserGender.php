@@ -5,8 +5,8 @@ namespace common\models\user;
 use common\components\ArrayHelper;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgTable;
-use Yii;
 use common\models\base\BaseModel;
+use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**

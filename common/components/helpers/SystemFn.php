@@ -2,8 +2,6 @@
 
 namespace common\components\helpers;
 
-use common\components\ArrayHelper;
-
 class SystemFn
 {
     /**
@@ -16,7 +14,7 @@ class SystemFn
      */
     public static function key_exists(string $key, array $search): bool
     {
-        return key_exists($key, $search);
+        return array_key_exists($key, $search);
     }
 
     /**

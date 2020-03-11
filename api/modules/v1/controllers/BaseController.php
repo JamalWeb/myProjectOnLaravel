@@ -2,9 +2,9 @@
 
 namespace api\modules\v1\controllers;
 
-use Yii;
 use api\modules\v1\classes\base\Api;
 use common\models\user\User;
+use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\HeaderCollection;
@@ -64,7 +64,7 @@ class BaseController extends Controller
      */
     public function init(): void
     {
-        if (!is_null($this->modelName)) {
+        if ($this->modelName !== null) {
             $this->api = new $this->modelName();
         }
 

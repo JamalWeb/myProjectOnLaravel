@@ -2,11 +2,11 @@
 
 namespace api\modules\v1\models\form;
 
+use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgUser;
-use Yii;
-use api\modules\v1\models\error\UnauthorizedHttpException;
 use common\models\user\User;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -42,7 +42,7 @@ class LoginForm extends Model
     {
         $parent = parent::beforeValidate();
 
-        if (!is_null($this->email)) {
+        if ($this->email !== null) {
             $this->createKeyAttempts();
 
             $countAttempt = Yii::$app->cache->get($this->keyAttempts);
@@ -67,7 +67,7 @@ class LoginForm extends Model
 
         $this->getUser();
 
-        if (is_null($this->user)) {
+        if ($this->user === null) {
             $this->handleFailure();
             throw new UnauthorizedHttpException(
                 [
@@ -103,7 +103,7 @@ class LoginForm extends Model
      * @return User
      * @throws UnauthorizedHttpException
      */
-    public final function authenticate(): User
+    final public function authenticate(): User
     {
         if (!$this->validate()) {
             throw new UnauthorizedHttpException($this->getFirstErrors());

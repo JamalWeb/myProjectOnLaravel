@@ -20,19 +20,23 @@ class ConfirmController extends Controller
      */
     public function actionEmail($token): void
     {
-        $userToken = UserToken::findOne([
-            'access_token' => $token,
-            'type'         => RgUser::TOKEN_TYPE_EMAIL_CONFIRM
-        ]);
+        $userToken = UserToken::findOne(
+            [
+                'access_token' => $token,
+                'type' => RgUser::TOKEN_TYPE_EMAIL_CONFIRM
+            ]
+        );
 
         if ($userToken === null) {
             throw new NotFoundHttpException('Страница не найдена');
         }
 
         try {
-            $userToken->user->saveModel([
-                'status' => RgUser::STATUS_ACTIVE
-            ]);
+            $userToken->user->saveModel(
+                [
+                    'status' => RgUser::STATUS_ACTIVE
+                ]
+            );
             $userToken->delete();
         } catch (Exception $e) {
             throw new BadRequestHttpException('Что-то пошло не так');

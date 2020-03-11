@@ -1,7 +1,9 @@
 <?php
+
 namespace common\widgets;
 
 use Yii;
+use yii\bootstrap\Widget;
 
 /**
  * Alert widget renders a message from session flash. All flash messages are displayed
@@ -22,7 +24,7 @@ use Yii;
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @author Alexander Makarov <sam@rmcreative.ru>
  */
-class Alert extends \yii\bootstrap\Widget
+class Alert extends Widget
 {
     /**
      * @var array the alert types configuration for the flash messages.
@@ -37,14 +39,12 @@ class Alert extends \yii\bootstrap\Widget
         'info'    => 'alert-info',
         'warning' => 'alert-warning'
     ];
-    /**
+/**
      * @var array the options for rendering the close button tag.
      * Array will be passed to [[\yii\bootstrap\Alert::closeButton]].
      */
     public $closeButton = [];
-
-
-    /**
+/**
      * {@inheritdoc}
      */
     public function run()
@@ -52,7 +52,6 @@ class Alert extends \yii\bootstrap\Widget
         $session = Yii::$app->session;
         $flashes = $session->getAllFlashes();
         $appendClass = isset($this->options['class']) ? ' ' . $this->options['class'] : '';
-
         foreach ($flashes as $type => $flash) {
             if (!isset($this->alertTypes[$type])) {
                 continue;
@@ -60,12 +59,12 @@ class Alert extends \yii\bootstrap\Widget
 
             foreach ((array) $flash as $i => $message) {
                 echo \yii\bootstrap\Alert::widget([
-                    'body' => $message,
-                    'closeButton' => $this->closeButton,
-                    'options' => array_merge($this->options, [
-                        'id' => $this->getId() . '-' . $type . '-' . $i,
-                        'class' => $this->alertTypes[$type] . $appendClass,
-                    ]),
+                'body' => $message,
+                'closeButton' => $this->closeButton,
+                'options' => array_merge($this->options, [
+                'id' => $this->getId() . '-' . $type . '-' . $i,
+                'class' => $this->alertTypes[$type] . $appendClass,
+                ]),
                 ]);
             }
 

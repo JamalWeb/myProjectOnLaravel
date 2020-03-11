@@ -26,7 +26,7 @@ class FileHelper extends \yii\helpers\FileHelper
      */
     public static function saveFile(string $path, UploadedFile $file): string
     {
-        if (is_null($file)) {
+        if ($file === null) {
             throw new BadRequestHttpException('$file is null');
         }
 

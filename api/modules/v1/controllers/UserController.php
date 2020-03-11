@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnused */
 
 namespace api\modules\v1\controllers;
@@ -13,8 +14,7 @@ use Exception;
 class UserController extends BaseController
 {
     public $modelName = UserApi::class;
-
-    /**
+/**
      * @OA\Post(
      *   path="/user/login",
      *   summary="Авторизация",

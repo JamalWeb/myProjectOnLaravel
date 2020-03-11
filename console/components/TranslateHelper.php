@@ -12,7 +12,7 @@ class TranslateHelper
     /**
      * @param array $data ['ru' => ['category' => ['common.generic.variable' => 'translation', ...]], 'en' => ...]
      */
-    public static function insert($data)
+    public static function insert($data): void
     {
         foreach ($data as $language => $categories) {
             self::insertLanguage($language, $categories);
@@ -23,7 +23,7 @@ class TranslateHelper
      * @param string $language
      * @param array  $categories ['category' => ['common.generic.variable' => 'translation', ...]]
      */
-    public static function insertLanguage($language, $categories)
+    public static function insertLanguage($language, $categories): void
     {
         foreach ($categories as $category => $translations) {
             self::insertCategory($language, $category, $translations);
@@ -35,12 +35,12 @@ class TranslateHelper
      * @param string $category
      * @param array  $translations ['common.generic.variable' => 'translation', ...]
      */
-    public static function insertCategory($language, $category, $translations)
+    public static function insertCategory($language, $category, $translations): void
     {
         foreach ($translations as $var => $translation) {
             $source_message = SourceMessage::findOne(['message' => $var, 'category' => $category]);
 
-            if (empty($source_message)) {
+            if ($source_message === null) {
                 $source_message = new SourceMessage();
                 $source_message->message = $var;
                 $source_message->category = $category;
@@ -48,7 +48,7 @@ class TranslateHelper
             }
 
             $message = Message::findOne(['id' => $source_message->id, 'language' => $language]);
-            if (empty($message)) {
+            if ($message === null) {
                 $message = new Message();
             }
 
@@ -64,7 +64,7 @@ class TranslateHelper
      * @throws StaleObjectException
      * @throws Throwable
      */
-    public static function delete($data)
+    public static function delete($data): void
     {
         foreach ($data as $language => $categories) {
             self::deleteLanguage($language, $categories);
@@ -77,7 +77,7 @@ class TranslateHelper
      * @throws StaleObjectException
      * @throws Throwable
      */
-    public static function deleteLanguage($language, $categories)
+    public static function deleteLanguage($language, $categories): void
     {
         foreach ($categories as $category => $translations) {
             self::deleteCategory($language, $category, $translations);
@@ -91,13 +91,13 @@ class TranslateHelper
      * @throws Throwable
      * @throws StaleObjectException
      */
-    public static function deleteCategory($language, $category, $translations)
+    public static function deleteCategory($language, $category, $translations): void
     {
         foreach ($translations as $var => $translation) {
             $source_message = SourceMessage::findOne(['message' => $var, 'category' => $category]);
-            if (!empty($source_message)) {
+            if ($source_message !== null) {
                 $message = Message::findOne(['id' => $source_message->id, 'language' => $language]);
-                if (!empty($message)) {
+                if ($message !== null) {
                     $message->delete();
                 }
                 $source_message->delete();

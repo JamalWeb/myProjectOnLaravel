@@ -43,7 +43,7 @@ class Auth extends AuthMethod
 
         $identity = $loginForm->getUser();
 
-        if (is_null($identity)) {
+        if ($identity === null) {
             throw new UnauthorizedHttpException(['email' => Yii::t('user', 'Email not found')]);
         }
 

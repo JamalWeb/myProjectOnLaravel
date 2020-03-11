@@ -49,7 +49,7 @@ abstract class AbstractUserForm extends Model
      */
     public function uploadAvatar(User $user): void
     {
-        if (!is_null($this->avatar)) {
+        if ($this->avatar !== null) {
             /**
              * Пути для сохранения аватарки
              */
@@ -66,7 +66,7 @@ abstract class AbstractUserForm extends Model
             /**
              * Создание директории
              */
-            FileHelper::createDir($userAvatarPath, 755);
+            FileHelper::createDirectory($userAvatarPath,755);
 
             $avatarPath = "{$userAvatarPath}/{$avatarName}";
             $this->avatar->saveAs($avatarPath);

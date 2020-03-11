@@ -2,11 +2,11 @@
 
 namespace api\controllers;
 
+use genxoft\swagger\JsonAction;
+use genxoft\swagger\ViewAction;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
-use genxoft\swagger\ViewAction;
-use genxoft\swagger\JsonAction;
 
 /**
  * Site controller

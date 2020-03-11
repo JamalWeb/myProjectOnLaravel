@@ -89,7 +89,9 @@ class EventFilter extends Model
         }
 
         if (!empty($this->interest)) {
-            $this->eventQuery->andFilterWhere(['in', 'interest_category_id', ArrayHelper::jsonToArray($this->interest)]);
+            $this->eventQuery->andFilterWhere(
+                ['in', 'interest_category_id', ArrayHelper::jsonToArray($this->interest)]
+            );
         }
 
         if ($this->forYou) {
@@ -139,5 +141,4 @@ class EventFilter extends Model
     {
         $this->user = $user;
     }
-
 }

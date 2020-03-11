@@ -8,7 +8,7 @@ return [
         '@setEventImg'  => '@frontend/web/upload/events',
         '@getEventImg'  => 'upload/events',
     ],
-    'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'language'   => 'ru-RU',
     'components' => [
         'user'  => [

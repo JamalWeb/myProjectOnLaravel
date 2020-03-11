@@ -24,13 +24,11 @@ class PasswordHelper
      * @return string
      * @throws Exception
      */
-    public static final function encrypt(string $password): string
+    final public static function encrypt(string $password): string
     {
         $saltWithPass = self::addSaltInPassword($password);
 
-        $passwordHash = Yii::$app->security->generatePasswordHash($saltWithPass);
-
-        return $passwordHash;
+        return Yii::$app->security->generatePasswordHash($saltWithPass);
     }
 
     /**
@@ -39,7 +37,7 @@ class PasswordHelper
      * @param string $password
      * @return string
      */
-    public static final function addSaltInPassword(string $password): string
+    final public static function addSaltInPassword(string $password): string
     {
         return self::SALT . $password . self::SALT;
     }

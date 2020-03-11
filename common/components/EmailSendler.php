@@ -22,7 +22,7 @@ class EmailSendler
      * @throws BadRequestHttpException
      * @throws Exception
      */
-    public static final function registrationConfirmDefaultUser(User $user): bool
+    final public static function registrationConfirmDefaultUser(User $user): bool
     {
         UserToken::generateAccessToken($user, RgUser::TOKEN_TYPE_EMAIL_CONFIRM);
         $userToken = UserToken::get($user, RgUser::TOKEN_TYPE_EMAIL_CONFIRM);
@@ -43,7 +43,7 @@ class EmailSendler
     /**
      * @param User $user
      */
-    public static final function registrationConfirmBusinessUser(User $user): void
+    final public static function registrationConfirmBusinessUser(User $user): void
     {
 //        UserToken::generateToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
 //        $userToken = UserToken::getToken($user, UserToken::TYPE_EMAIL_ACTIVATE);

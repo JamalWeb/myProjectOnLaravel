@@ -7,8 +7,8 @@ use common\components\DateHelper;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgTable;
 use common\components\registry\RgUser;
-use Yii;
 use common\models\base\BaseModel;
+use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
 
@@ -45,14 +45,14 @@ class UserToken extends BaseModel
     {
         self::checkTypeAccessToken($typeId);
 
-        $userToken = UserToken::findOne(
+        $userToken = self::findOne(
             [
                 RgAttribute::USER_ID => $user->id,
                 RgAttribute::TYPE_ID => $typeId
             ]
         );
 
-        if (is_null($userToken)) {
+        if ($userToken === null) {
             throw new BadRequestHttpException($userToken->getFirstErrors());
         }
 
@@ -84,8 +84,8 @@ class UserToken extends BaseModel
             ]
         );
 
-        if (is_null($userToken)) {
-            $userToken = new UserToken(
+        if ($userToken === null) {
+            $userToken = new self(
                 [
                     RgAttribute::USER_ID => $user->id,
                     RgAttribute::TYPE_ID => $typeId,
@@ -115,7 +115,7 @@ class UserToken extends BaseModel
      */
     public static function checkTypeAccessToken(int $type): void
     {
-        if (!in_array($type, RgUser::$tokenTypeList)) {
+        if (!in_array($type, RgUser::$tokenTypeList, true)) {
             throw new BadRequestHttpException(
                 [
                     RgAttribute::ACCESS_TOKEN => 'not found'

@@ -4,9 +4,9 @@ namespace common\models\user;
 
 use common\components\registry\RgAttribute;
 use common\components\registry\RgTable;
+use common\models\base\BaseModel;
 use common\models\City;
 use Yii;
-use common\models\base\BaseModel;
 use yii\db\ActiveQuery;
 
 /**
