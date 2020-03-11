@@ -47,7 +47,7 @@
     }
   },
   "scripts": {
-    "cs-check" : "phpcs -s",
+    "cs-check" : "phpcs",
     "cs-fix" : "phpcbf"
   },
   "repositories": [
