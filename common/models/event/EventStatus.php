@@ -37,7 +37,10 @@ class EventStatus
         return self::$statusList[$id];
     }
 
-    public static function getList()
+    /**
+     * @return array
+     */
+    public static function getList(): array
     {
         return [
             [
