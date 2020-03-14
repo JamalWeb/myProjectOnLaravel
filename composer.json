@@ -51,17 +51,14 @@
     "cs-check": "phpcs",
     "cs-fix": "phpcbf",
     "psalm": "psalm",
-    "pre-commit-check": [
-      "cp pre-commit.sh .git/hooks/pre-commit",
-      "chmod +x .git/hooks/pre-commit"
-    ],
+
     "post-install-cmd": [
-      "@code-sniffer",
-      "@pre-commit-check"
+      "@cs-check",
+      "@cs-fix"
     ],
     "post-update-cmd": [
-      "@code-sniffer",
-      "@pre-commit-check"
+      "@cs-check",
+      "@cs-fix"
     ]
   },
   "repositories": [

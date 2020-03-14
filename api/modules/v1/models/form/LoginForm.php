@@ -14,7 +14,8 @@ use yii\base\Model;
  *
  * @package api\modules\v1\models\form
  */
-class LoginForm extends Model{
+class LoginForm extends Model
+{
     /** @var int */
     public const COUNT_ATTEMPT = 10;
 
@@ -37,7 +38,8 @@ class LoginForm extends Model{
      * @return bool
      * @throws UnauthorizedHttpException
      */
-    public function beforeValidate(): bool{
+    public function beforeValidate(): bool
+    {
         $parent = parent::beforeValidate();
 
         if ($this->email !== null) {
