@@ -24,26 +24,26 @@ class DataProviderHelper
 
         $provider = new ActiveDataProvider(
             [
-                RgAttribute::QUERY      => $query,
+                RgAttribute::QUERY => $query,
                 RgAttribute::PAGINATION => [
                     RgAttribute::PAGE => ($page - 1),
-                    'pageSize'        => $pageSize
-                ]
+                    'pageSize' => $pageSize,
+                ],
             ]
         );
 
         return [
-            RgAttribute::ITEMS      => ArrayHelper::getColumn(
+            RgAttribute::ITEMS => ArrayHelper::getColumn(
                 $provider->models,
-                function (BaseModel $model) {
-                    return $model->publicInfo;
+                static function (BaseModel $model): ?array {
+                    return $model->getPublicInfo();
                 },
                 false
             ),
             RgAttribute::PAGINATION => [
-                RgAttribute::PAGE        => ($provider->pagination->page + 1),
-                RgAttribute::PAGE_SIZE   => $provider->pagination->pageSize,
-                RgAttribute::TOTAL_PAGE  => ceil($provider->totalCount / $provider->pagination->pageSize),
+                RgAttribute::PAGE => ($provider->pagination->page + 1),
+                RgAttribute::PAGE_SIZE => $provider->pagination->pageSize,
+                RgAttribute::TOTAL_PAGE => ceil($provider->totalCount / $provider->pagination->pageSize),
                 RgAttribute::TOTAL_COUNT => $provider->totalCount,
             ],
         ];
