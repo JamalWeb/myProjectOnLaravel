@@ -48,9 +48,21 @@
     }
   },
   "scripts": {
-    "cs-check" : "phpcs",
-    "cs-fix" : "phpcbf",
-    "psalm" : "psalm"
+    "cs-check": "phpcs",
+    "cs-fix": "phpcbf",
+    "psalm": "psalm",
+    "pre-commit-check": [
+      "cp pre-commit.sh .git/hooks/pre-commit",
+      "chmod +x .git/hooks/pre-commit"
+    ],
+    "post-install-cmd": [
+      "@code-sniffer",
+      "@pre-commit-check"
+    ],
+    "post-update-cmd": [
+      "@code-sniffer",
+      "@pre-commit-check"
+    ]
   },
   "repositories": [
     {
