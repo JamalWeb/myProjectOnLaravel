@@ -14,7 +14,8 @@ use Exception;
 class UserController extends BaseController
 {
     public $modelName = UserApi::class;
-/**
+
+    /**
      * @OA\Post(
      *   path="/user/login",
      *   summary="Авторизация",
@@ -62,7 +63,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionLogin()
+    public function actionLogin(): ?array
     {
         return $this->api->login($this->post);
     }
@@ -105,7 +106,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionResetAuthToken()
+    public function actionResetAuthToken(): ?array
     {
         return $this->api->resetAuthToken($this->headers);
     }
@@ -293,7 +294,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationDefault(): array
+    public function actionRegistrationDefault(): ?array
     {
         return $this->api->createDefault($this->post);
     }
@@ -431,7 +432,7 @@ class UserController extends BaseController
      * )
      * @throws Exception
      */
-    public function actionRegistrationBusiness()
+    public function actionRegistrationBusiness(): ?array
     {
         return $this->api->registrationBusiness($this->post);
     }
@@ -515,7 +516,7 @@ class UserController extends BaseController
      * @return array
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionGet(): array
+    public function actionGet(): ?array
     {
         return $this->api->get($this->user, $this->get);
     }
@@ -563,7 +564,7 @@ class UserController extends BaseController
      * @throws BadRequestHttpException
      * @throws \yii\base\Exception
      */
-    public function actionRecovery(): array
+    public function actionRecovery(): ?array
     {
         return $this->api->recovery($this->post);
     }

@@ -132,15 +132,11 @@ class LoginForm extends Model
             );
         }
 
-        switch ($this->user->status_id) {
-            case RgUser::STATUS_INACTIVE:
-                $error = [
-                    RgAttribute::EMAIL => 'Ваш аккаунт отключен'
-                ];
-                break;
-//            case User::STATUS_UNCONFIRMED_EMAIL:
-//                $error = ['email' => 'Пожалуйста подтвердите Вашу почту'];
-//                break;
+        $i = $this->user->status_id;
+        if ($i === RgUser::STATUS_INACTIVE) {
+            $error = [
+                RgAttribute::EMAIL => 'Ваш аккаунт отключен'
+            ];
         }
 
         if (isset($error)) {
