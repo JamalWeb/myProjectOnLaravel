@@ -11,8 +11,7 @@ use Exception;
 /**
  * @property UserApi $api
  */
-class UserController extends BaseController
-{
+class UserController extends BaseController {
     public $modelName = UserApi::class;
 
     /**
