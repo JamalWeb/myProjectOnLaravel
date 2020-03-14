@@ -2,9 +2,9 @@
 
 namespace backend\controllers;
 
-use Yii;
+use backend\controllers\Action\Site\ActionIndex;
+use backend\controllers\Action\Site\ActionLogin;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\ErrorAction;
 
@@ -16,63 +16,38 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function behaviors(): ?array
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error', 'index'],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
+            'login' => [
+                'class' => ActionLogin::class,
+            ],
+            'index' => [
+                'class' => ActionIndex::class,
+            ],
             'error' => [
                 'class' => ErrorAction::class,
             ],
         ];
-    }
-
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex(): string
-    {
-        return $this->render('index');
-    }
-
-
-    /**
-     * Logout action.
-     *
-     * @return string
-     */
-    public function actionLogout(): string
-    {
-        Yii::$app->user->logout();
-        return $this->goHome();
     }
 }
