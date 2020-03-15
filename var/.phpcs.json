@@ -3401,7 +3401,7 @@
     "numTokens": 140
   },
   "\/app\/backend\/config\/main.php": {
-    "hash": "0f4973c3d7f501d54095f96d45f955d833279",
+    "hash": "bc9b9ce0f711c70252451a8082932dc633279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -3682,7 +3682,7 @@
     "numTokens": 89
   },
   "\/app\/backend\/controllers\/SiteController.php": {
-    "hash": "029085d5b8b7cc5ab494cb2b2f7c729b33279",
+    "hash": "2c083fd4909bfdc2c54d6ec09339632133279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -3713,7 +3713,7 @@
       },
       "Line length": {
         "values": {
-          "80 or less": 54
+          "80 or less": 53
         }
       },
       "Line indent": {
@@ -3723,12 +3723,12 @@
       },
       "PHP keyword case": {
         "values": {
-          "lower": 18
+          "lower": 17
         }
       },
       "Multiple statements on same line": {
         "values": {
-          "no": 12
+          "no": 11
         }
       },
       "One class per file": {
@@ -3775,7 +3775,7 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 353
+    "numTokens": 347
   },
   "\/app\/backend\/tests\/_data\/login_data.php": {
     "hash": "883a32f3a1341c8365dd0a77d67b2d1633279",
@@ -8555,7 +8555,7 @@
     "numTokens": 504
   },
   "\/app\/backend\/controllers\/Action\/Site\/ActionIndex.php": {
-    "hash": "2f54a4d8ebd3d9481f313fa187501b4433279",
+    "hash": "5da1959e64ea9821ccf68342cfeb764133279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -8586,12 +8586,12 @@
       },
       "Line length": {
         "values": {
-          "80 or less": 20
+          "80 or less": 22
         }
       },
       "Line indent": {
         "values": {
-          "spaces": 10
+          "spaces": 12
         }
       },
       "PHP keyword case": {
@@ -8601,7 +8601,7 @@
       },
       "Multiple statements on same line": {
         "values": {
-          "no": 5
+          "no": 6
         }
       },
       "One class per file": {
@@ -8643,12 +8643,12 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 129
+    "numTokens": 153
   },
   "\/app\/backend\/controllers\/Action\/Site\/ActionLogin.php": {
-    "hash": "394587bc8e2a2bbc7b8b69ae709227fc33279",
+    "hash": "129599d409adb18845196c6160e53bc633279",
     "errors": {
-      "48": {
+      "49": {
         "9": [
           {
             "message": "No blank line found after control structure",
@@ -8699,7 +8699,7 @@
       },
       "PHP keyword case": {
         "values": {
-          "lower": 18
+          "lower": 19
         }
       },
       "Multiple statements on same line": {
@@ -8732,6 +8732,11 @@
           "yes": 2
         }
       },
+      "PHP type case": {
+        "values": {
+          "lower": 2
+        }
+      },
       "Function opening brace placement": {
         "values": {
           "new line": 2
@@ -8761,17 +8766,12 @@
         "values": {
           "no": 2
         }
-      },
-      "PHP type case": {
-        "values": {
-          "lower": 1
-        }
       }
     },
     "errorCount": 1,
     "warningCount": 0,
     "fixableCount": 1,
-    "numTokens": 326
+    "numTokens": 325
   },
   "\/app\/backend\/controllers\/Base\/BaseAction.php": {
     "hash": "3d0e6e8f171caef6f6da4f1b5ae8d4bc33279",
@@ -8931,7 +8931,7 @@
     "numTokens": 36
   },
   "\/app\/backend\/models\/Site\/LoginForm.php": {
-    "hash": "9f6ce41a0bb744d3b7180cb59cb0db2333279",
+    "hash": "84b952eab705919c9866d1f9065dbfe833279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -9011,14 +9011,14 @@
           "yes": 5
         }
       },
+      "PHP type case": {
+        "values": {
+          "lower": 4
+        }
+      },
       "Function opening brace placement": {
         "values": {
           "new line": 5
-        }
-      },
-      "PHP type case": {
-        "values": {
-          "lower": 3
         }
       },
       "Spaces after control structure open parenthesis": {
@@ -9050,7 +9050,7 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 510
+    "numTokens": 512
   },
   "\/app\/common\/traits\/RegisterMetaTag.php": {
     "hash": "3039bdd3c56902735662edde69055b0433279",

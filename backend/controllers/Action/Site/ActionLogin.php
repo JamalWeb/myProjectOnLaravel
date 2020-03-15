@@ -17,13 +17,14 @@ class ActionLogin extends BaseAction
 
     public function run(): string
     {
+        $request = Yii::$app->request;
+
         $this->controller->registerMeta("{$this->appName} | Вход", '', '');
 
         $model = $this->getLoginForm();
-        $request = Yii::$app->request;
 
-        if ($request->isPost && $model->load($request->post())) {
-            Yii::$app->session->setFlash('success', 'Данные были загружены');
+        if ($model->validate() && $model->load($request->post())) {
+            return $model->sigIn();
         }
 
         return $this->controller->render(
