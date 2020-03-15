@@ -11,17 +11,18 @@ $params = array_merge(
 );
 
 return [
-    'id'                  => 'app-backend',
-    'basePath'            => dirname(__DIR__),
+    'id' => 'app-backend',
+    'basePath' => dirname(__DIR__),
+    'name' => 'Mappa',
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap'           => ['log'],
-    'modules'             => [],
-    'components'          => [
-        'request'      => [
+    'bootstrap' => ['log'],
+    'modules' => [],
+    'components' => [
+        'request' => [
             'csrfParam' => '_csrf-backend',
         ],
-        'user'         => [
-            'identityClass'   => User::class,
+        'user' => [
+            'identityClass' => User::class,
             'enableAutoLogin' => true,
             'identityCookie'  => ['name' => '_identity-backend', 'httpOnly' => true],
         ],

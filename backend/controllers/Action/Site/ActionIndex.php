@@ -2,18 +2,23 @@
 
 namespace backend\controllers\Action\Site;
 
+use backend\controllers\Base\BaseAction;
 use backend\controllers\SiteController;
-use yii\base\Action;
 
 /**
  * @property SiteController $controller
  */
-class ActionIndex extends Action
+class ActionIndex extends BaseAction
 {
     public function run(): string
     {
+        $this->controller->registerMeta("{$this->appName} | Главная", '', '');
+
         return $this->controller->render(
-            'index'
+            'index',
+            [
+                'appName' => $this->appName,
+            ]
         );
     }
 }

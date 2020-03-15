@@ -12,36 +12,37 @@ use common\models\base\BaseModel;
 use common\models\relations\RelationUserInterest;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * @property int                    $id                  Идентификатор пользователя
- * @property int                    $type_id             Идентификатор типа
- * @property int                    $role_id             Идентификатор роли
- * @property string                 $email               Электронная почта
- * @property string                 $username            Никнейм
- * @property string                 $password            Пароль
- * @property string                 $auth_key            Ключ необходимый для авторизации
- * @property bool                   $status_id           Статус активности (1 - вкл. 0 - выкл.) | default = 1
- * @property string                 $logged_in_ip        IP адрес авторизации
- * @property string                 $logged_in_at        Дата авторизации
- * @property string                 $logout_in_ip        IP адрес выхода
- * @property string                 $logout_in_at        Дата выхода
- * @property string                 $created_ip          IP адрес с которого создали
- * @property bool                   $is_banned           Бан (1 - вкл. 0 - выкл.) | default = 0
- * @property string                 $banned_reason       Причина бана
- * @property string                 $banned_at           Дата бана
- * @property string                 $created_at          Дата создания
- * @property string                 $authKey
- * @property string                 $updated_at          Дата обновления
- * @property array                  $publicInfo          Информация о пользователи
- * @property UserStatus             $status              Тип
- * @property UserType               $type                Тип
- * @property UserRole               $role                Роль
- * @property UserProfile            $profile             Профиль
- * @property UserChildren[]         $children            Дети
+ * @property int $id                  Идентификатор пользователя
+ * @property int $type_id             Идентификатор типа
+ * @property int $role_id             Идентификатор роли
+ * @property string $email               Электронная почта
+ * @property string $username            Никнейм
+ * @property string $password            Пароль
+ * @property string $auth_key            Ключ необходимый для авторизации
+ * @property bool $status_id           Статус активности (1 - вкл. 0 - выкл.) | default = 1
+ * @property string $logged_in_ip        IP адрес авторизации
+ * @property string $logged_in_at        Дата авторизации
+ * @property string $logout_in_ip        IP адрес выхода
+ * @property string $logout_in_at        Дата выхода
+ * @property string $created_ip          IP адрес с которого создали
+ * @property bool $is_banned           Бан (1 - вкл. 0 - выкл.) | default = 0
+ * @property string $banned_reason       Причина бана
+ * @property string $banned_at           Дата бана
+ * @property string $created_at          Дата создания
+ * @property string $authKey
+ * @property string $updated_at          Дата обновления
+ * @property array $publicInfo          Информация о пользователи
+ * @property UserStatus $status              Тип
+ * @property UserType $type                Тип
+ * @property UserRole $role                Роль
+ * @property UserProfile $profile             Профиль
+ * @property UserChildren[] $children            Дети
  * @property RelationUserInterest[] $relationUserInterests
- * @property string                 $fullName            Полное имя
+ * @property string $fullName            Полное имя
  */
 class User extends BaseModel implements IdentityInterface
 {
@@ -79,7 +80,7 @@ class User extends BaseModel implements IdentityInterface
         if ($this->type_id === $type) {
             throw new BadRequestHttpException(
                 [
-                    RgAttribute::TYPE_ID => 'Type is invalid'
+                    RgAttribute::TYPE_ID => 'Type is invalid',
                 ]
             );
         }
@@ -93,49 +94,49 @@ class User extends BaseModel implements IdentityInterface
     public function getPublicInfo(): array
     {
         $defaultUserInfo = [
-            RgAttribute::ID      => $this->id,
-            RgAttribute::EMAIL   => $this->email,
-            RgAttribute::ACCESS  => [],
+            RgAttribute::ID => $this->id,
+            RgAttribute::EMAIL => $this->email,
+            RgAttribute::ACCESS => [],
             RgAttribute::PROFILE => [
-                RgAttribute::FIRST_NAME   => $this->profile->first_name,
-                RgAttribute::LAST_NAME    => $this->profile->last_name,
+                RgAttribute::FIRST_NAME => $this->profile->first_name,
+                RgAttribute::LAST_NAME => $this->profile->last_name,
                 RgAttribute::PHONE_NUMBER => $this->profile->phone_number,
-                RgAttribute::ADDRESS      => $this->profile->address,
-                RgAttribute::ABOUT        => $this->profile->about,
-                RgAttribute::COUNTRY      => null,
-                RgAttribute::CITY         => [
-                    RgAttribute::ID   => $this->profile->city->id,
-                    RgAttribute::NAME => $this->profile->city->name
+                RgAttribute::ADDRESS => $this->profile->address,
+                RgAttribute::ABOUT => $this->profile->about,
+                RgAttribute::COUNTRY => null,
+                RgAttribute::CITY => [
+                    RgAttribute::ID => $this->profile->city->id,
+                    RgAttribute::NAME => $this->profile->city->name,
                 ],
-                RgAttribute::CHILDREN     => [],
-                RgAttribute::TYPE         => [
-                    RgAttribute::ID          => $this->type->id,
-                    RgAttribute::NAME        => $this->type->name,
-                    RgAttribute::DESCRIPTION => $this->type->description
+                RgAttribute::CHILDREN => [],
+                RgAttribute::TYPE => [
+                    RgAttribute::ID => $this->type->id,
+                    RgAttribute::NAME => $this->type->name,
+                    RgAttribute::DESCRIPTION => $this->type->description,
                 ],
-                RgAttribute::LONGITUDE    => $this->profile->longitude,
-                RgAttribute::LATITUDE     => $this->profile->latitude,
-                RgAttribute::LANGUAGE     => $this->profile->language,
-                RgAttribute::SHORT_LANG   => $this->profile->short_lang,
-                RgAttribute::TIMEZONE     => $this->profile->timezone,
+                RgAttribute::LONGITUDE => $this->profile->longitude,
+                RgAttribute::LATITUDE => $this->profile->latitude,
+                RgAttribute::LANGUAGE => $this->profile->language,
+                RgAttribute::SHORT_LANG => $this->profile->short_lang,
+                RgAttribute::TIMEZONE => $this->profile->timezone,
             ],
-            RgAttribute::BANNED  => [
-                RgAttribute::IS_BANNED     => $this->is_banned,
+            RgAttribute::BANNED => [
+                RgAttribute::IS_BANNED => $this->is_banned,
                 RgAttribute::BANNED_REASON => $this->banned_reason,
-                RgAttribute::BANNED_AT     => $this->banned_at
-            ]
+                RgAttribute::BANNED_AT => $this->banned_at,
+            ],
         ];
 
         if (!empty($this->children) && $this->type_id == RgUser::TYPE_DEFAULT) {
             /** @var UserChildren $child */
             foreach (ArrayHelper::generator($this->children) as $child) {
                 $defaultUserInfo[RgAttribute::PROFILE][RgAttribute::CHILDREN][] = [
-                    RgAttribute::ID     => $child->id,
-                    RgAttribute::AGE    => $child->age,
+                    RgAttribute::ID => $child->id,
+                    RgAttribute::AGE => $child->age,
                     RgAttribute::GENDER => [
-                        RgAttribute::ID   => $child->gender->id,
-                        RgAttribute::NAME => $child->gender->name
-                    ]
+                        RgAttribute::ID => $child->gender->id,
+                        RgAttribute::NAME => $child->gender->name,
+                    ],
                 ];
             }
         }
@@ -156,7 +157,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserStatus::class,
             [
-                RgAttribute::ID => RgAttribute::STATUS_ID
+                RgAttribute::ID => RgAttribute::STATUS_ID,
             ]
         );
     }
@@ -169,7 +170,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserType::class,
             [
-                RgAttribute::ID => RgAttribute::TYPE_ID
+                RgAttribute::ID => RgAttribute::TYPE_ID,
             ]
         );
     }
@@ -182,7 +183,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserRole::class,
             [
-                RgAttribute::ID => RgAttribute::ROLE_ID
+                RgAttribute::ID => RgAttribute::ROLE_ID,
             ]
         );
     }
@@ -195,7 +196,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasOne(
             UserProfile::class,
             [
-                RgAttribute::USER_ID => RgAttribute::ID
+                RgAttribute::USER_ID => RgAttribute::ID,
             ]
         );
     }
@@ -218,7 +219,7 @@ class User extends BaseModel implements IdentityInterface
         return $this->hasMany(
             UserChildren::class,
             [
-                RgAttribute::USER_ID => RgAttribute::ID
+                RgAttribute::USER_ID => RgAttribute::ID,
             ]
         );
     }
@@ -229,24 +230,24 @@ class User extends BaseModel implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            RgAttribute::ID            => Yii::t('app', 'ID'),
-            RgAttribute::TYPE_ID       => Yii::t('app', 'Type ID'),
-            RgAttribute::ROLE_ID       => Yii::t('app', 'Role ID'),
-            RgAttribute::EMAIL         => Yii::t('app', 'Email'),
-            RgAttribute::USERNAME      => Yii::t('app', 'Username'),
-            RgAttribute::PASSWORD      => Yii::t('app', 'Password'),
-            RgAttribute::AUTH_KEY      => Yii::t('app', 'Auth Key'),
-            RgAttribute::STATUS_ID     => Yii::t('app', 'Status ID'),
-            RgAttribute::LOGGED_IN_IP  => Yii::t('app', 'Logged In Ip'),
-            RgAttribute::LOGGED_IN_AT  => Yii::t('app', 'Logged In At'),
-            RgAttribute::LOGOUT_IN_IP  => Yii::t('app', 'Logout In Ip'),
-            RgAttribute::LOGOUT_IN_AT  => Yii::t('app', 'Logout In At'),
-            RgAttribute::CREATED_IP    => Yii::t('app', 'Created Ip'),
-            RgAttribute::IS_BANNED     => Yii::t('app', 'Is Banned'),
+            RgAttribute::ID => Yii::t('app', 'ID'),
+            RgAttribute::TYPE_ID => Yii::t('app', 'Type ID'),
+            RgAttribute::ROLE_ID => Yii::t('app', 'Role ID'),
+            RgAttribute::EMAIL => Yii::t('app', 'Email'),
+            RgAttribute::USERNAME => Yii::t('app', 'Username'),
+            RgAttribute::PASSWORD => Yii::t('app', 'Password'),
+            RgAttribute::AUTH_KEY => Yii::t('app', 'Auth Key'),
+            RgAttribute::STATUS_ID => Yii::t('app', 'Status ID'),
+            RgAttribute::LOGGED_IN_IP => Yii::t('app', 'Logged In Ip'),
+            RgAttribute::LOGGED_IN_AT => Yii::t('app', 'Logged In At'),
+            RgAttribute::LOGOUT_IN_IP => Yii::t('app', 'Logout In Ip'),
+            RgAttribute::LOGOUT_IN_AT => Yii::t('app', 'Logout In At'),
+            RgAttribute::CREATED_IP => Yii::t('app', 'Created Ip'),
+            RgAttribute::IS_BANNED => Yii::t('app', 'Is Banned'),
             RgAttribute::BANNED_REASON => Yii::t('app', 'Banned Reason'),
-            RgAttribute::BANNED_AT     => Yii::t('app', 'Banned At'),
-            RgAttribute::CREATED_AT    => Yii::t('app', 'Created At'),
-            RgAttribute::UPDATED_AT    => Yii::t('app', 'Updated At'),
+            RgAttribute::BANNED_AT => Yii::t('app', 'Banned At'),
+            RgAttribute::CREATED_AT => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -261,26 +262,26 @@ class User extends BaseModel implements IdentityInterface
                     RgAttribute::TYPE_ID,
                     RgAttribute::ROLE_ID,
                     RgAttribute::EMAIL,
-                    RgAttribute::PASSWORD
+                    RgAttribute::PASSWORD,
                 ],
-                'required'
+                'required',
             ],
             [
                 [
                     RgAttribute::TYPE_ID,
                     RgAttribute::ROLE_ID,
-                    RgAttribute::STATUS_ID
+                    RgAttribute::STATUS_ID,
                 ],
                 'default',
-                'value' => null
+                'value' => null,
             ],
             [
                 [
                     RgAttribute::TYPE_ID,
                     RgAttribute::ROLE_ID,
-                    RgAttribute::STATUS_ID
+                    RgAttribute::STATUS_ID,
                 ],
-                'integer'
+                'integer',
             ],
             [
                 [
@@ -288,13 +289,13 @@ class User extends BaseModel implements IdentityInterface
                     RgAttribute::LOGOUT_IN_AT,
                     RgAttribute::BANNED_AT,
                     RgAttribute::CREATED_AT,
-                    RgAttribute::UPDATED_AT
+                    RgAttribute::UPDATED_AT,
                 ],
-                'safe'
+                'safe',
             ],
             [
                 [RgAttribute::IS_BANNED],
-                'boolean'
+                'boolean',
             ],
             [
                 [
@@ -305,10 +306,10 @@ class User extends BaseModel implements IdentityInterface
                     RgAttribute::LOGGED_IN_IP,
                     RgAttribute::LOGOUT_IN_IP,
                     RgAttribute::CREATED_IP,
-                    RgAttribute::BANNED_REASON
+                    RgAttribute::BANNED_REASON,
                 ],
                 'string',
-                'max' => 255
+                'max' => 255,
             ],
         ];
     }
@@ -320,9 +321,9 @@ class User extends BaseModel implements IdentityInterface
     {
         return static::findOne(
             [
-                RgAttribute::ID        => $id,
+                RgAttribute::ID => $id,
                 RgAttribute::STATUS_ID => RgUser::STATUS_ACTIVE,
-                RgAttribute::IS_BANNED => false
+                RgAttribute::IS_BANNED => false,
             ]
         );
     }
@@ -337,7 +338,7 @@ class User extends BaseModel implements IdentityInterface
         $userToken = UserToken::findOne(
             [
                 RgAttribute::ACCESS_TOKEN => $accessToken,
-                RgAttribute::TYPE_ID      => RgUser::TOKEN_TYPE_AUTH
+                RgAttribute::TYPE_ID => RgUser::TOKEN_TYPE_AUTH,
             ]
         );
 
@@ -347,11 +348,11 @@ class User extends BaseModel implements IdentityInterface
 
         return static::findOne(
             [
-                RgAttribute::ID        => $userToken->user_id,
+                RgAttribute::ID => $userToken->user_id,
                 RgAttribute::STATUS_ID => [
                     RgUser::STATUS_ACTIVE,
-                    RgUser::STATUS_UNCONFIRMED_EMAIL
-                ]
+                    RgUser::STATUS_UNCONFIRMED_EMAIL,
+                ],
             ]
         );
     }
@@ -378,5 +379,20 @@ class User extends BaseModel implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         return $this->getAuthKey() === $authKey;
+    }
+
+    /**
+     * @param string $login
+     * @return array|User|ActiveRecord|null
+     */
+    public static function findByUserName(string $login): ?self
+    {
+        return self::find()->where(
+            [
+                'OR',
+                ['email' => $login],
+                ['username' => $login],
+            ]
+        )->one();
     }
 }

@@ -1,14 +1,16 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
+
 /* @var $content string */
 
 use backend\assets\AppAsset;
 use common\widgets\Alert;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
+use yii\bootstrap4\Breadcrumbs;
+use yii\bootstrap4\Nav;
+use yii\bootstrap4\NavBar;
 use yii\helpers\Html;
-use yii\widgets\Breadcrumbs;
+use yii\web\View;
 
 AppAsset::register($this);
 ?>
@@ -28,18 +30,17 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
+    NavBar::begin(
+        [
+            'brandLabel' => Yii::$app->name,
+            'brandUrl' => Yii::$app->homeUrl,
+        ]
+    );
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'Главная', 'url' => ['/site/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
@@ -50,17 +51,21 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
     }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
+    echo Nav::widget(
+        [
+            'options' => ['class' => 'navbar-nav navbar-right'],
+            'items' => $menuItems,
+        ]
+    );
     NavBar::end();
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+        <?= Breadcrumbs::widget(
+            [
+                'links' => $this->params['breadcrumbs'] ?? [],
+            ]
+        ) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
@@ -69,8 +74,6 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
 
