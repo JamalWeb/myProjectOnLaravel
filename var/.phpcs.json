@@ -3682,7 +3682,7 @@
     "numTokens": 89
   },
   "\/app\/backend\/controllers\/SiteController.php": {
-    "hash": "2c083fd4909bfdc2c54d6ec09339632133279",
+    "hash": "e9be5f264dc94aca58a1fae112ec3b0c33279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -3775,7 +3775,7 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 347
+    "numTokens": 348
   },
   "\/app\/backend\/tests\/_data\/login_data.php": {
     "hash": "883a32f3a1341c8365dd0a77d67b2d1633279",
@@ -8555,7 +8555,7 @@
     "numTokens": 504
   },
   "\/app\/backend\/controllers\/Action\/Site\/ActionIndex.php": {
-    "hash": "5da1959e64ea9821ccf68342cfeb764133279",
+    "hash": "9ac76c6e59110c3de4c711f4c722b5c633279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -8586,7 +8586,7 @@
       },
       "Line length": {
         "values": {
-          "80 or less": 22
+          "80 or less": 23
         }
       },
       "Line indent": {
@@ -8596,12 +8596,12 @@
       },
       "PHP keyword case": {
         "values": {
-          "lower": 8
+          "lower": 9
         }
       },
       "Multiple statements on same line": {
         "values": {
-          "no": 6
+          "no": 7
         }
       },
       "One class per file": {
@@ -8643,7 +8643,7 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 153
+    "numTokens": 157
   },
   "\/app\/backend\/controllers\/Action\/Site\/ActionLogin.php": {
     "hash": "129599d409adb18845196c6160e53bc633279",
@@ -8774,7 +8774,7 @@
     "numTokens": 325
   },
   "\/app\/backend\/controllers\/Base\/BaseAction.php": {
-    "hash": "3d0e6e8f171caef6f6da4f1b5ae8d4bc33279",
+    "hash": "3227a0edecd53787da2cee4b56ae50e833279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -8805,7 +8805,7 @@
       },
       "Line length": {
         "values": {
-          "80 or less": 12
+          "80 or less": 13
         }
       },
       "Line indent": {
@@ -8815,12 +8815,12 @@
       },
       "PHP keyword case": {
         "values": {
-          "lower": 7
+          "lower": 8
         }
       },
       "Multiple statements on same line": {
         "values": {
-          "no": 4
+          "no": 5
         }
       },
       "One class per file": {
@@ -8857,7 +8857,7 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 79
+    "numTokens": 83
   },
   "\/app\/backend\/controllers\/Base\/BaseController.php": {
     "hash": "f2a29686262d3141d9224ee885edf68c33279",
@@ -8931,7 +8931,7 @@
     "numTokens": 36
   },
   "\/app\/backend\/models\/Site\/LoginForm.php": {
-    "hash": "84b952eab705919c9866d1f9065dbfe833279",
+    "hash": "fa70c9691286d1117a209c4887c33b7c33279",
     "errors": [],
     "warnings": [],
     "metrics": {
@@ -9050,7 +9050,7 @@
     "errorCount": 0,
     "warningCount": 0,
     "fixableCount": 0,
-    "numTokens": 512
+    "numTokens": 509
   },
   "\/app\/common\/traits\/RegisterMetaTag.php": {
     "hash": "3039bdd3c56902735662edde69055b0433279",
