@@ -9,7 +9,7 @@ use Yii;
 /**
  * @property SiteController $controller
  */
-class ActionIndex extends BaseAction
+final class ActionIndex extends BaseAction
 {
     public function run(): string
     {

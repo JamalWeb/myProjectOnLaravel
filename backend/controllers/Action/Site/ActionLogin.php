@@ -10,7 +10,7 @@ use Yii;
 /**
  * @property SiteController $controller
  */
-class ActionLogin extends BaseAction
+final class ActionLogin extends BaseAction
 {
     /** @var LoginForm */
     public $loginForm;
@@ -23,7 +23,7 @@ class ActionLogin extends BaseAction
 
         $model = $this->getLoginForm();
 
-        if ($model->validate() && $model->load($request->post())) {
+        if ($request->isPost && $model->validate() && $model->load($request->post())) {
             return $model->sigIn();
         }
 
