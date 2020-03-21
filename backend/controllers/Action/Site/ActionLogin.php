@@ -15,24 +15,36 @@ final class ActionLogin extends BaseAction
     /** @var LoginForm */
     public $loginForm;
 
-    public function run(): string
+    public function run()
     {
         $request = Yii::$app->request;
 
         $this->controller->registerMeta("{$this->appName} | Вход", '', '');
 
-        $model = $this->getLoginForm();
 
-        if ($request->isPost && $model->validate() && $model->load($request->post())) {
-            return $model->sigIn();
+        if ($request->isPost) {
+            $this->loginForm->load($request->post());
+
+            $valid = $this->loginForm->validate();
+
+            if ($valid) {
+                $this->controller->userService->signIn($this->loginForm->getDto());
+
+                return $this->controller->goHome();
+            }
         }
 
         return $this->controller->render(
             'login',
             [
-                'model' => $model,
+                'model' => $this->loginForm,
             ]
         );
+    }
+
+    public function init(): void
+    {
+        $this->loginForm = $this->getLoginForm();
     }
 
     /**

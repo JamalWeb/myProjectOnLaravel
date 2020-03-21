@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\controllers\Action\Site\ActionIndex;
 use backend\controllers\Action\Site\ActionLogin;
+use backend\controllers\Action\Site\ActionLogOut;
 use backend\Entity\Services\User\UserService;
 use backend\models\Site\LoginForm;
 use common\traits\RegisterMetaTag;
@@ -19,7 +20,7 @@ final class SiteController extends Controller
 {
     use RegisterMetaTag;
 
-    private $userService;
+    public $userService;
 
     /**
      * SiteController constructor.
@@ -45,13 +46,13 @@ final class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error', 'index'],
-                        'allow' => true,
+                        'actions' => ['login', 'error'],
+                        'allow'   => true,
                     ],
                     [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
+                        'actions' => ['logout', 'index'],
+                        'allow'   => true,
+                        'roles'   => ['@'],
                     ],
                 ],
             ],
@@ -61,14 +62,17 @@ final class SiteController extends Controller
     public function actions()
     {
         return [
-            'login' => [
-                'class' => ActionLogin::class,
+            'login'  => [
+                'class'     => ActionLogin::class,
                 'loginForm' => LoginForm::class,
             ],
-            'index' => [
+            'index'  => [
                 'class' => ActionIndex::class,
             ],
-            'error' => [
+            'logout' => [
+                'class' => ActionLogOut::class,
+            ],
+            'error'  => [
                 'class' => ErrorAction::class,
             ],
         ];
