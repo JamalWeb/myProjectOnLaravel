@@ -6,6 +6,7 @@ namespace backend\Entity\Services\User;
 
 use backend\Entity\Services\User\Dto\UserLoginDto;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;
+use Yii;
 
 class UserService
 {
@@ -20,9 +21,9 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function signIn(UserLoginDto $userLoginDto)
+    public function signIn(UserLoginDto $userLoginDto): bool
     {
+        return Yii::$app->user->login($userLoginDto->user, $userLoginDto->rememberMe ? 3600 * 24 * 30 : 0);
     }
-
 
 }
