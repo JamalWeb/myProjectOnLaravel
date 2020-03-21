@@ -7,9 +7,9 @@
 use backend\assets\AppAsset;
 use common\widgets\Alert;
 use yii\bootstrap4\Breadcrumbs;
+use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
-use yii\helpers\Html;
 use yii\web\View;
 
 AppAsset::register($this);
@@ -33,28 +33,32 @@ AppAsset::register($this);
     NavBar::begin(
         [
             'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->homeUrl,
+            'brandUrl'   => Yii::$app->homeUrl,
         ]
     );
     $menuItems = [
         ['label' => 'Главная', 'url' => ['/site/index']],
     ];
+
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
+        $menuItems[] =
+            [
+                'label'  => '<ion-icon name="enter-outline" size="large"></ion-icon>',
+                'url'    => ['/site/login'],
+                'encode' => false,
+            ];
     } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
+        $menuItems[] =
+            [
+                'label'  => '<ion-icon name="exit-outline" size="large"></ion-icon>',
+                'url'    => ['/site/logout'],
+                'encode' => false,
+            ];
     }
     echo Nav::widget(
         [
             'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => $menuItems,
+            'items'   => $menuItems,
         ]
     );
     NavBar::end();
