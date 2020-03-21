@@ -6,12 +6,26 @@ namespace backend\controllers\Cabinet;
 
 use backend\controllers\Base\BaseController;
 use backend\controllers\Cabinet\Action\ActionIndex;
+use backend\Entity\Services\User\ProfileService;
+use backend\models\Cabinet\ProfileForm;
+use backend\models\Cabinet\UserForm;
 use common\traits\RegisterMetaTag;
 use yii\filters\AccessControl;
 
+/**
+ * @property-read ProfileService $profileService;
+ */
 final class CabinetController extends BaseController
 {
     use RegisterMetaTag;
+
+    public $profileService;
+
+    public function __construct($id, $module, ProfileService $profileService, $config = [])
+    {
+        parent::__construct($id, $module, $config);
+        $this->profileService = $profileService;
+    }
 
     /**
      * {@inheritdoc}
@@ -40,7 +54,9 @@ final class CabinetController extends BaseController
     {
         return [
             'index' => [
-                'class' => ActionIndex::class,
+                'class'       => ActionIndex::class,
+                'profileForm' => ProfileForm::class,
+                'userForm'    => UserForm::class,
             ],
         ];
     }

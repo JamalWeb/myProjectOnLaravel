@@ -12,20 +12,20 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "user_profile".
  *
- * @property int    $id           Идентификатор профиля
- * @property int    $user_id      Идентификатор пользователя
+ * @property int $id           Идентификатор профиля
+ * @property int $user_id      Идентификатор пользователя
  * @property string $first_name   Имя
  * @property string $last_name    Фамилия
  * @property string $patronymic   Отчество
  * @property string $avatar       Аватар
  * @property string $phone_number Телефоный номер
  * @property string $address      Адрес
- * @property int    $gender_id    Идентификатор пола
+ * @property int $gender_id    Идентификатор пола
  * @property string $about        Описание бизнес аккаунта
- * @property int    $country_id   Идентификатор страны
- * @property int    $city_id      Идентификатор города
- * @property bool   $is_closed    Профиль закрыт
- * @property bool   $is_notice    Получать уведомления
+ * @property int $country_id   Идентификатор страны
+ * @property int $city_id      Идентификатор города
+ * @property bool $is_closed    Профиль закрыт
+ * @property bool $is_notice    Получать уведомления
  * @property string $longitude    Координаты: долгота
  * @property string $latitude     Координаты: широта
  * @property string $language     Язык
@@ -33,8 +33,9 @@ use yii\db\ActiveQuery;
  * @property string $timezone     Часовой пояс
  * @property string $created_at   Дата создания
  * @property string $updated_at   Дата обновления
- * @property User   $user         Пользователь
- * @property City   $city         Город
+ * @property User $user         Пользователь
+ * @property UserGender $gender Пол
+ * @property City $city         Город
  */
 class UserProfile extends BaseModel
 {
@@ -49,12 +50,12 @@ class UserProfile extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(
             User::class,
             [
-                RgAttribute::ID => RgAttribute::USER_ID
+                RgAttribute::ID => RgAttribute::USER_ID,
             ]
         );
     }
@@ -62,12 +63,22 @@ class UserProfile extends BaseModel
     /**
      * @return ActiveQuery
      */
-    public function getCity()
+    public function getCity(): ActiveQuery
     {
         return $this->hasOne(
             City::class,
             [
-                RgAttribute::ID => RgAttribute::CITY_ID
+                RgAttribute::ID => RgAttribute::CITY_ID,
+            ]
+        );
+    }
+
+    public function getGender(): ActiveQuery
+    {
+        return $this->hasOne(
+            UserGender::class,
+            [
+                RgAttribute::ID => RgAttribute::GENDER_ID,
             ]
         );
     }
@@ -111,35 +122,35 @@ class UserProfile extends BaseModel
             [
                 [
                     RgAttribute::USER_ID,
-                    RgAttribute::CITY_ID
+                    RgAttribute::CITY_ID,
                 ],
-                'required'
+                'required',
             ],
             [
                 [
                     RgAttribute::USER_ID,
                     RgAttribute::GENDER_ID,
                     RgAttribute::COUNTRY_ID,
-                    RgAttribute::CITY_ID
+                    RgAttribute::CITY_ID,
                 ],
                 'default',
-                'value' => null
+                'value' => null,
             ],
             [
                 [
                     RgAttribute::USER_ID,
                     RgAttribute::GENDER_ID,
                     RgAttribute::COUNTRY_ID,
-                    RgAttribute::CITY_ID
+                    RgAttribute::CITY_ID,
                 ],
-                'integer'
+                'integer',
             ],
             [
                 [
                     RgAttribute::CREATED_AT,
-                    RgAttribute::UPDATED_AT
+                    RgAttribute::UPDATED_AT,
                 ],
-                'safe'
+                'safe',
             ],
             [
                 [
@@ -154,18 +165,18 @@ class UserProfile extends BaseModel
                     RgAttribute::LATITUDE,
                     RgAttribute::LANGUAGE,
                     RgAttribute::SHORT_LANG,
-                    RgAttribute::TIMEZONE
+                    RgAttribute::TIMEZONE,
                 ],
                 'string',
-                'max' => 255
+                'max' => 255,
             ],
             [
                 [
                     RgAttribute::IS_CLOSED,
-                    RgAttribute::IS_NOTICE
+                    RgAttribute::IS_NOTICE,
                 ],
-                'boolean'
-            ]
+                'boolean',
+            ],
         ];
     }
 }
