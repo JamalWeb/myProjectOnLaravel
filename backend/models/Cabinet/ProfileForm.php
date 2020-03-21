@@ -16,6 +16,12 @@ class ProfileForm extends Model
     public $phoneNumber;
     public $address;
     public $gender;
+    public $username;
+    public $email;
+    public $createdAt;
+    public $updatedAt;
+    public $role;
+    public $type;
 
     /**
      * @return array
@@ -29,6 +35,11 @@ class ProfileForm extends Model
             'phoneNumber' => 'Номер телефона',
             'address'     => 'Адрес',
             'gender'      => 'Пол',
+            'username'    => 'Имя пользователя',
+            'email'       => 'Email',
+            'createdAt'   => 'Дата регистраций',
+            'role'        => 'Роль',
+            'type'        => 'Тип',
         ];
     }
 

@@ -2,11 +2,9 @@
 /**
  * @var $this View
  * @var $profileForm ProfileForm
- * @var $userForm UserForm
  */
 
 use backend\models\Cabinet\ProfileForm;
-use backend\models\Cabinet\UserForm;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 use yii\web\View;
@@ -51,11 +49,11 @@ use yii\web\View;
                         <?= $form->field($profileForm, 'gender')->textInput() ?>
                         <?= $form->field($profileForm, 'phoneNumber')->textInput() ?>
                         <?= $form->field($profileForm, 'address')->textInput() ?>
-                        <?= $form->field($userForm, 'username')->textInput() ?>
-                        <?= $form->field($userForm, 'email')->textInput(['disabled' => true]) ?>
-                        <?= $form->field($userForm, 'role')->textInput(['disabled' => true]) ?>
-                        <?= $form->field($userForm, 'type')->textInput(['disabled' => true]) ?>
-                        <?= $form->field($userForm, 'createdAt')->textInput(['disabled' => true]) ?>
+                        <?= $form->field($profileForm, 'username')->textInput() ?>
+                        <?= $form->field($profileForm, 'email')->textInput() ?>
+                        <?= $form->field($profileForm, 'role')->textInput(['disabled' => true]) ?>
+                        <?= $form->field($profileForm, 'type')->textInput(['disabled' => true]) ?>
+                        <?= $form->field($profileForm, 'createdAt')->textInput(['disabled' => true]) ?>
 
                         <?= Html::submitButton(
                             'Сохранить',

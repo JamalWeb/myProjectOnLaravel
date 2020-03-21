@@ -8,7 +8,6 @@ use backend\controllers\Base\BaseController;
 use backend\controllers\Cabinet\Action\ActionIndex;
 use backend\Entity\Services\User\ProfileService;
 use backend\models\Cabinet\ProfileForm;
-use backend\models\Cabinet\UserForm;
 use common\traits\RegisterMetaTag;
 use yii\filters\AccessControl;
 
@@ -56,7 +55,6 @@ final class CabinetController extends BaseController
             'index' => [
                 'class'       => ActionIndex::class,
                 'profileForm' => ProfileForm::class,
-                'userForm'    => UserForm::class,
             ],
         ];
     }
