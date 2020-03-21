@@ -3,8 +3,10 @@
 /**
  * @var View $this
  * @var string $appName
+ * @var User $user
  */
 
+use common\models\user\User;
 use yii\web\View;
 
 ?>
