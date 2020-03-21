@@ -2,10 +2,14 @@
 
 namespace backend\models\Site;
 
+use backend\Entity\Services\User\Dto\UserLoginDto;
 use common\models\user\User;
-use Yii;
 use yii\base\Model;
 
+/**
+ *
+ * @property UserLoginDto $dto
+ */
 class LoginForm extends Model
 {
     /** @var string */
@@ -38,9 +42,7 @@ class LoginForm extends Model
             [
                 'rememberMe',
                 'boolean',
-            ]
-            ,
-
+            ],
             [
                 'password',
                 'validatePassword',
@@ -54,8 +56,8 @@ class LoginForm extends Model
     public function attributeLabels(): ?array
     {
         return [
-            'login' => 'Вход',
-            'password' => 'Пароль',
+            'login'      => 'Вход',
+            'password'   => 'Пароль',
             'rememberMe' => 'Запомни меня',
         ];
     }
@@ -71,22 +73,22 @@ class LoginForm extends Model
         }
     }
 
-
-    public function sigIn(): bool
-    {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
-        }
-
-        return false;
-    }
-
     protected function getUser()
     {
         if ($this->user === null) {
-            $this->user = User::findByUserName($this->login);
+            $this->user = User::findOne(['email' => $this->login]);
         }
 
         return $this->user;
     }
+
+    public function getDto(): UserLoginDto
+    {
+        $dto = new UserLoginDto();
+        $dto->user = $this->user;
+        $dto->rememberMe = $this->rememberMe;
+
+        return $dto;
+    }
+
 }
