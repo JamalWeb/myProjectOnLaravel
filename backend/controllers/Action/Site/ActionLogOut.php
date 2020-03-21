@@ -8,7 +8,7 @@ use Yii;
 use yii\base\Action;
 use yii\web\Response;
 
-class ActionLogOut extends Action
+final class ActionLogOut extends Action
 {
     public function run(): Response
     {
