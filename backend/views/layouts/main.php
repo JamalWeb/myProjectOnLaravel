@@ -50,6 +50,12 @@ AppAsset::register($this);
     } else {
         $menuItems[] =
             [
+                'label' => 'Кабинет',
+                'url'   => ['/cabinet/index'],
+            ];
+
+        $menuItems[] =
+            [
                 'label'  => '<ion-icon name="exit-outline" size="large"></ion-icon>',
                 'url'    => ['/site/logout'],
                 'encode' => false,

@@ -1,6 +1,7 @@
 <?php
 
 use backend\config\Bootstrap\UserBootstrap;
+use backend\controllers\Cabinet\CabinetController;
 use backend\controllers\Site\SiteController;
 use common\models\user\User;
 use yii\log\FileTarget;
@@ -18,7 +19,8 @@ return [
     'name'                => 'Mappa',
     'controllerNamespace' => 'backend\controllers',
     'controllerMap'       => [
-        'site' => SiteController::class,
+        'site'    => SiteController::class,
+        'cabinet' => CabinetController::class,
     ],
     'bootstrap'           => ['log', UserBootstrap::class],
     'modules'             => [],
