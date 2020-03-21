@@ -17,6 +17,7 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+        'https://unpkg.com/ionicons@5.0.0/dist/ionicons.js',
     ];
     public $depends = [
         YiiAsset::class,
