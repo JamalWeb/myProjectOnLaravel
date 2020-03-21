@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\controllers\Action\Site\ActionIndex;
 use backend\controllers\Action\Site\ActionLogin;
+use backend\Entity\Services\User\UserService;
 use backend\models\Site\LoginForm;
 use common\traits\RegisterMetaTag;
 use yii\filters\AccessControl;
@@ -12,10 +13,27 @@ use yii\web\ErrorAction;
 
 /**
  * Site controller
+ * @property-read UserService $userService
  */
-class SiteController extends Controller
+final class SiteController extends Controller
 {
     use RegisterMetaTag;
+
+    private $userService;
+
+    /**
+     * SiteController constructor.
+     * @param $id
+     * @param $module
+     * @param UserService $userService
+     * @param array $config
+     */
+    public function __construct($id, $module, UserService $userService, $config = [])
+    {
+        parent::__construct($id, $module, $config);
+
+        $this->userService = $userService;
+    }
 
     /**
      * {@inheritdoc}

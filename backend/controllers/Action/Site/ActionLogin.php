@@ -36,17 +36,10 @@ final class ActionLogin extends BaseAction
     }
 
     /**
-     * @param array $params
      * @return LoginForm
      */
-    public function getLoginForm(array $params = []): LoginForm
+    public function getLoginForm(): LoginForm
     {
-        /** @var LoginForm $model */
-        $model = new $this->loginForm();
-
-        if (!empty($params)) {
-            $model->load($params);
-        }
-        return $model;
+        return new $this->loginForm();
     }
 }
