@@ -94,36 +94,36 @@ class User extends BaseModel implements IdentityInterface
     public function getPublicInfo(): array
     {
         $defaultUserInfo = [
-            RgAttribute::ID => $this->id,
-            RgAttribute::EMAIL => $this->email,
-            RgAttribute::ACCESS => [],
+            RgAttribute::ID      => $this->id,
+            RgAttribute::EMAIL   => $this->email,
+            RgAttribute::ACCESS  => [],
             RgAttribute::PROFILE => [
-                RgAttribute::FIRST_NAME => $this->profile->first_name,
-                RgAttribute::LAST_NAME => $this->profile->last_name,
+                RgAttribute::FIRST_NAME   => $this->profile->first_name,
+                RgAttribute::LAST_NAME    => $this->profile->last_name,
                 RgAttribute::PHONE_NUMBER => $this->profile->phone_number,
-                RgAttribute::ADDRESS => $this->profile->address,
-                RgAttribute::ABOUT => $this->profile->about,
-                RgAttribute::COUNTRY => null,
-                RgAttribute::CITY => [
-                    RgAttribute::ID => $this->profile->city->id,
+                RgAttribute::ADDRESS      => $this->profile->address,
+                RgAttribute::ABOUT        => $this->profile->about,
+                RgAttribute::COUNTRY      => null,
+                RgAttribute::CITY         => [
+                    RgAttribute::ID   => $this->profile->city->id,
                     RgAttribute::NAME => $this->profile->city->name,
                 ],
-                RgAttribute::CHILDREN => [],
-                RgAttribute::TYPE => [
-                    RgAttribute::ID => $this->type->id,
-                    RgAttribute::NAME => $this->type->name,
+                RgAttribute::CHILDREN     => [],
+                RgAttribute::TYPE         => [
+                    RgAttribute::ID          => $this->type->id,
+                    RgAttribute::NAME        => $this->type->name,
                     RgAttribute::DESCRIPTION => $this->type->description,
                 ],
-                RgAttribute::LONGITUDE => $this->profile->longitude,
-                RgAttribute::LATITUDE => $this->profile->latitude,
-                RgAttribute::LANGUAGE => $this->profile->language,
-                RgAttribute::SHORT_LANG => $this->profile->short_lang,
-                RgAttribute::TIMEZONE => $this->profile->timezone,
+                RgAttribute::LONGITUDE    => $this->profile->longitude,
+                RgAttribute::LATITUDE     => $this->profile->latitude,
+                RgAttribute::LANGUAGE     => $this->profile->language,
+                RgAttribute::SHORT_LANG   => $this->profile->short_lang,
+                RgAttribute::TIMEZONE     => $this->profile->timezone,
             ],
-            RgAttribute::BANNED => [
-                RgAttribute::IS_BANNED => $this->is_banned,
+            RgAttribute::BANNED  => [
+                RgAttribute::IS_BANNED     => $this->is_banned,
                 RgAttribute::BANNED_REASON => $this->banned_reason,
-                RgAttribute::BANNED_AT => $this->banned_at,
+                RgAttribute::BANNED_AT     => $this->banned_at,
             ],
         ];
 
@@ -131,10 +131,10 @@ class User extends BaseModel implements IdentityInterface
             /** @var UserChildren $child */
             foreach (ArrayHelper::generator($this->children) as $child) {
                 $defaultUserInfo[RgAttribute::PROFILE][RgAttribute::CHILDREN][] = [
-                    RgAttribute::ID => $child->id,
-                    RgAttribute::AGE => $child->age,
+                    RgAttribute::ID     => $child->id,
+                    RgAttribute::AGE    => $child->age,
                     RgAttribute::GENDER => [
-                        RgAttribute::ID => $child->gender->id,
+                        RgAttribute::ID   => $child->gender->id,
                         RgAttribute::NAME => $child->gender->name,
                     ],
                 ];
@@ -230,24 +230,24 @@ class User extends BaseModel implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            RgAttribute::ID => Yii::t('app', 'ID'),
-            RgAttribute::TYPE_ID => Yii::t('app', 'Type ID'),
-            RgAttribute::ROLE_ID => Yii::t('app', 'Role ID'),
-            RgAttribute::EMAIL => Yii::t('app', 'Email'),
-            RgAttribute::USERNAME => Yii::t('app', 'Username'),
-            RgAttribute::PASSWORD => Yii::t('app', 'Password'),
-            RgAttribute::AUTH_KEY => Yii::t('app', 'Auth Key'),
-            RgAttribute::STATUS_ID => Yii::t('app', 'Status ID'),
-            RgAttribute::LOGGED_IN_IP => Yii::t('app', 'Logged In Ip'),
-            RgAttribute::LOGGED_IN_AT => Yii::t('app', 'Logged In At'),
-            RgAttribute::LOGOUT_IN_IP => Yii::t('app', 'Logout In Ip'),
-            RgAttribute::LOGOUT_IN_AT => Yii::t('app', 'Logout In At'),
-            RgAttribute::CREATED_IP => Yii::t('app', 'Created Ip'),
-            RgAttribute::IS_BANNED => Yii::t('app', 'Is Banned'),
+            RgAttribute::ID            => Yii::t('app', 'ID'),
+            RgAttribute::TYPE_ID       => Yii::t('app', 'Type ID'),
+            RgAttribute::ROLE_ID       => Yii::t('app', 'Role ID'),
+            RgAttribute::EMAIL         => Yii::t('app', 'Email'),
+            RgAttribute::USERNAME      => Yii::t('app', 'Username'),
+            RgAttribute::PASSWORD      => Yii::t('app', 'Password'),
+            RgAttribute::AUTH_KEY      => Yii::t('app', 'Auth Key'),
+            RgAttribute::STATUS_ID     => Yii::t('app', 'Status ID'),
+            RgAttribute::LOGGED_IN_IP  => Yii::t('app', 'Logged In Ip'),
+            RgAttribute::LOGGED_IN_AT  => Yii::t('app', 'Logged In At'),
+            RgAttribute::LOGOUT_IN_IP  => Yii::t('app', 'Logout In Ip'),
+            RgAttribute::LOGOUT_IN_AT  => Yii::t('app', 'Logout In At'),
+            RgAttribute::CREATED_IP    => Yii::t('app', 'Created Ip'),
+            RgAttribute::IS_BANNED     => Yii::t('app', 'Is Banned'),
             RgAttribute::BANNED_REASON => Yii::t('app', 'Banned Reason'),
-            RgAttribute::BANNED_AT => Yii::t('app', 'Banned At'),
-            RgAttribute::CREATED_AT => Yii::t('app', 'Created At'),
-            RgAttribute::UPDATED_AT => Yii::t('app', 'Updated At'),
+            RgAttribute::BANNED_AT     => Yii::t('app', 'Banned At'),
+            RgAttribute::CREATED_AT    => Yii::t('app', 'Created At'),
+            RgAttribute::UPDATED_AT    => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -321,7 +321,7 @@ class User extends BaseModel implements IdentityInterface
     {
         return static::findOne(
             [
-                RgAttribute::ID => $id,
+                RgAttribute::ID        => $id,
                 RgAttribute::STATUS_ID => RgUser::STATUS_ACTIVE,
                 RgAttribute::IS_BANNED => false,
             ]
@@ -338,7 +338,7 @@ class User extends BaseModel implements IdentityInterface
         $userToken = UserToken::findOne(
             [
                 RgAttribute::ACCESS_TOKEN => $accessToken,
-                RgAttribute::TYPE_ID => RgUser::TOKEN_TYPE_AUTH,
+                RgAttribute::TYPE_ID      => RgUser::TOKEN_TYPE_AUTH,
             ]
         );
 
@@ -348,7 +348,7 @@ class User extends BaseModel implements IdentityInterface
 
         return static::findOne(
             [
-                RgAttribute::ID => $userToken->user_id,
+                RgAttribute::ID        => $userToken->user_id,
                 RgAttribute::STATUS_ID => [
                     RgUser::STATUS_ACTIVE,
                     RgUser::STATUS_UNCONFIRMED_EMAIL,
