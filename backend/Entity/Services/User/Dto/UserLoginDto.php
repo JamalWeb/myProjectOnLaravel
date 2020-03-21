@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\Entity\Services\User\Dto;
-
 
 use common\models\user\User;
 
@@ -13,5 +11,4 @@ class UserLoginDto
 
     /** @var bool */
     public $rememberMe;
-
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\controllers\Action\Site;
+namespace backend\controllers\Site\Action;
 
 use backend\controllers\Base\BaseAction;
-use backend\controllers\SiteController;
+use backend\controllers\Site\SiteController;
 use backend\models\Site\LoginForm;
 use Yii;
 
@@ -21,14 +21,12 @@ final class ActionLogin extends BaseAction
 
         $this->controller->registerMeta("{$this->appName} | Вход", '', '');
 
-
         if ($request->isPost) {
             $this->loginForm->load($request->post());
-
             $valid = $this->loginForm->validate();
 
             if ($valid) {
-                $this->controller->userService->signIn($this->loginForm->getDto());
+                $this->controller->authService->signIn($this->loginForm->getDto());
 
                 return $this->controller->goHome();
             }

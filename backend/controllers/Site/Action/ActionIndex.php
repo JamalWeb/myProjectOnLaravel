@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\controllers\Action\Site;
+namespace backend\controllers\Site\Action;
 
 use backend\controllers\Base\BaseAction;
-use backend\controllers\SiteController;
+use backend\controllers\Site\SiteController;
 
 /**
  * @property SiteController $controller

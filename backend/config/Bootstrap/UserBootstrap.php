@@ -1,12 +1,10 @@
 <?php
 
-
 namespace backend\config\Bootstrap;
 
-
+use backend\Entity\Services\User\AuthService;
 use backend\Entity\Services\User\Repository\UserRepository;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;
-use backend\Entity\Services\User\UserService;
 use Yii;
 use yii\base\BootstrapInterface;
 
@@ -20,7 +18,7 @@ class UserBootstrap implements BootstrapInterface
     {
         $container = Yii::$container;
 
-        $container->setSingleton(UserService::class);
+        $container->setSingleton(AuthService::class);
 
         $container->set(
             UserRepositoryInterface::class,

@@ -1,6 +1,7 @@
 <?php
 
 use backend\config\Bootstrap\UserBootstrap;
+use backend\controllers\Site\SiteController;
 use common\models\user\User;
 use yii\log\FileTarget;
 
@@ -16,6 +17,9 @@ return [
     'basePath'            => dirname(__DIR__),
     'name'                => 'Mappa',
     'controllerNamespace' => 'backend\controllers',
+    'controllerMap'       => [
+        'site' => SiteController::class,
+    ],
     'bootstrap'           => ['log', UserBootstrap::class],
     'modules'             => [],
     'components'          => [

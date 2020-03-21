@@ -90,5 +90,4 @@ class LoginForm extends Model
 
         return $dto;
     }
-
 }
