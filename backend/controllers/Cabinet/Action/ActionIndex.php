@@ -1,12 +1,11 @@
 <?php
 
-
 namespace backend\controllers\Cabinet\Action;
-
 
 use backend\controllers\Base\BaseAction;
 use backend\controllers\Cabinet\CabinetController;
 use backend\models\Cabinet\ProfileForm;
+use Yii;
 
 /**
  * @property-read CabinetController $controller
@@ -29,7 +28,7 @@ final class ActionIndex extends BaseAction
                 'avatar'      => $user->profile->avatar,
                 'phoneNumber' => $user->profile->phone_number,
                 'address'     => $user->profile->address,
-                'gender'      => $user->profile->gender->name,
+                'genderId'    => $user->profile->gender->id,
                 'username'    => $user->username,
                 'email'       => $user->email,
                 'createdAt'   => $user->created_at,
@@ -53,7 +52,6 @@ final class ActionIndex extends BaseAction
      */
     public function getProfileForm(array $params): ProfileForm
     {
-        return new $this->profileForm($params);
+        return new $this->profileForm(Yii::$app->user, $params);
     }
-
 }

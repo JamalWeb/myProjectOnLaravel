@@ -1,14 +1,24 @@
 <?php
+
 /**
  * @var $this View
  * @var $profileForm ProfileForm
  */
 
+
+use backend\assets\AppAsset;
 use backend\models\Cabinet\ProfileForm;
 use yii\bootstrap4\ActiveForm;
-use yii\bootstrap4\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
+$this->registerJsFile(
+    '@web/js/cabinet/update.js',
+    [
+        'position' => View::POS_END,
+        'depends'  => [AppAsset::class],
+    ]
+);
 ?>
 <div class="container bootstrap snippet">
     <div class="row">
@@ -21,18 +31,9 @@ use yii\web\View;
                      alt="avatar">
                 <br>
                 <br>
-                <div class="custom-file">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
-                    <input type="file" class="custom-file-input" id="customFile">
+                <div>
+                    <input type="file">
                 </div>
-            </div>
-            <br>
-            <div class="card" style="">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
             </div>
         </div><!--/col-3-->
         <div class="col-sm-9">
@@ -40,11 +41,18 @@ use yii\web\View;
                 <div class="card-header">Информация о пользователе</div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <?php $form = ActiveForm::begin() ?>
+                        <?php $form = ActiveForm::begin(
+                            [
+                                'id'                     => 'profileForm',
+                                'action'                 => Url::to(['update-profile']),
+                                'enableClientValidation' => true,
+                                'enableAjaxValidation'   => true,
+                            ]
+                        ) ?>
                         <?= $form->field($profileForm, 'firstName')->textInput() ?>
                         <?= $form->field($profileForm, 'lastName')->textInput() ?>
                         <?= $form->field($profileForm, 'patronymic')->textInput() ?>
-                        <?= $form->field($profileForm, 'gender')->textInput() ?>
+                        <?= $form->field($profileForm, 'genderId')->dropDownList(ProfileForm::getGenders()) ?>
                         <?= $form->field($profileForm, 'phoneNumber')->textInput() ?>
                         <?= $form->field($profileForm, 'address')->textInput() ?>
                         <?= $form->field($profileForm, 'username')->textInput() ?>
@@ -53,12 +61,6 @@ use yii\web\View;
                         <?= $form->field($profileForm, 'type')->textInput(['disabled' => true]) ?>
                         <?= $form->field($profileForm, 'createdAt')->textInput(['disabled' => true]) ?>
 
-                        <?= Html::submitButton(
-                            'Сохранить',
-                            [
-                                'class' => 'btn btn-outline-success',
-                            ]
-                        ) ?>
                         <?php ActiveForm::end() ?>
                     </div>
                 </div>

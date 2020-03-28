@@ -1,29 +1,35 @@
 <?php
 
-
 namespace backend\controllers\Cabinet;
-
 
 use backend\controllers\Base\BaseController;
 use backend\controllers\Cabinet\Action\ActionIndex;
-use backend\Entity\Services\User\ProfileService;
+use backend\controllers\Cabinet\Action\ActionUpdateProfile;
+use backend\Entity\Services\User\CabinetService;
 use backend\models\Cabinet\ProfileForm;
 use common\traits\RegisterMetaTag;
 use yii\filters\AccessControl;
 
 /**
- * @property-read ProfileService $profileService;
+ * @property-read CabinetService $cabinetService;
  */
 final class CabinetController extends BaseController
 {
     use RegisterMetaTag;
 
-    public $profileService;
+    public $cabinetService;
 
-    public function __construct($id, $module, ProfileService $profileService, $config = [])
+    /**
+     * CabinetController constructor.
+     * @param $id
+     * @param $module
+     * @param CabinetService $cabinetService
+     * @param array $config
+     */
+    public function __construct($id, $module, CabinetService $cabinetService, $config = [])
     {
         parent::__construct($id, $module, $config);
-        $this->profileService = $profileService;
+        $this->cabinetService = $cabinetService;
     }
 
     /**
@@ -40,7 +46,11 @@ final class CabinetController extends BaseController
                         'allow'   => true,
                     ],
                     [
-                        'actions' => ['index'],
+                        'actions' =>
+                            [
+                                'index',
+                                'update-profile',
+                            ],
                         'allow'   => true,
                         'roles'   => ['@'],
                     ],
@@ -52,11 +62,15 @@ final class CabinetController extends BaseController
     public function actions()
     {
         return [
-            'index' => [
+            'index'          => [
                 'class'       => ActionIndex::class,
                 'profileForm' => ProfileForm::class,
             ],
+            'update-profile' => [
+                'class'       => ActionUpdateProfile::class,
+                'profileForm' => ProfileForm::class,
+
+            ],
         ];
     }
-
 }

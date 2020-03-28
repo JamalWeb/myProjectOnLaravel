@@ -6,11 +6,11 @@ use yii\db\Connection;
 
 class UserRepository implements UserRepositoryInterface
 {
-    private $connnection;
+    private $connection;
 
     public function __construct(Connection $connection)
     {
-        $this->connnection = $connection;
+        $this->connection = $connection;
     }
 
 

@@ -10,7 +10,7 @@ class BaseAction extends Action
     /** @var string */
     public $appName;
 
-    public function init()
+    public function init(): void
     {
         $this->appName = Yii::$app->name;
     }
