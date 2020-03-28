@@ -10,10 +10,9 @@ use yii\bootstrap4\Html;
 use yii\web\View;
 
 ?>
-<hr>
 <div class="container bootstrap snippet">
     <div class="row">
-        <div class="col-sm-10"><h1><?= $this->context->authorizedUser->profile->first_name ?></h1></div>
+        <div class="col-sm-10"><h1><?= $this->context->authorizedUser->username ?></h1></div>
     </div>
     <div class="row">
         <div class="col-sm-3"><!--left col-->
@@ -41,7 +40,6 @@ use yii\web\View;
                 <div class="card-header">Информация о пользователе</div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <hr>
                         <?php $form = ActiveForm::begin() ?>
                         <?= $form->field($profileForm, 'firstName')->textInput() ?>
                         <?= $form->field($profileForm, 'lastName')->textInput() ?>
@@ -65,9 +63,6 @@ use yii\web\View;
                     </div>
                 </div>
             </div>
-
-
-        </div><!--/tab-pane-->
-    </div><!--/tab-content-->
-
-</div><!--/col-9-->
+        </div>
+    </div>
+</div>

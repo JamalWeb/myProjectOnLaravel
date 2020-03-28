@@ -22,7 +22,6 @@ class ProfileForm extends Model
     public $updatedAt;
     public $role;
     public $type;
-
     /**
      * @return array
      */

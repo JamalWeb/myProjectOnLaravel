@@ -11,7 +11,7 @@ use yii\web\View;
 
 ?>
 <div class="jumbotron">
-    <h1 class="display-4">Привет, <?= $this->context->authorizedUser->email ?> !</h1>
+    <h1 class="display-4">Привет, <?= $this->context->authorizedUser->username ?> !</h1>
     <p class="lead">Это простой пример блока с компонентом в стиле jumbotron для
         привлечения дополнительного внимания к содержанию или информации.</p>
     <hr class="my-4">
