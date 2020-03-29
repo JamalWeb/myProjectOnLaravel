@@ -4,7 +4,9 @@ namespace backend\models\Cabinet;
 
 use backend\Entity\Services\User\Dto\UserProfileDto;
 use common\components\ArrayHelper;
+use common\components\PasswordHelper;
 use common\models\user\UserGender;
+use Exception;
 use yii\base\Model;
 use yii\web\User;
 
@@ -20,9 +22,7 @@ class ProfileForm extends Model
     public $avatar;
     public $phoneNumber;
     public $address;
-    public $genderName;
     public $genderId;
-
     public $username;
     public $email;
     public $createdAt;
@@ -32,6 +32,8 @@ class ProfileForm extends Model
 
     /** @var User */
     private $user;
+    public $currentPassword;
+    public $newPassword;
 
     /**
      * ProfileForm constructor.
@@ -88,7 +90,28 @@ class ProfileForm extends Model
 
             ],
             ['genderId', 'integer'],
+            [['currentPassword', 'newPassword'], 'validateCurrentPassword'],
+
         ];
+    }
+
+    public function validateCurrentPassword($attribute): void
+    {
+        if (empty($this->currentPassword) && !empty($this->newPassword)) {
+            $this->addErrors(
+                [
+                    'currentPassword' => 'Введите текущий пароль',
+                    'newPassword'     => 'Введите текущий пароль',
+                ]
+            );
+        }
+
+        if (!empty($this->currentPassword)) {
+            $result = $this->user->identity->validatePassword($this->currentPassword);
+            if (!$result) {
+                $this->addError($attribute, 'Текущий пароль не совпадает');
+            }
+        }
     }
 
     /**
@@ -97,17 +120,19 @@ class ProfileForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'firstName'   => 'Имя',
-            'lastName'    => 'Фамилия',
-            'patronymic'  => 'Отчество',
-            'phoneNumber' => 'Номер телефона',
-            'address'     => 'Адрес',
-            'genderId'    => 'Пол',
-            'username'    => 'Имя пользователя',
-            'email'       => 'Email',
-            'createdAt'   => 'Дата регистраций',
-            'role'        => 'Роль',
-            'type'        => 'Тип',
+            'firstName'       => 'Имя',
+            'lastName'        => 'Фамилия',
+            'patronymic'      => 'Отчество',
+            'phoneNumber'     => 'Номер телефона',
+            'address'         => 'Адрес',
+            'genderId'        => 'Пол',
+            'username'        => 'Имя пользователя',
+            'email'           => 'Email',
+            'createdAt'       => 'Дата регистраций',
+            'role'            => 'Роль',
+            'type'            => 'Тип',
+            'currentPassword' => 'Текущий пароль',
+            'newPassword'     => 'Новый пароль',
         ];
     }
 
@@ -123,6 +148,7 @@ class ProfileForm extends Model
 
     /**
      * @return UserProfileDto
+     * @throws Exception
      */
     public function getDto(): UserProfileDto
     {
@@ -136,6 +162,9 @@ class ProfileForm extends Model
         $dto->genderId = $this->genderId;
         $dto->email = $this->email;
         $dto->address = $this->address;
+        $dto->newPassword = !empty($this->newPassword) ? PasswordHelper::encrypt(
+            $this->newPassword
+        ) : $this->user->identity->password;
 
         return $dto;
     }

@@ -49,6 +49,7 @@ class ProfileRepository implements ProfileRepositoryInterface
                     [
                         'email'    => $dto->email,
                         'username' => $dto->username,
+                        'password' => $dto->newPassword,
                     ],
                     [
                         'id' => $dto->userId,

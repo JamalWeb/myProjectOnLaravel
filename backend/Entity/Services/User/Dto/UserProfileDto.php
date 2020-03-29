@@ -19,4 +19,6 @@ class UserProfileDto
     public $username;
     public $email;
     public $avatar;
+    public $newPassword;
+
 }
