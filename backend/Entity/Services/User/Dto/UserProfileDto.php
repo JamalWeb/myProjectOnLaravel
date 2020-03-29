@@ -20,5 +20,4 @@ class UserProfileDto
     public $email;
     public $avatar;
     public $newPassword;
-
 }

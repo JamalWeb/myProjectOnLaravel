@@ -25,11 +25,6 @@ $this->registerJsFile(
         <div class="col-sm-10"><h1><?= $this->context->authorizedUser->username ?></h1></div>
     </div>
     <div class="row">
-        <div class="col-sm-3"><!--left col-->
-            <div class="text-center">
-
-            </div>
-        </div><!--/col-3-->
         <div class="col-sm-9">
             <div class="card bg-light">
                 <div class="card-header">Информация о пользователе</div>
