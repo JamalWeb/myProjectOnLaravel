@@ -90,6 +90,11 @@ class ProfileForm extends Model
 
             ],
             ['genderId', 'integer'],
+            [
+                ['currentPassword', 'newPassword'],
+                'string',
+                'min' => 6,
+            ],
             [['currentPassword', 'newPassword'], 'validateCurrentPassword'],
 
         ];
