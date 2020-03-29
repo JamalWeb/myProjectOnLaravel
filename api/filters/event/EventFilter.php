@@ -36,6 +36,12 @@ class EventFilter extends Model
     /** @var User $user */
     private $user;
 
+    public function __construct(User $user, $config = [])
+    {
+        parent::__construct($config);
+        $this->user = $user;
+    }
+
     /**
      * @return array
      */
@@ -44,35 +50,35 @@ class EventFilter extends Model
         return [
             [
                 'interest',
-                'safe'
+                'safe',
             ],
             [
                 'query',
                 'string',
-                'max' => 255
+                'max' => 255,
             ],
             [
                 'city',
-                'integer'
+                'integer',
             ],
             [
                 'forYou',
                 'boolean',
-                'trueValue' => true,
-                'falseValue' => false
+                'trueValue'  => true,
+                'falseValue' => false,
             ],
             [
                 'all',
                 'boolean',
-                'trueValue' => true,
-                'falseValue' => false
+                'trueValue'  => true,
+                'falseValue' => false,
             ],
             [
                 [
                     'dateFrom',
-                    'dateTo'
+                    'dateTo',
                 ],
-                'date'
+                'date',
             ],
         ];
     }
@@ -124,19 +130,4 @@ class EventFilter extends Model
         return $this->eventQuery;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
 }

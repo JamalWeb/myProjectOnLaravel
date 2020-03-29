@@ -66,9 +66,9 @@ class EventApi extends Api
         $eventForm = new EventForm($post);
         $eventForm->setAttributes(
             [
-                RgAttribute::USER_ID => $user->id,
-                RgAttribute::WALLPAPER => UploadedFile::getInstanceByName(RgAttribute::WALLPAPER),
-                RgAttribute::PHOTO_GALLERY => UploadedFile::getInstancesByName(RgAttribute::PHOTO_GALLERY)
+                RgAttribute::USER_ID       => $user->id,
+                RgAttribute::WALLPAPER     => UploadedFile::getInstanceByName(RgAttribute::WALLPAPER),
+                RgAttribute::PHOTO_GALLERY => UploadedFile::getInstancesByName(RgAttribute::PHOTO_GALLERY),
             ]
         );
 
@@ -138,7 +138,7 @@ class EventApi extends Api
         $eventList = Event::find()
             ->where(
                 [
-                    RgAttribute::USER_ID => $user->id
+                    RgAttribute::USER_ID => $user->id,
                 ]
             );
 
@@ -147,9 +147,7 @@ class EventApi extends Api
 
     public function list(User $user, array $get): array
     {
-        $filter = new EventFilter();
-        $filter->setUser($user);
-
+        $filter = new EventFilter($user);
         $filter->setAttributes($get);
 
         return DataProviderHelper::active($filter->search()->eventQuery, $get);
