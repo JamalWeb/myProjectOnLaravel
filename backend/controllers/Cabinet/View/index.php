@@ -22,7 +22,7 @@ $this->registerJsFile(
 ?>
 <div class="container bootstrap snippet">
     <div class="row">
-        <div class="col-sm-10"><h1><?= $this->context->authorizedUser->username ?></h1></div>
+        <div class="col-sm-10"><h2><?= "Профиль: {$this->context->authorizedUser->username}" ?></h2></div>
     </div>
     <div class="row">
         <div class="col-sm-9">

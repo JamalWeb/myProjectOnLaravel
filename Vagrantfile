@@ -50,9 +50,7 @@ Vagrant.configure(2) do |config|
   config.vm.network 'private_network', ip: options['ip']
 
   # sync: folder 'yii2-app-advanced' (host machine) -> folder '/app' (guest machine)
-  config.vm.synced_folder './', '/app', owner: nil, group: nil,
-        :nfs => true,
-        :mount_options => ['nolock']
+  config.vm.synced_folder './', '/app', owner: 'vagrant', group: 'vagrant'
 
   # disable folder '/vagrant' (guest machine)
   config.vm.synced_folder '.', '/vagrant', disabled: true
