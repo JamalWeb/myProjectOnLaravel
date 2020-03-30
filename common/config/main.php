@@ -1,5 +1,10 @@
 <?php
 
+use common\components\User;
+use yii\caching\FileCache;
+use yii\i18n\DbMessageSource;
+use yii\rbac\DbManager;
+
 return [
     'aliases'    => [
         '@bower'        => '@vendor/bower-asset',
@@ -11,24 +16,27 @@ return [
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'language'   => 'ru-RU',
     'components' => [
-        'user'  => [
-            'class' => 'common\components\User',
+        'user'        => [
+            'class' => User::class,
         ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
+        'cache'       => [
+            'class' => FileCache::class,
         ],
-        'i18n'  => [
+        'i18n'        => [
             'translations' => [
                 'api' => [
-                    'class' => 'yii\i18n\DbMessageSource',
+                    'class' => DbMessageSource::class,
                 ],
             ],
+        ],
+        'authManager' => [
+            'class' => DbManager::class,
         ],
     ],
     'modules'    => [
         'user' => [
-            'class'         => 'common\components\User',
-            'identityClass' => 'common\models\user\User',
+            'class'         => User::class,
+            'identityClass' => \common\models\user\User::class,
         ],
     ],
 ];
