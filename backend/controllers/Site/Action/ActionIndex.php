@@ -12,7 +12,7 @@ final class ActionIndex extends BaseAction
 {
     public function run(): string
     {
-        $this->controller->registerMeta("{$this->appName} | Главная", '', '');
+        $this->controller->registerMeta("{$this->appName} | Список пользователей", '', '');
 
         return $this->controller->render(
             'index',

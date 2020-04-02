@@ -129,5 +129,4 @@ class EventFilter extends Model
     {
         return $this->eventQuery;
     }
-
 }

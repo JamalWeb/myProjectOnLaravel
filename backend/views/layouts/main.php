@@ -5,6 +5,7 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
+use common\helpers\UserPermissionsHelper;
 use common\widgets\Alert;
 use yii\bootstrap4\Breadcrumbs;
 use yii\bootstrap4\Html;
@@ -36,10 +37,6 @@ AppAsset::register($this);
             'brandUrl'   => Yii::$app->homeUrl,
         ]
     );
-    $menuItems = [
-        ['label' => 'Главная', 'url' => ['/site/index']],
-    ];
-
     if (Yii::$app->user->isGuest) {
         $menuItems[] =
             [
@@ -48,6 +45,20 @@ AppAsset::register($this);
                 'encode' => false,
             ];
     } else {
+        $menuItems[] =
+            [
+                'label' => 'Главная',
+                'url'   => ['/site/index'],
+            ];
+
+        if (UserPermissionsHelper::isAdmin(Yii::$app->user->identity->getId())) {
+            $menuItems[] =
+                [
+                    'label' => 'Пользователи',
+                    'url'   => ['/user/index'],
+                ];
+        }
+
         $menuItems[] =
             [
                 'label' => 'Кабинет',
