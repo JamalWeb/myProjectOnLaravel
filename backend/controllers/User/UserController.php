@@ -6,7 +6,8 @@ namespace backend\controllers\User;
 
 use backend\controllers\Base\BaseController;
 use backend\controllers\User\Action\ActionIndex;
-use backend\Entity\Services\User\AuthService;
+use backend\controllers\User\Action\ActionView;
+use backend\Entity\Services\User\UserService;
 use backend\models\User\UserSearch;
 use common\helpers\UserPermissionsHelper;
 use common\traits\RegisterMetaTag;
@@ -17,20 +18,20 @@ final class UserController extends BaseController
 {
     use RegisterMetaTag;
 
-    public $authService;
+    public $service;
 
     /**
      * SiteController constructor.
      * @param $id
      * @param $module
-     * @param AuthService $authService
+     * @param UserService $service
      * @param array $config
      */
-    public function __construct($id, $module, AuthService $authService, $config = [])
+    public function __construct($id, $module, UserService $service, $config = [])
     {
         parent::__construct($id, $module, $config);
 
-        $this->authService = $authService;
+        $this->service = $service;
     }
 
     /**
@@ -43,7 +44,10 @@ final class UserController extends BaseController
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => [
+                            'index',
+                            'view',
+                        ],
                         'allow'   => true,
                         'roles'   => [
                             UserPermissionsHelper::ROLE_ADMIN,
@@ -60,6 +64,9 @@ final class UserController extends BaseController
             'index' => [
                 'class'       => ActionIndex::class,
                 'modelSearch' => UserSearch::class,
+            ],
+            'view'  => [
+                'class' => ActionView::class,
             ],
             'error' => [
                 'class' => ErrorAction::class,

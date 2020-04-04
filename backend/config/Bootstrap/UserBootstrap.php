@@ -2,12 +2,14 @@
 
 namespace backend\config\Bootstrap;
 
-use backend\Entity\Services\User\AuthService;
-use backend\Entity\Services\User\CabinetService;
-use backend\Entity\Services\User\Repository\ProfileRepository;
-use backend\Entity\Services\User\Repository\ProfileRepositoryInterface;
-use backend\Entity\Services\User\Repository\UserRepository;
-use backend\Entity\Services\User\Repository\UserRepositoryInterface;
+use backend\Entity\Services\User\{AuthService,
+    CabinetService,
+    Repository\ProfileRepository,
+    Repository\ProfileRepositoryInterface,
+    Repository\UserRepository,
+    Repository\UserRepositoryInterface
+};
+use UserService;
 use Yii;
 use yii\base\BootstrapInterface;
 
@@ -23,6 +25,7 @@ class UserBootstrap implements BootstrapInterface
 
         $container->setSingleton(AuthService::class);
         $container->setSingleton(CabinetService::class);
+        $container->setSingleton(UserService::class);
 
         $container->set(
             UserRepositoryInterface::class,

@@ -7,6 +7,8 @@ namespace backend\models\User;
 use common\components\ArrayHelper;
 use common\models\user\User;
 use common\models\user\UserGender;
+use common\models\user\UserStatus;
+use common\models\user\UserType;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 
@@ -69,9 +71,28 @@ class UserSearch extends Model
         return $this->activeQuery;
     }
 
+    /**
+     * @return array
+     */
     public static function getGenders(): array
     {
         return ArrayHelper::map(UserGender::find()->asArray()->all(), 'id', 'name');
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTypes(): array
+    {
+        return ArrayHelper::map(UserType::find()->asArray()->all(), 'id', 'name');
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatuses(): array
+    {
+        return ArrayHelper::map(UserStatus::find()->asArray()->all(), 'id', 'name');
     }
 
 }
