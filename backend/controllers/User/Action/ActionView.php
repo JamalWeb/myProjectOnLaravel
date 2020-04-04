@@ -10,7 +10,7 @@ use backend\controllers\User\UserController;
 /**
  * @property-read UserController $controller
  */
-class ActionView extends BaseAction
+final class ActionView extends BaseAction
 {
     public function run(int $id): string
     {

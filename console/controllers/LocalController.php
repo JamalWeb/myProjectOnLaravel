@@ -20,5 +20,4 @@ class LocalController extends Controller
 SQL
         )->execute();
     }
-
 }

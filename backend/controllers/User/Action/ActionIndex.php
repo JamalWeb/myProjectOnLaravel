@@ -23,7 +23,7 @@ final class ActionIndex extends BaseAction
         $this->controller->registerMeta("{$this->appName} | Список пользователей", '', '');
 
         $searchModel = $this->getModelSearch();
-        $searchModel->setAttributes(Yii::$app->request->queryParams);
+        $searchModel->load(Yii::$app->request->get());
 
         $dataProvider = new ActiveDataProvider(
             [

@@ -48,7 +48,7 @@ class RbacController extends Controller
      */
     public function findUser(): int
     {
-        return User::findOne(['username' => 'jamalWeb'])->id;
+        return User::findOne(['id' => 1])->id;
     }
 
 }

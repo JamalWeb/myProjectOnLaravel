@@ -5,8 +5,7 @@ namespace backend\controllers\User;
 
 
 use backend\controllers\Base\BaseController;
-use backend\controllers\User\Action\ActionIndex;
-use backend\controllers\User\Action\ActionView;
+use backend\controllers\User\Action\{ActionDelete, ActionIndex, ActionView};
 use backend\Entity\Services\User\UserService;
 use backend\models\User\UserSearch;
 use common\helpers\UserPermissionsHelper;
@@ -14,6 +13,9 @@ use common\traits\RegisterMetaTag;
 use yii\filters\AccessControl;
 use yii\web\ErrorAction;
 
+/**
+ * @property-read UserService $service
+ */
 final class UserController extends BaseController
 {
     use RegisterMetaTag;
@@ -47,6 +49,7 @@ final class UserController extends BaseController
                         'actions' => [
                             'index',
                             'view',
+                            'delete',
                         ],
                         'allow'   => true,
                         'roles'   => [
@@ -61,14 +64,17 @@ final class UserController extends BaseController
     public function actions()
     {
         return [
-            'index' => [
+            'index'  => [
                 'class'       => ActionIndex::class,
                 'modelSearch' => UserSearch::class,
             ],
-            'view'  => [
+            'view'   => [
                 'class' => ActionView::class,
             ],
-            'error' => [
+            'delete' => [
+                'class' => ActionDelete::class,
+            ],
+            'error'  => [
                 'class' => ErrorAction::class,
             ],
         ];

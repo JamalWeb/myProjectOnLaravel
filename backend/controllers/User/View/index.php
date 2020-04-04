@@ -51,7 +51,7 @@ echo GridView::widget(
                 },
             ],
             [
-                'attribute' => 'status',
+                'attribute' => 'status_id',
                 'label'     => 'Статус',
                 'filter'    => Select2::widget(
                     [

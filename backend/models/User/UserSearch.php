@@ -11,6 +11,7 @@ use common\models\user\UserStatus;
 use common\models\user\UserType;
 use yii\base\Model;
 use yii\db\ActiveQuery;
+use yii\db\Query;
 
 class UserSearch extends Model
 {
@@ -34,7 +35,7 @@ class UserSearch extends Model
                 [
                     'gender_id',
                     'id',
-                    'status_d',
+                    'status_id',
                     'type_id',
                 ],
                 'integer',
@@ -53,13 +54,34 @@ class UserSearch extends Model
     }
 
 
-    public function init()
+    public function init(): void
     {
-        $this->activeQuery = User::find();
+        $this->activeQuery = User::find()->alias('u');
     }
 
     public function search(): self
     {
+        $this->activeQuery->andFilterWhere(
+            [
+                'status_id' => $this->status_id,
+                'type_id'   => $this->type_id,
+                'u.id'      => $this->id,
+                'username'  => $this->username,
+                'email'     => $this->email,
+            ]
+        );
+
+        $this->activeQuery->joinWith(
+            [
+                'profile p' => function (Query $query) {
+                    $query->andFilterWhere(['ilike', 'first_name', $this->firstName])
+                        ->andFilterWhere(['ilike', 'last_name', $this->lastName])
+                        ->andFilterWhere(['ilike', 'phone', $this->phone])
+                        ->andFilterWhere(['gender_id' => $this->gender_id]);
+                },
+            ]
+        );
+
         return $this;
     }
 
