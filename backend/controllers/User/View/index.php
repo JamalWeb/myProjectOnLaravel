@@ -33,7 +33,7 @@ echo GridView::widget(
                 'label'     => 'Тип пользователя',
                 'filter'    => Select2::widget(
                     [
-                        'name'          => 'type_id',
+                        'name'          => 'UserSearch[type_id]',
                         'data'          => UserSearch::getTypes(),
                         'value'         => $searchModel->type_id,
                         'options'       => [
@@ -55,7 +55,7 @@ echo GridView::widget(
                 'label'     => 'Статус',
                 'filter'    => Select2::widget(
                     [
-                        'name'          => 'status_id',
+                        'name'          => 'UserSearch[status_id]',
                         'data'          => UserSearch::getStatuses(),
                         'value'         => $searchModel->status_id,
                         'options'       => [
@@ -77,7 +77,7 @@ echo GridView::widget(
                 'label'     => 'Пол',
                 'filter'    => Select2::widget(
                     [
-                        'name'          => 'gender_id',
+                        'name'          => 'UserSearch[gender_id]',
                         'data'          => UserSearch::getGenders(),
                         'value'         => $searchModel->gender_id,
                         'options'       => [
