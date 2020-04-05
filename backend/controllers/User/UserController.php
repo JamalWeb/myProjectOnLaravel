@@ -5,8 +5,9 @@ namespace backend\controllers\User;
 
 
 use backend\controllers\Base\BaseController;
-use backend\controllers\User\Action\{ActionDelete, ActionIndex, ActionView};
+use backend\controllers\User\Action\{ActionCreate, ActionDelete, ActionIndex, ActionView};
 use backend\Entity\Services\User\UserService;
+use backend\models\User\UserForm;
 use backend\models\User\UserSearch;
 use common\helpers\UserPermissionsHelper;
 use common\traits\RegisterMetaTag;
@@ -50,6 +51,7 @@ final class UserController extends BaseController
                             'index',
                             'view',
                             'delete',
+                            'create',
                         ],
                         'allow'   => true,
                         'roles'   => [
@@ -73,6 +75,10 @@ final class UserController extends BaseController
             ],
             'delete' => [
                 'class' => ActionDelete::class,
+            ],
+            'create' => [
+                'class'    => ActionCreate::class,
+                'userForm' => UserForm::class,
             ],
             'error'  => [
                 'class' => ErrorAction::class,
