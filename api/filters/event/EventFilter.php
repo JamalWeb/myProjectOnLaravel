@@ -112,7 +112,9 @@ class EventFilter extends Model
             $this->eventQuery->andFilterWhere(['in', 'interest_category_id', $userInterest]);
         }
 
-        $this->eventQuery->andFilterWhere(['city_id' => $this->city]);
+        if (is_int($this->city)) {
+            $this->eventQuery->andFilterWhere(['city_id' => $this->city]);
+        }
 
         $this->addOrderBy();
         return $this;
