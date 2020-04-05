@@ -654,6 +654,243 @@ class EventController extends BaseController
         return $this->api->getListByUser($this->user, $this->get);
     }
 
+    /**
+     * @OA\Get(
+     *   path="/event/list",
+     *   summary="Получить список событий",
+     *   tags={"Событие | Event"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\RequestBody(
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="interest",
+     *           description="ID интересов",
+     *           type="integer",
+     *           example=1
+     *         ),
+     *         @OA\Property(
+     *           property="query",
+     *           description="Строка запроса (поиск по адресу или названию)",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="city",
+     *           description="ID города",
+     *           type="integer",
+     *         ),
+     *         @OA\Property(
+     *           property="forYou",
+     *           description="Поиск по интересам текущего пользователя",
+     *           type="bool",
+     *         ),
+     *         @OA\Property(
+     *           property="dateFrom",
+     *           description="Дата начала 2019-03-09 16:00:00",
+     *           format="datetime"
+     *         ),
+     *         @OA\Property(
+     *             property="dateTo",
+     *             description="Дата окончания 2019-03-09 16:00:00",
+     *             format="datetime"
+     *         )
+     *       )
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="success",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         type="object",
+     *         example={
+     *           "items":{
+     *             {
+     *               "id": 1,
+     *               "name": "7 f f .",
+     *               "about": "ОписаниеОписание",
+     *               "address": "Адрес проведения",
+     *               "ticket_price": "0.00",
+     *               "tickets_number": 2000,
+     *               "additional_information": "Дополнительная информация",
+     *               "wallpaper": "http://project.loc/upload/events/1/1/wallpaper/__A9h_yHLs.jpg",
+     *               "user": {
+     *                 "id": 1,
+     *                 "email": "arsen-web@yandex.ru",
+     *                 "access": {},
+     *                 "profile": {
+     *                   "first_name": "Admin",
+     *                   "last_name": null,
+     *                   "phone_number": null,
+     *                   "address": null,
+     *                   "about": null,
+     *                   "country": null,
+     *                   "city": {
+     *                     "id": 1,
+     *                     "name": "Moscow"
+     *                   },
+     *                   "children": {},
+     *                   "type": {
+     *                       "id": 2,
+     *                       "name": "User",
+     *                       "description": "Обычный пользователь"
+     *                   },
+     *                   "longitude": null,
+     *                   "latitude": null,
+     *                     "language": "Russian",
+     *                     "short_lang": "ru-RU",
+     *                     "timezone": "Europe/Moscow"
+     *                 },
+     *                 "banned": {
+     *                     "is_banned": false,
+     *                     "banned_reason": null,
+     *                     "banned_at": null
+     *                 }
+     *               },
+     *               "age_limit": {
+     *                 "min": 0,
+     *                 "max": 3
+     *               },
+     *               "type": {
+     *                 "id": 1,
+     *                 "name": "One-day event"
+     *               },
+     *               "status": {
+     *                 "id": 1,
+     *                 "name": "На модерации"
+     *               },
+     *               "interest_category": {
+     *                 "id": 1,
+     *                 "name": "Entertainment"
+     *               },
+     *               "city": {
+     *                 "id": 1,
+     *                 "name": "Moscow"
+     *               },
+     *               "carrying_date": {
+     *                 {
+     *                   "id": 1,
+     *                   "date": "2019-12-09 16:00:00",
+     *                   "duration": "02:30:00"
+     *                 },
+     *                 {
+     *                   "id": 2,
+     *                   "date": "2019-12-08 16:00:00",
+     *                   "duration": "01:00:00"
+     *                 }
+     *               },
+     *               "photo_gallery": {
+     *                 {
+     *                   "id": 1,
+     *                   "url": "http://project.loc/upload/events/1/1/photo_gallery/FZFTtO6dLX.jpg"
+     *                 },
+     *                 {
+     *                   "id": 2,
+     *                   "url": "http://project.loc/upload/events/1/1/photo_gallery/zLShhWC3oq.jpg"
+     *                 }
+     *               }
+     *             },
+     *             {
+     *               "id": 1,
+     *               "name": "7 f f .",
+     *               "about": "ОписаниеОписание",
+     *               "address": "Адрес проведения",
+     *               "ticket_price": "0.00",
+     *               "tickets_number": 2000,
+     *               "additional_information": "Дополнительная информация",
+     *               "wallpaper": "http://project.loc/upload/events/1/1/wallpaper/__A9h_yHLs.jpg",
+     *               "user": {
+     *                 "id": 1,
+     *                 "email": "arsen-web@yandex.ru",
+     *                 "access": {},
+     *                 "profile": {
+     *                   "first_name": "Admin",
+     *                   "last_name": null,
+     *                   "phone_number": null,
+     *                   "address": null,
+     *                   "about": null,
+     *                   "country": null,
+     *                   "city": {
+     *                     "id": 1,
+     *                     "name": "Moscow"
+     *                   },
+     *                   "children": {},
+     *                   "type": {
+     *                       "id": 2,
+     *                       "name": "User",
+     *                       "description": "Обычный пользователь"
+     *                   },
+     *                   "longitude": null,
+     *                   "latitude": null,
+     *                     "language": "Russian",
+     *                     "short_lang": "ru-RU",
+     *                     "timezone": "Europe/Moscow"
+     *                 },
+     *                 "banned": {
+     *                     "is_banned": false,
+     *                     "banned_reason": null,
+     *                     "banned_at": null
+     *                 }
+     *               },
+     *               "age_limit": {
+     *                 "min": 0,
+     *                 "max": 3
+     *               },
+     *               "type": {
+     *                 "id": 1,
+     *                 "name": "One-day event"
+     *               },
+     *               "status": {
+     *                 "id": 1,
+     *                 "name": "На модерации"
+     *               },
+     *               "interest_category": {
+     *                 "id": 1,
+     *                 "name": "Entertainment"
+     *               },
+     *               "city": {
+     *                 "id": 1,
+     *                 "name": "Moscow"
+     *               },
+     *               "carrying_date": {
+     *                 {
+     *                   "id": 1,
+     *                   "date": "2019-12-09 16:00:00",
+     *                   "duration": "02:30:00"
+     *                 },
+     *                 {
+     *                   "id": 2,
+     *                   "date": "2019-12-08 16:00:00",
+     *                   "duration": "01:00:00"
+     *                 }
+     *               },
+     *               "photo_gallery": {
+     *                 {
+     *                   "id": 1,
+     *                   "url": "http://project.loc/upload/events/1/1/photo_gallery/FZFTtO6dLX.jpg"
+     *                 },
+     *                 {
+     *                   "id": 2,
+     *                   "url": "http://project.loc/upload/events/1/1/photo_gallery/zLShhWC3oq.jpg"
+     *                 }
+     *               }
+     *             }
+     *           },
+     *           "pagination": {
+     *             "page": 1,
+     *             "page_size": 2,
+     *             "total_page": 2,
+     *             "total_count": 4
+     *           }
+     *         }
+     *       ),
+     *     ),
+     *   ),
+     * )
+     * @return array
+     */
     public function actionList(): array
     {
         return $this->api->list($this->user, $this->get);
