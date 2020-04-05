@@ -17,13 +17,17 @@ final class ActionCreate extends BaseAction
     /** @var UserForm */
     public $userForm;
 
-    public function run(): string
+    public function run()
     {
         $this->controller->registerMeta('Создание пользователя', '', '');
         $model = $this->getUserForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return $this->controller->service->createUser($model->getDto());
+            $resultCreate = $this->controller->service->createUser($model->getDto());
+            if ($resultCreate) {
+                Yii::$app->session->setFlash('success', 'Пользователь создан');
+                return $this->controller->redirect(['user/index']);
+            }
         }
 
         return $this->controller->render(

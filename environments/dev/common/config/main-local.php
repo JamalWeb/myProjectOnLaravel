@@ -16,16 +16,24 @@ return [
                 'pgsql' => [
                     'class'         => Schema::class,
                     'defaultSchema' => 'main',
-                ]
+                ],
             ],
             'on afterOpen'        => function ($event) {
                 $event->sender->createCommand("SET search_path TO 'main';")->execute();
             },
         ],
         'mailer' => [
-            'class'            => 'yii\swiftmailer\Mailer',
+            'class'            => Mailer::class,
             'viewPath'         => '@common/mail',
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport'        => [
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => 'smtp.yandex.ru',
+                'username'   => 'jamal.absalimov@yandex.ru',
+                'password'   => 'T6jx4jdn!2018',
+                'port'       => '587',
+                'encryption' => 'TLS',
+            ],
         ],
     ],
 ];
