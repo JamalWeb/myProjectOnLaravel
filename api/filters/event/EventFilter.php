@@ -90,15 +90,18 @@ class EventFilter extends Model
 
     public function search(): EventFilter
     {
-        if (!empty($this->query)) {
-            $this->eventQuery->andFilterWhere(['ilike', 'name', $this->query]);
-        }
+        $this->eventQuery->andFilterWhere(
+            [
+                'OR',
+                ['ilike', 'address', $this->query],
+                ['ilike', 'name', $this->query],
+            ]
+        );
 
-        if (!empty($this->interest)) {
-            $this->eventQuery->andFilterWhere(
-                ['in', 'interest_category_id', ArrayHelper::jsonToArray($this->interest)]
-            );
-        }
+        $this->eventQuery->andFilterWhere(
+            ['in', 'interest_category_id', ArrayHelper::jsonToArray($this->interest)]
+        );
+
 
         if ($this->forYou) {
             $userInterest = $this->user->getRelationUserInterests()->select(['interest_category_id'])->column();
@@ -109,9 +112,7 @@ class EventFilter extends Model
             $this->eventQuery->andFilterWhere(['in', 'interest_category_id', $userInterest]);
         }
 
-        if ($this->city) {
-            $this->eventQuery->andWhere(['city_id' => $this->city]);
-        }
+        $this->eventQuery->andFilterWhere(['city_id' => $this->city]);
 
         $this->addOrderBy();
         return $this;
