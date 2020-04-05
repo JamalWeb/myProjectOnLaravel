@@ -4,6 +4,9 @@
 namespace backend\Entity\Services\User;
 
 
+use backend\Entity\Services\User\Dto\UserCreateDto;
+use backend\Entity\Services\User\Repository\UserRepositoryInterface;
+use common\components\EmailSendler;
 use common\models\user\User;
 use Throwable;
 use yii\db\StaleObjectException;
@@ -11,6 +14,17 @@ use yii\web\NotFoundHttpException;
 
 class UserService
 {
+    public $repository;
+
+    /**
+     * UserService constructor.
+     * @param UserRepositoryInterface $repository
+     */
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @param string $field
      * @param $value
@@ -50,5 +64,19 @@ class UserService
         if (!$user) {
             throw new NotFoundHttpException("Пользователь с {$field}: {$value} не найден");
         }
+    }
+
+    public function createUser(UserCreateDto $dto): bool
+    {
+        $resultSave = $this->repository->create($dto);
+
+        if ($resultSave) {
+            $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
+            if ($sendEmail) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

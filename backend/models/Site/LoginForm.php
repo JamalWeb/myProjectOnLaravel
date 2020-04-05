@@ -3,6 +3,7 @@
 namespace backend\models\Site;
 
 use backend\Entity\Services\User\Dto\UserLoginDto;
+use common\components\registry\RgUser;
 use common\models\user\User;
 use yii\base\Model;
 
@@ -76,7 +77,7 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->user === null) {
-            $this->user = User::findOne(['email' => $this->login]);
+            $this->user = User::findOne(['email' => $this->login, 'status_id' => RgUser::STATUS_ACTIVE]);
         }
 
         return $this->user;

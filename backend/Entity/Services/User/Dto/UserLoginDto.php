@@ -4,7 +4,7 @@ namespace backend\Entity\Services\User\Dto;
 
 use common\models\user\User;
 
-class UserLoginDto
+class UserLoginDto extends BaseDto
 {
     /** @var User */
     public $user;

@@ -39,6 +39,7 @@ use yii\widgets\DetailView;
                 'value'     => $user->profile->avatar,
             ],
             'username',
+            'role.name',
             'profile.first_name',
             'profile.last_name',
             'profile.patronymic',

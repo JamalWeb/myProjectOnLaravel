@@ -12,6 +12,7 @@ class RgUser
     public const ROLE_ADMIN = 1;
     public const ROLE_DEFAULT = 2;
     public const ROLE_BUSINESS = 3;
+    public const ROLE_MODERATOR = 4;
 
     /* Статусы */
     public const STATUS_INACTIVE = 1;
@@ -59,7 +60,7 @@ class RgUser
     public static function getRoleList(bool $systemRoles = false): array
     {
         $excludeRole = $systemRoles ? [] : [
-            self::ROLE_ADMIN
+            self::ROLE_ADMIN,
         ];
 
         return UserRole::find()
@@ -76,7 +77,7 @@ class RgUser
     public static function getTypeList(bool $systemTypes = false): array
     {
         $excludeTypes = $systemTypes ? [] : [
-            self::TYPE_SYSTEM
+            self::TYPE_SYSTEM,
         ];
 
         return UserType::find()
