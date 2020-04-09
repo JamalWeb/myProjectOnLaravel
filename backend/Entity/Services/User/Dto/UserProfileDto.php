@@ -7,7 +7,7 @@ use backend\models\Cabinet\ProfileForm;
 /**
  * @see ProfileForm
  */
-class UserProfileDto
+class UserProfileDto extends BaseDto
 {
     public $userId;
     public $firstName;

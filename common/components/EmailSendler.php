@@ -3,6 +3,7 @@
 namespace common\components;
 
 use api\modules\v1\models\error\BadRequestHttpException;
+use backend\Entity\Services\User\Dto\UserCreateDto;
 use common\components\registry\RgUser;
 use common\models\user\User;
 use common\models\user\UserToken;
@@ -31,11 +32,29 @@ class EmailSendler
             'confirmEmail-html.php',
             [
                 'user'      => $user,
-                'userToken' => $userToken
+                'userToken' => $userToken,
             ]
         )
             ->setFrom('info@mappa.one')
             ->setTo($user->email)
+            ->setSubject('Подтверждение регистрации')
+            ->send();
+    }
+
+    /**
+     * @param UserCreateDto $dto
+     * @return bool
+     */
+    final public static function registrationConfirmSystemUser(UserCreateDto $dto): bool
+    {
+        return Yii::$app->mailer->compose(
+            'confirmEmailSysUser-html.php',
+            [
+                'dto' => $dto,
+            ]
+        )
+            ->setFrom(Yii::$app->params['senderEmail'])
+            ->setTo($dto->email)
             ->setSubject('Подтверждение регистрации')
             ->send();
     }
@@ -81,7 +100,7 @@ class EmailSendler
             'userRecovery-html.php',
             [
                 'user'      => $user,
-                'userToken' => $userToken
+                'userToken' => $userToken,
             ]
         )
             ->setFrom('info@mappa.one')

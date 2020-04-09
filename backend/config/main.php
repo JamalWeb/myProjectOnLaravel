@@ -1,7 +1,11 @@
 <?php
 
 use backend\config\Bootstrap\UserBootstrap;
-use backend\controllers\{Cabinet\CabinetController, Site\SiteController, User\UserController};
+use backend\controllers\{Cabinet\CabinetController,
+    Confirm\ConfirmController,
+    Site\SiteController,
+    User\UserController
+};
 use common\models\user\User;
 use yii\log\FileTarget;
 
@@ -21,6 +25,7 @@ return [
         'site'    => SiteController::class,
         'cabinet' => CabinetController::class,
         'user'    => UserController::class,
+        'confirm' => ConfirmController::class,
     ],
     'bootstrap'           => ['log', UserBootstrap::class],
     'modules'             => [],
