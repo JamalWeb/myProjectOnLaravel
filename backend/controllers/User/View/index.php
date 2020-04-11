@@ -111,12 +111,12 @@ echo GridView::widget(
                 'class'    => ActionColumn::class,
                 'template' => '{view} {update} {delete}',
                 'buttons'  => [
-//                    'update' => static function ($url) {
-//                        return Html::a(
-//                            '<ion-icon name="create-outline" size="small"></ion-icon>',
-//                            $url
-//                        );
-//                    },
+                    //                    'update' => static function ($url) {
+                    //                        return Html::a(
+                    //                            '<ion-icon name="create-outline" size="small"></ion-icon>',
+                    //                            $url
+                    //                        );
+                    //                    },
                     'view'   => static function ($url) {
                         return Html::a(
                             '<ion-icon name="eye-outline" size="small"></ion-icon>',

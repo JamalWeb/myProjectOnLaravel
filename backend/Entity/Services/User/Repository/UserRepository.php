@@ -28,7 +28,7 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->connection->transaction(
             function () use ($dto) {
-                $this->connection->createCommand(new Expression('return id'))
+                $this->connection->createCommand()
                     ->insert(
                         '{{%user}}',
                         [
@@ -70,7 +70,6 @@ class UserRepository implements UserRepositoryInterface
 
                 return true;
             }
-
         );
     }
 }

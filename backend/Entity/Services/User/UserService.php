@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\Entity\Services\User;
-
 
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;

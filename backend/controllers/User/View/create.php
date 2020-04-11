@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @var View $this
  * @var UserForm $model
  */
+
 
 use backend\models\User\UserForm;
 use kartik\select2\Select2;
@@ -65,4 +67,3 @@ $this->params['breadcrumbs'][] = $this->title
     ?>
     <?php ActiveForm::end() ?>
 </div>
-

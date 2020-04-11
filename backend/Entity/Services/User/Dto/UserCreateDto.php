@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\Entity\Services\User\Dto;
-
 
 class UserCreateDto extends BaseDto
 {
@@ -21,5 +19,4 @@ class UserCreateDto extends BaseDto
     public $countryId;
     public $accessToken;
     public $passwordUser;
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\Confirm;
-
 
 use backend\controllers\Base\BaseController;
 use backend\controllers\Confirm\Action\ActionEmail;
@@ -35,5 +33,4 @@ class ConfirmController extends BaseController
             ],
         ];
     }
-
 }

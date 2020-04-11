@@ -28,7 +28,8 @@
     "doctrine/dbal": "2.5.4",
     "ext-json": "*",
     "genxoft/yii2-oas3": "v0.2-stable",
-    "yiisoft/yii2-bootstrap4": "^2.0"
+    "yiisoft/yii2-bootstrap4": "^2.0",
+    "kartik-v/yii2-widget-select2": "@dev"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
@@ -40,7 +41,9 @@
     "codeception/verify": ">=1.0.0 <1.1.0",
     "symfony/browser-kit": ">=2.7 <=4.2.4",
     "squizlabs/php_codesniffer": "3.*",
-    "vimeo/psalm": "~3.8"
+    "vimeo/psalm": "~3.8",
+    "kartik-v/yii2-widget-select2": "@dev",
+    "yii2mod/yii2-helpers": "*"
   },
   "config": {
     "process-timeout": 1800,
@@ -52,12 +55,10 @@
     "cs-check": "phpcs",
     "cs-fix": "phpcbf",
     "psalm": "psalm",
-
     "post-install-cmd": [
       "@cs-check",
       "@cs-fix"
     ],
-
     "post-update-cmd": [
       "@cs-check",
       "@cs-fix"

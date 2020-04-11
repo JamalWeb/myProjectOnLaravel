@@ -7,5 +7,4 @@ use backend\Entity\Services\User\Dto\UserCreateDto;
 interface UserRepositoryInterface
 {
     public function create(UserCreateDto $dto);
-
 }
