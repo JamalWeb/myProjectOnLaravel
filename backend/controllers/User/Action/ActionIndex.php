@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\User\Action;
-
 
 use backend\controllers\Base\BaseAction;
 use backend\controllers\User\UserController;
@@ -47,5 +45,4 @@ final class ActionIndex extends BaseAction
     {
         return new $this->modelSearch();
     }
-
 }

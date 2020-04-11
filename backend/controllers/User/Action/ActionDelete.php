@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\User\Action;
-
 
 use backend\controllers\User\UserController;
 use Yii;
@@ -20,5 +18,4 @@ final class ActionDelete extends Action
             'result' => $this->controller->service->deleteUser($id),
         ];
     }
-
 }

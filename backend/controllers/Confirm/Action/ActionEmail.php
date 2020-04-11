@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\Confirm\Action;
-
 
 use backend\controllers\Confirm\ConfirmController;
 use backend\controllers\Confirm\models\VerifyEmailForm;
@@ -26,6 +24,4 @@ class ActionEmail extends Action
 
         return $this->controller->goHome();
     }
-
-
 }

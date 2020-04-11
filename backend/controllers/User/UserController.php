@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\User;
-
 
 use backend\controllers\Base\BaseController;
 use backend\controllers\User\Action\{ActionCreate, ActionDelete, ActionIndex, ActionView};

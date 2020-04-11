@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\models\User;
-
 
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use common\components\ArrayHelper;

@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @var View $this
- * @var ActiveDataProvider $dataProvider
  * @var User $user
  */
+
 
 use common\models\user\User;
 use yii\bootstrap4\Html;

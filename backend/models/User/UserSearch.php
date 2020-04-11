@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\models\User;
-
 
 use common\components\ArrayHelper;
 use common\models\user\User;
@@ -116,5 +114,4 @@ class UserSearch extends Model
     {
         return ArrayHelper::map(UserStatus::find()->asArray()->all(), 'id', 'name');
     }
-
 }

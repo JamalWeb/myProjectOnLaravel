@@ -1,15 +1,12 @@
 <?php
 
-
 namespace backend\Entity\Services\User;
-
 
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;
 use common\components\EmailSendler;
 use common\models\user\User;
 use Throwable;
-use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 
 class UserService
@@ -42,13 +39,12 @@ class UserService
      * @param int $id
      * @return bool
      * @throws Throwable
-     * @throws StaleObjectException
      */
     public function deleteUser(int $id): bool
     {
         $user = $this->findOne('id', $id);
 
-        return $user->delete() > 0;
+        return $this->repository->deleteUser($user);
     }
 
 
@@ -68,8 +64,13 @@ class UserService
 
     public function createUser(UserCreateDto $dto): bool
     {
-        $resultSave = $this->repository->create($dto);
-        $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
-        return $resultSave && $sendEmail;
+        try {
+            $resultSave = $this->repository->create($dto);
+            $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
+
+            return $resultSave && $sendEmail;
+        } catch (\Exception $exception) {
+            throw new $exception;
+        }
     }
 }

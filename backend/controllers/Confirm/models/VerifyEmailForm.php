@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\Confirm\models;
-
 
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
@@ -30,6 +28,4 @@ class VerifyEmailForm extends Model
 
         parent::__construct($config);
     }
-
-
 }

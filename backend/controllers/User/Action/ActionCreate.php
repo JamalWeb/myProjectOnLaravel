@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\User\Action;
-
 
 use backend\controllers\Base\BaseAction;
 use backend\controllers\User\UserController;
@@ -25,7 +23,7 @@ final class ActionCreate extends BaseAction
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $resultCreate = $this->controller->service->createUser($model->getDto());
             if ($resultCreate) {
-                Yii::$app->session->setFlash('success', 'Пользователь создан');
+                Yii::$app->session->setFlash('success', "Пользователь <b>{$model->getDto()->firstName}</b> создан");
                 return $this->controller->redirect(['user/index']);
             }
         }

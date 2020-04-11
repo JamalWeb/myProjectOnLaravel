@@ -6,9 +6,10 @@ use backend\Entity\Services\User\Dto\UserCreateDto;
 use common\components\DateHelper;
 use common\components\registry\RgUser;
 use common\helpers\UserPermissionsHelper;
+use common\models\user\User;
 use Throwable;
 use yii\db\Connection;
-use yii\db\Expression;
+use yii\db\Exception;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -28,7 +29,7 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->connection->transaction(
             function () use ($dto) {
-                $this->connection->createCommand(new Expression('return id'))
+                $this->connection->createCommand()
                     ->insert(
                         '{{%user}}',
                         [
@@ -70,7 +71,40 @@ class UserRepository implements UserRepositoryInterface
 
                 return true;
             }
+        );
+    }
 
+    /**
+     * @param int $userID
+     * @return int
+     * @throws Exception
+     */
+    public function deleteAuthAssigment(int $userID)
+    {
+        return $this->connection->createCommand()->delete(
+            '{{%auth_assignment}}',
+            [
+                'user_id' => $userID
+            ]
+        )->execute();
+    }
+
+
+    /**
+     * @param User $user
+     * @return bool|null
+     * @throws Throwable
+     */
+    public function deleteUser(User $user): ?bool
+    {
+        return $this->connection->transaction(
+            function () use ($user) {
+                $user->delete();
+
+                $this->deleteAuthAssigment($user->id);
+
+                return true;
+            }
         );
     }
 }
