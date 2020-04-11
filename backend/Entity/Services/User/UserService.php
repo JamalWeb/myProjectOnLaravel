@@ -7,7 +7,6 @@ use backend\Entity\Services\User\Repository\UserRepositoryInterface;
 use common\components\EmailSendler;
 use common\models\user\User;
 use Throwable;
-use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 
 class UserService
@@ -40,13 +39,12 @@ class UserService
      * @param int $id
      * @return bool
      * @throws Throwable
-     * @throws StaleObjectException
      */
     public function deleteUser(int $id): bool
     {
         $user = $this->findOne('id', $id);
 
-        return $user->delete() > 0;
+        return $this->repository->deleteUser($user);
     }
 
 
