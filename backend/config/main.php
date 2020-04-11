@@ -1,10 +1,10 @@
 <?php
 
 use backend\config\Bootstrap\UserBootstrap;
-use backend\controllers\{Cabinet\CabinetController,
+use backend\controllers\{Admin\AdminController,
+    Cabinet\CabinetController,
     Confirm\ConfirmController,
-    Site\SiteController,
-    User\UserController
+    Site\SiteController
 };
 use common\models\user\User;
 use yii\log\FileTarget;
@@ -24,7 +24,7 @@ return [
     'controllerMap'       => [
         'site'    => SiteController::class,
         'cabinet' => CabinetController::class,
-        'user'    => UserController::class,
+        'admin'   => AdminController::class,
         'confirm' => ConfirmController::class,
     ],
     'bootstrap'           => ['log', UserBootstrap::class],

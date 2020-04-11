@@ -24,7 +24,7 @@ use yii\web\View;
         <?= Html::a(
             '<ion-icon name="person-add-outline" style="color: #000000"></ion-icon>',
             [
-                'user/create',
+                'create',
             ]
         ) ?>
     </div>

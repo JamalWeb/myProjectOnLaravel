@@ -1,12 +1,12 @@
 <?php
 
-namespace backend\controllers\User\Action;
+namespace backend\controllers\Admin\Action;
 
+use backend\controllers\Admin\AdminController;
 use backend\controllers\Base\BaseAction;
-use backend\controllers\User\UserController;
 
 /**
- * @property-read UserController $controller
+ * @property-read AdminController $controller
  */
 final class ActionView extends BaseAction
 {

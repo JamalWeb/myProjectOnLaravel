@@ -1,9 +1,12 @@
 <?php
 
-namespace backend\controllers\User;
+namespace backend\controllers\Admin;
 
+use backend\controllers\Admin\Action\ActionCreate;
+use backend\controllers\Admin\Action\ActionDelete;
+use backend\controllers\Admin\Action\ActionIndex;
+use backend\controllers\Admin\Action\ActionView;
 use backend\controllers\Base\BaseController;
-use backend\controllers\User\Action\{ActionCreate, ActionDelete, ActionIndex, ActionView};
 use backend\Entity\Services\User\UserService;
 use backend\models\User\UserForm;
 use backend\models\User\UserSearch;
@@ -15,7 +18,7 @@ use yii\web\ErrorAction;
 /**
  * @property-read UserService $service
  */
-final class UserController extends BaseController
+final class AdminController extends BaseController
 {
     use RegisterMetaTag;
 

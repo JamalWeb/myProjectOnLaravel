@@ -1,13 +1,16 @@
 <?php
 
-namespace backend\controllers\User\Action;
+namespace backend\controllers\Admin\Action;
 
-use backend\controllers\User\UserController;
+
+use backend\controllers\Admin\AdminController;
 use Yii;
 use yii\base\Action;
 use yii\web\Response;
 
-/** @property-read UserController $controller */
+/**
+ * @property-read AdminController $controller
+ */
 final class ActionDelete extends Action
 {
     public function run(int $id): array

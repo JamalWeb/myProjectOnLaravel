@@ -18,7 +18,7 @@ use yii\widgets\DetailView;
     <?= Html::a(
         '<ion-icon name="trash-outline" size="small" style="color:red"></ion-icon>',
         [
-            'user/delete',
+            'delete',
             'id' => $user->id,
         ],
         [

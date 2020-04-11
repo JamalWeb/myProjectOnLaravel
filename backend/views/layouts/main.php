@@ -55,7 +55,7 @@ AppAsset::register($this);
             $menuItems[] =
                 [
                     'label' => 'Пользователи',
-                    'url'   => ['/user/index'],
+                    'url'   => ['/admin/index'],
                 ];
         }
 
