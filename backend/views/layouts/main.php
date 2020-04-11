@@ -59,6 +59,19 @@ AppAsset::register($this);
                 ];
         }
 
+        if (UserPermissionsHelper::isCan('moderationOfEvents')) {
+            $menuItems[] =
+                [
+                    'label'   => 'Модерация',
+                    'options' => ['class' => 'nav-item dropdown'],
+                    'items'   => [
+                        ['label' => 'Пользователи', 'url' => '/moderator/user-list'],
+                        ['label' => 'События', 'url' => 'moderator/event-list']
+                    ]
+
+                ];
+        }
+
         $menuItems[] =
             [
                 'label' => 'Кабинет',

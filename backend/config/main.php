@@ -4,6 +4,7 @@ use backend\config\Bootstrap\UserBootstrap;
 use backend\controllers\{Admin\AdminController,
     Cabinet\CabinetController,
     Confirm\ConfirmController,
+    Moderator\ModeratorController,
     Site\SiteController
 };
 use common\models\user\User;
@@ -22,10 +23,11 @@ return [
     'name'                => 'Mappa',
     'controllerNamespace' => 'backend\controllers',
     'controllerMap'       => [
-        'site'    => SiteController::class,
-        'cabinet' => CabinetController::class,
-        'admin'   => AdminController::class,
-        'confirm' => ConfirmController::class,
+        'site'      => SiteController::class,
+        'cabinet'   => CabinetController::class,
+        'admin'     => AdminController::class,
+        'confirm'   => ConfirmController::class,
+        'moderator' => ModeratorController::class
     ],
     'bootstrap'           => ['log', UserBootstrap::class],
     'modules'             => [],
