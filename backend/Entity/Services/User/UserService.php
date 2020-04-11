@@ -66,8 +66,13 @@ class UserService
 
     public function createUser(UserCreateDto $dto): bool
     {
-        $resultSave = $this->repository->create($dto);
-        $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
-        return $resultSave && $sendEmail;
+        try {
+            $resultSave = $this->repository->create($dto);
+            $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
+
+            return $resultSave && $sendEmail;
+        } catch (\Exception $exception) {
+            throw new $exception;
+        }
     }
 }
