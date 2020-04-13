@@ -7,6 +7,7 @@ namespace backend\controllers\Moderator\Action;
 use backend\controllers\Base\BaseAction;
 use backend\controllers\Moderator\ModeratorController;
 use backend\models\User\UserSearch;
+use common\components\registry\RgUser;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -30,7 +31,11 @@ class ActionUserList extends BaseAction
 
         $request = Yii::$app->request;
 
-        $searchModel = new UserSearch();
+        $searchModel = $this->getUserSearch(
+            [
+                'type_id' => RgUser::TYPE_BUSINESS
+            ]
+        );
         $searchModel->load($request->get());
 
         if ($searchModel->validate()) {
@@ -51,11 +56,12 @@ class ActionUserList extends BaseAction
     }
 
     /**
+     * @param array $params
      * @return mixed
      */
-    public function getUserSearch()
+    public function getUserSearch(array $params)
     {
-        return new $this->userSearch();
+        return new $this->userSearch($params);
     }
 
     /**

@@ -42,7 +42,8 @@
     "squizlabs/php_codesniffer": "3.*",
     "vimeo/psalm": "~3.8",
     "kartik-v/yii2-widget-select2": "@dev",
-    "yii2mod/yii2-helpers": "*"
+    "yii2mod/yii2-helpers": "*",
+    "kartik-v/yii2-editable": "@dev"
   },
   "config": {
     "process-timeout": 1800,

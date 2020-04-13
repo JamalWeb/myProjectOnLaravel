@@ -5,7 +5,9 @@ namespace backend\controllers\Moderator;
 
 
 use backend\controllers\Base\BaseController;
+use backend\controllers\Moderator\Action\ActionChangeStatusUser;
 use backend\controllers\Moderator\Action\ActionUserList;
+use backend\controllers\Moderator\Action\ActionUserView;
 use backend\Entity\Moderator\Service\ModeratorService;
 use backend\models\User\UserSearch;
 use common\helpers\UserPermissionsHelper;
@@ -75,11 +77,11 @@ class ModeratorController extends BaseController
                 ],
             'user-view'           =>
                 [
-                    'class'
+                    'class' => ActionUserView::class
                 ],
             'change-status-user'  =>
                 [
-                    'class'
+                    'class' => ActionChangeStatusUser::class
                 ],
             'event-list'          =>
                 [

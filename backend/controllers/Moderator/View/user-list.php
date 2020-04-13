@@ -69,7 +69,7 @@ echo GridView::widget(
                         ],
                     ]
                 ),
-                'value'     => static function (User $model) {
+                'value' => static function (User $model): string {
                     return $model->status->name;
                 },
             ],
@@ -99,21 +99,12 @@ echo GridView::widget(
                 'class'    => ActionColumn::class,
                 'template' => '{user-view} {change-status}',
                 'buttons'  => [
-                    'user-view'     => static function ($url) {
+                    'user-view' => static function ($url) {
                         return Html::a(
                             '<ion-icon name="eye-outline" size="small"></ion-icon>',
                             $url,
                             [
                                 'title' => 'Детальная информация'
-                            ]
-                        );
-                    },
-                    'change-status' => static function ($url) {
-                        return Html::a(
-                            '<ion-icon name="power-outline" size="small"></ion-icon>',
-                            $url,
-                            [
-                                'title' => 'Сменить статус'
                             ]
                         );
                     }
