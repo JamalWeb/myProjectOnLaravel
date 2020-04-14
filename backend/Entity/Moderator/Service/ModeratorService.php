@@ -38,6 +38,11 @@ class ModeratorService
         return User::findOne([$field => $value]);
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     * @throws NotFoundHttpException
+     */
     public function changeStatus(int $id): bool
     {
         $user = $this->findOne('id', $id);

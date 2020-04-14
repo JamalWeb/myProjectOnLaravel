@@ -14,7 +14,7 @@ use yii\web\Response;
  */
 class ActionChangeStatusUser extends BaseAction
 {
-    public function run(int $id)
+    public function run(int $id): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
