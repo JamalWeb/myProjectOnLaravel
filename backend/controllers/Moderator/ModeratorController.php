@@ -3,10 +3,12 @@
 namespace backend\controllers\Moderator;
 
 use backend\controllers\Base\BaseController;
-use backend\controllers\Moderator\Action\ActionChangeStatusUser;
-use backend\controllers\Moderator\Action\ActionUserList;
-use backend\controllers\Moderator\Action\ActionUserView;
+use backend\controllers\Moderator\Action\Event\ActionEventList;
+use backend\controllers\Moderator\Action\User\ActionChangeStatusUser;
+use backend\controllers\Moderator\Action\User\ActionUserList;
+use backend\controllers\Moderator\Action\User\ActionUserView;
 use backend\Entity\Moderator\Service\ModeratorService;
+use backend\models\Event\EventSearch;
 use backend\models\User\UserSearch;
 use common\helpers\UserPermissionsHelper;
 use common\traits\RegisterMetaTag;
@@ -49,8 +51,8 @@ class ModeratorController extends BaseController
                             'user-list',
                             'user-view',
                             'change-status-user',
-                            'moderator-list',
-                            'moderator-view',
+                            'event-list',
+                            'event-view',
                             'change-status-event'
                         ],
                         'allow'   => true,
@@ -83,7 +85,9 @@ class ModeratorController extends BaseController
                 ],
             'event-list'          =>
                 [
-                    'class'
+                    'class'        => ActionEventList::class,
+                    'eventSearch'  => EventSearch::class,
+                    'dataProvider' => ActiveDataProvider::class
                 ],
             'event-view'          =>
                 [

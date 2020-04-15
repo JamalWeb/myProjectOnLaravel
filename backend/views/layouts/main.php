@@ -66,7 +66,7 @@ AppAsset::register($this);
                     'options' => ['class' => 'nav-item dropdown'],
                     'items'   => [
                         ['label' => 'Пользователи', 'url' => '/moderator/user-list'],
-                        ['label' => 'События', 'url' => 'moderator/event-list']
+                        ['label' => 'События', 'url' => '/moderator/event-list']
                     ]
 
                 ];

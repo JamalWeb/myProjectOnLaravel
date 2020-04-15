@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers\Moderator\Action;
+namespace backend\controllers\Moderator\Action\User;
 
 use backend\controllers\Base\BaseAction;
 use backend\controllers\Moderator\ModeratorController;

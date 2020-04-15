@@ -35,7 +35,7 @@ class EmailSendler
                 'userToken' => $userToken,
             ]
         )
-            ->setFrom('info@mappa.one')
+            ->setFrom(Yii::$app->params['senderEmail'])
             ->setTo($user->email)
             ->setSubject('Подтверждение регистрации')
             ->send();
