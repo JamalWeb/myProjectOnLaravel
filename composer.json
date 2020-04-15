@@ -43,6 +43,7 @@
     "vimeo/psalm": "~3.8",
     "kartik-v/yii2-widget-select2": "@dev",
     "yii2mod/yii2-helpers": "*",
+    "kartik-v/yii2-grid": "@dev",
     "kartik-v/yii2-editable": "@dev"
   },
   "config": {

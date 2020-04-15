@@ -1,20 +1,23 @@
 <?php
 
+use backend\models\User\UserSearch;
+use common\models\user\User;
+use kartik\editable\Editable;
+use kartik\grid\EditableColumn;
+use kartik\grid\GridView;
+use kartik\select2\Select2;
+use yii\bootstrap4\Html;
+use yii\data\ActiveDataProvider;
+use yii\grid\ActionColumn;
+use yii\helpers\Url;
+use yii\web\View;
+
 /**
  * @var ActiveDataProvider $dataProvider
  * @var UserSearch $searchModel
  * @var View $this
  */
 
-
-use backend\models\User\UserSearch;
-use common\models\user\User;
-use kartik\select2\Select2;
-use yii\bootstrap4\Html;
-use yii\data\ActiveDataProvider;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
-use yii\web\View;
 
 ?>
     <h3><?= $this->title ?></h3>
@@ -24,7 +27,6 @@ echo GridView::widget(
     [
         'dataProvider' => $dataProvider,
         'filterModel'  => $searchModel,
-        'showFooter'   => true,
         'columns'      => [
             'id',
             'username',
@@ -52,9 +54,10 @@ echo GridView::widget(
                 },
             ],
             [
-                'attribute' => 'status_id',
-                'label'     => 'Статус',
-                'filter'    => Select2::widget(
+                'attribute'       => 'status_id',
+                'label'           => 'Статус',
+                'format'          => 'raw',
+                'filter'          => Select2::widget(
                     [
                         'name'          => 'UserSearch[status_id]',
                         'data'          => UserSearch::getStatuses(),
@@ -69,9 +72,30 @@ echo GridView::widget(
                         ],
                     ]
                 ),
-                'value' => static function (User $model): string {
-                    return $model->status->name;
-                },
+                'class'           => EditableColumn::class,
+                'editableOptions' => [
+                    'value'              => static function (User $model) {
+                        return $model->status->name;
+                    },
+                    'asPopover'          => true,
+                    'formOptions'        => [
+                        'action' => Url::toRoute('change-status-user'),
+                    ],
+                    'displayValueConfig' => UserSearch::getStatuses(),
+                    'inputType'          => Editable::INPUT_SELECT2,
+                    'options'            => [
+                        'data'       => UserSearch::getStatuses(),
+                        'hideSearch' => true,
+                    ],
+                    'submitButton'       => [
+                        'class' => 'btn btn-sm btn-success',
+                        'icon'  => '<ion-icon name="add-outline" size="small"></ion-icon>',
+                    ],
+                    'resetButton'        => [
+                        'icon' => '<ion-icon name="refresh-outline" size="small"></ion-icon>'
+                    ],
+                    'header'             => 'Статус'
+                ],
             ],
             [
                 'attribute' => 'profile.gender_id',
@@ -97,7 +121,7 @@ echo GridView::widget(
             ],
             [
                 'class'    => ActionColumn::class,
-                'template' => '{user-view} {change-status}',
+                'template' => '{user-view}',
                 'buttons'  => [
                     'user-view' => static function ($url) {
                         return Html::a(

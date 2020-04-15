@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\Entity\Moderator\Service;
-
 
 use common\components\registry\RgUser;
 use common\models\user\User;
@@ -50,6 +48,4 @@ class ModeratorService
 
         return true;
     }
-
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\Moderator\Action;
-
 
 use backend\controllers\Base\BaseAction;
 use backend\controllers\Moderator\ModeratorController;
@@ -30,5 +28,4 @@ class ActionUserView extends BaseAction
             ]
         );
     }
-
 }

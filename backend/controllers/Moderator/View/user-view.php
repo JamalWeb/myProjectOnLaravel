@@ -1,6 +1,9 @@
 <?php
 
+use backend\models\User\UserSearch;
 use common\models\user\User;
+use kartik\editable\Editable;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\DetailView;
 
@@ -15,6 +18,37 @@ $this->params['breadcrumbs'][] = $this->title
 <div class="row">
     <div class="col-md-6">
         <h3><?= $this->title ?></h3>
+    </div>
+    <div class="col-md-6 text-right">
+        <?php
+        $userStatuses = UserSearch::getStatuses();
+        echo Editable::widget(
+            [
+                'name'               => 'status',
+                'value'              => $user->status->name,
+                'asPopover'          => true,
+                'header'             => 'Статус',
+                'inputType'          => Editable::INPUT_SELECT2,
+                'options'            => [
+                    'data'       => $userStatuses,
+                    'hideSearch' => true,
+                    'class'      => 'form-control',
+                    'name'       => 'User'
+                ],
+                'formOptions'        => [
+                    'action' => Url::toRoute('change-status-user'),
+                ],
+                'displayValueConfig' => $userStatuses,
+                'submitButton'       => [
+                    'class' => 'btn btn-sm btn-success',
+                    'icon'  => '<ion-icon name="add-outline" size="small"></ion-icon>',
+                ],
+                'resetButton'        => [
+                    'icon' => '<ion-icon name="refresh-outline" size="small"></ion-icon>'
+                ],
+            ]
+        )
+        ?>
     </div>
 </div>
 

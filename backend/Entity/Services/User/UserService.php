@@ -6,6 +6,7 @@ use backend\Entity\Services\User\Dto\UserCreateDto;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;
 use common\components\EmailSendler;
 use common\models\user\User;
+use Exception;
 use Throwable;
 use yii\web\NotFoundHttpException;
 
@@ -69,8 +70,8 @@ class UserService
             $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
 
             return $resultSave && $sendEmail;
-        } catch (\Exception $exception) {
-            throw new $exception;
+        } catch (Exception $exception) {
+            throw new $exception();
         }
     }
 }

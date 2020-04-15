@@ -1,8 +1,6 @@
 <?php
 
-
 namespace backend\controllers\Moderator;
-
 
 use backend\controllers\Base\BaseController;
 use backend\controllers\Moderator\Action\ActionChangeStatusUser;
@@ -97,5 +95,4 @@ class ModeratorController extends BaseController
                 ]
         ];
     }
-
 }

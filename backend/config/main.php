@@ -8,6 +8,7 @@ use backend\controllers\{Admin\AdminController,
     Site\SiteController
 };
 use common\models\user\User;
+use kartik\grid\Module;
 use yii\log\FileTarget;
 
 $params = array_merge(
@@ -30,7 +31,9 @@ return [
         'moderator' => ModeratorController::class
     ],
     'bootstrap'           => ['log', UserBootstrap::class],
-    'modules'             => [],
+    'modules'             => [
+        'gridview' => ['class' => Module::class]
+    ],
     'components'          => [
         'request'      => [
             'csrfParam' => '_csrf-backend',

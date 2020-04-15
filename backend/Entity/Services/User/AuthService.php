@@ -37,6 +37,7 @@ class AuthService
     public function verifyEmail(string $token): bool
     {
         $userToken = UserToken::findOne(['access_token' => $token]);
+
         if ($userToken !== null) {
             $user = $userToken->user;
             $user->status_id = RgUser::STATUS_ACTIVE;
@@ -45,8 +46,7 @@ class AuthService
             $dto = new UserLoginDto();
             $dto->user = $user;
 
-            $this->signIn($dto);
-            return true;
+            return $this->signIn($dto);
         }
 
         return false;

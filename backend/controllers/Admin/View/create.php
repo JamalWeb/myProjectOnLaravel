@@ -64,6 +64,6 @@ $this->params['breadcrumbs'][] = $this->title
             'class' => 'btn btn-outline-success',
         ]
     )
-    ?>
+?>
     <?php ActiveForm::end() ?>
 </div>
