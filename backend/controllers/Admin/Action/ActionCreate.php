@@ -20,10 +20,17 @@ final class ActionCreate extends BaseAction
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $resultCreate = $this->controller->service->createUser($model->getDto());
+
             if ($resultCreate) {
                 Yii::$app->session->setFlash('success', "Пользователь <b>{$model->getDto()->firstName}</b> создан");
-                return $this->controller->redirect(['user/index']);
+            } else {
+                Yii::$app->session->setFlash(
+                    'error',
+                    "Не удалось отправить письмо <b>{$model->getDto()->firstName}</b>"
+                );
             }
+
+            return $this->controller->refresh();
         }
 
         return $this->controller->render(

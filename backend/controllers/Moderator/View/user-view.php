@@ -24,7 +24,8 @@ $this->params['breadcrumbs'][] = $this->title
         $userStatuses = UserSearch::getStatuses();
         echo Editable::widget(
             [
-                'name'               => 'status',
+                'model'              => $user,
+                'attribute'          => 'status_id',
                 'value'              => $user->status->name,
                 'asPopover'          => true,
                 'header'             => 'Статус',
@@ -33,10 +34,10 @@ $this->params['breadcrumbs'][] = $this->title
                     'data'       => $userStatuses,
                     'hideSearch' => true,
                     'class'      => 'form-control',
-                    'name'       => 'User'
+                    'name'       => 'User',
                 ],
                 'formOptions'        => [
-                    'action' => Url::toRoute('change-status-user'),
+                    'action' => Url::toRoute(['change-status-user', 'id' => $user->id]),
                 ],
                 'displayValueConfig' => $userStatuses,
                 'submitButton'       => [
@@ -46,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title
                 'resetButton'        => [
                     'icon' => '<ion-icon name="refresh-outline" size="small"></ion-icon>'
                 ],
+
             ]
         )
         ?>

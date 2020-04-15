@@ -8,6 +8,7 @@ use common\components\EmailSendler;
 use common\models\user\User;
 use Exception;
 use Throwable;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 class UserService
@@ -71,7 +72,8 @@ class UserService
 
             return $resultSave && $sendEmail;
         } catch (Exception $exception) {
-            throw new $exception();
+            Yii::error($exception->getMessage() . PHP_EOL . $exception->getTraceAsString(), 'createUser');
+            return false;
         }
     }
 }

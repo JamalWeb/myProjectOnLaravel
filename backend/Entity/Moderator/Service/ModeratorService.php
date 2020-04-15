@@ -2,7 +2,6 @@
 
 namespace backend\Entity\Moderator\Service;
 
-use common\components\registry\RgUser;
 use common\models\user\User;
 use yii\web\NotFoundHttpException;
 
@@ -38,14 +37,15 @@ class ModeratorService
 
     /**
      * @param int $id
+     * @param int $newStatusId
      * @return bool
      * @throws NotFoundHttpException
      */
-    public function changeStatus(int $id): bool
+    public function changeStatus(int $id, int $newStatusId): bool
     {
         $user = $this->findOne('id', $id);
-        $user->status = RgUser::STATUS_ACTIVE;
+        $user->status_id = $newStatusId;
 
-        return true;
+        return $user->save();
     }
 }

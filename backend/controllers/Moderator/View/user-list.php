@@ -73,29 +73,31 @@ echo GridView::widget(
                     ]
                 ),
                 'class'           => EditableColumn::class,
-                'editableOptions' => [
-                    'value'              => static function (User $model) {
-                        return $model->status->name;
-                    },
-                    'asPopover'          => true,
-                    'formOptions'        => [
-                        'action' => Url::toRoute('change-status-user'),
-                    ],
-                    'displayValueConfig' => UserSearch::getStatuses(),
-                    'inputType'          => Editable::INPUT_SELECT2,
-                    'options'            => [
-                        'data'       => UserSearch::getStatuses(),
-                        'hideSearch' => true,
-                    ],
-                    'submitButton'       => [
-                        'class' => 'btn btn-sm btn-success',
-                        'icon'  => '<ion-icon name="add-outline" size="small"></ion-icon>',
-                    ],
-                    'resetButton'        => [
-                        'icon' => '<ion-icon name="refresh-outline" size="small"></ion-icon>'
-                    ],
-                    'header'             => 'Статус'
-                ],
+                'editableOptions' => static function (User $model) {
+                    return [
+                        'value'              => static function (User $model) {
+                            return $model->status->name;
+                        },
+                        'asPopover'          => true,
+                        'formOptions'        => [
+                            'action' => Url::to(['change-status-user', 'id' => $model->id])
+                        ],
+                        'displayValueConfig' => UserSearch::getStatuses(),
+                        'inputType'          => Editable::INPUT_SELECT2,
+                        'options'            => [
+                            'data'       => UserSearch::getStatuses(),
+                            'hideSearch' => true,
+                        ],
+                        'submitButton'       => [
+                            'class' => 'btn btn-sm btn-success',
+                            'icon'  => '<ion-icon name="add-outline" size="small"></ion-icon>',
+                        ],
+                        'resetButton'        => [
+                            'icon' => '<ion-icon name="refresh-outline" size="small"></ion-icon>'
+                        ],
+                        'header'             => 'Статус'
+                    ];
+                },
             ],
             [
                 'attribute' => 'profile.gender_id',

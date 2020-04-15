@@ -108,10 +108,15 @@ class UserSearch extends Model
     }
 
     /**
+     * @param int $statusId
      * @return array
      */
-    public static function getStatuses(): array
+    public static function getStatuses(int $statusId = null): array
     {
-        return ArrayHelper::map(UserStatus::find()->asArray()->all(), 'id', 'name');
+        return ArrayHelper::map(
+            UserStatus::find()->filterWhere(['!=', 'id', $statusId])->asArray()->all(),
+            'id',
+            'name'
+        );
     }
 }
