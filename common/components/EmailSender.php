@@ -5,17 +5,18 @@ namespace common\components;
 use api\modules\v1\models\error\BadRequestHttpException;
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use common\components\registry\RgUser;
+use common\models\event\Event;
 use common\models\user\User;
 use common\models\user\UserToken;
 use Yii;
 use yii\base\Exception;
 
 /**
- * Class EmailSendler
+ * Class EmailSender
  *
  * @package common\components
  */
-class EmailSendler
+class EmailSender
 {
     /**
      * @param User $user
@@ -61,28 +62,38 @@ class EmailSendler
 
     /**
      * @param User $user
+     * @return bool
      */
-    final public static function registrationConfirmBusinessUser(User $user): void
+    public static function changeStatusBusinessProfile(User $user): bool
     {
-//        UserToken::generateToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
-//        $userToken = UserToken::getToken($user, UserToken::TYPE_EMAIL_ACTIVATE);
-
-//        $confirmationLink = Html::a('Подтвердить регистрацию', [
-//            'user/registration-confirm',
-//            'access_token' => $userToken->token
-//        ]);
-
-//        Yii::$app->mailer->compose()
-//            ->setFrom('from@domain.com')
-//            ->setTo('to@domain.com')
-//            ->setSubject('Тема сообщения')
-//            ->setTextBody('Текст сообщения')
-//            ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
-//            ->send();
+        return Yii::$app->mailer->compose(
+            'changeStatusBProfile-html.php',
+            [
+                'user' => $user
+            ]
+        )
+            ->setFrom(Yii::$app->params['senderEmail'])
+            ->setTo($user->email)
+            ->setSubject('Ваш статус бизнес профиля')
+            ->send();
     }
 
-    public static function confirmChangeEmail(User $user, string $email): void
+    /**
+     * @param Event $event
+     * @return bool
+     */
+    public static function changeStatusEvent(Event $event): bool
     {
+        return Yii::$app->mailer->compose(
+            'changeStatusEvent-html.php',
+            [
+                'event' => $event
+            ]
+        )
+            ->setFrom(Yii::$app->params['senderEmail'])
+            ->setTo($event->user->email)
+            ->setSubject('Статус созданного события')
+            ->send();
     }
 
     /**

@@ -12,4 +12,6 @@ interface UserRepositoryInterface
     public function deleteAuthAssigment(int $userID);
 
     public function deleteUser(User $user);
+
+    public function searchFilter(string $q);
 }

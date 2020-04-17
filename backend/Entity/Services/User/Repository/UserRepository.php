@@ -7,9 +7,12 @@ use common\components\DateHelper;
 use common\components\registry\RgUser;
 use common\helpers\UserPermissionsHelper;
 use common\models\user\User;
+use common\models\user\UserProfile;
 use Throwable;
 use yii\db\Connection;
 use yii\db\Exception;
+use yii\db\Expression;
+use yii\db\Query;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -106,5 +109,52 @@ class UserRepository implements UserRepositoryInterface
                 return true;
             }
         );
+    }
+
+
+    /**
+     * @param string $q
+     * @return array
+     */
+    public function searchFilter(string $q): array
+    {
+        return (new Query())->select(
+            [
+                'id'   => 'u.id',
+                'text' => new Expression(
+                    "
+                      case
+                        when concat(up.first_name, up.last_name, up.patronymic) IS NOT NULL AND
+                            concat(up.first_name, up.last_name, up.patronymic) != ''
+                                then concat(up.first_name, ' ', up.last_name, ' ', up.patronymic)
+                        when u.username is not null AND u.username != ''
+                            then u.username
+                      else 
+                      u.email end
+                "
+                )
+            ]
+        )->from(['u' => User::tableName()])
+            ->innerJoin(['up' => UserProfile::tableName()], 'up.user_id = u.id')
+            ->andWhere(
+                [
+                    'OR',
+                    [
+                        'ilike',
+                        'u.username',
+                        $q
+                    ],
+                    [
+                        'ilike',
+                        'u.email',
+                        $q
+                    ],
+                    [
+                        'ilike',
+                        new Expression('concat(up.first_name, up.last_name, up.patronymic)'),
+                        $q
+                    ]
+                ]
+            )->all();
     }
 }

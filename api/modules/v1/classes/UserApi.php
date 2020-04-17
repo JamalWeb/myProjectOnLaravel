@@ -8,7 +8,7 @@ use api\modules\v1\models\form\BusinessUserForm;
 use api\modules\v1\models\form\DefaultUserForm;
 use api\modules\v1\models\form\LoginForm;
 use common\components\ArrayHelper;
-use common\components\EmailSendler;
+use common\components\EmailSender;
 use common\components\PasswordHelper;
 use common\components\registry\RgAttribute;
 use common\components\registry\RgUser;
@@ -171,7 +171,7 @@ class UserApi extends Api
             $userData = $user->publicInfo;
             $userData[RgAttribute::ACCESS] = $access;
 
-            EmailSendler::registrationConfirmDefaultUser($user);
+            EmailSender::registrationConfirmDefaultUser($user);
 
             $transaction->commit();
 
@@ -244,7 +244,7 @@ class UserApi extends Api
             $userData = $user->publicInfo;
             $userData[RgAttribute::ACCESS] = $access;
 
-            EmailSendler::registrationConfirmBusinessUser($user);
+            EmailSender::registrationConfirmBusinessUser($user);
 
             $transaction->commit();
 
@@ -329,7 +329,7 @@ class UserApi extends Api
             );
         }
 
-        $result = EmailSendler::userRecovery($user);
+        $result = EmailSender::userRecovery($user);
 
         return [
             RgAttribute::SUCCESS => $result

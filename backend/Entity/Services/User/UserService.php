@@ -4,7 +4,7 @@ namespace backend\Entity\Services\User;
 
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;
-use common\components\EmailSendler;
+use common\components\EmailSender;
 use common\models\user\User;
 use Exception;
 use Throwable;
@@ -68,7 +68,7 @@ class UserService
     {
         try {
             $resultSave = $this->repository->create($dto);
-            $sendEmail = EmailSendler::registrationConfirmSystemUser($dto);
+            $sendEmail = EmailSender::registrationConfirmSystemUser($dto);
 
             return $resultSave && $sendEmail;
         } catch (Exception $exception) {

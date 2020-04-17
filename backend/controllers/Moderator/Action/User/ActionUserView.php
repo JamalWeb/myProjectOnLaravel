@@ -18,7 +18,7 @@ class ActionUserView extends BaseAction
      */
     public function run(int $id): string
     {
-        $user = $this->controller->service->findOne('id', $id);
+        $user = $this->controller->service->findOneUser('id', $id);
         $this->controller->registerMeta($user->profile->first_name, '', '');
 
         return $this->controller->render(

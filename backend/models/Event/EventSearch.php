@@ -4,7 +4,10 @@
 namespace backend\models\Event;
 
 
+use common\components\ArrayHelper;
 use common\models\event\Event;
+use common\models\event\EventStatus;
+use common\models\event\EventType;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 
@@ -79,4 +82,19 @@ class EventSearch extends Model
         return $this->activeQuery;
     }
 
+    /**
+     * @return array|array[]
+     */
+    public static function getEventTypes(): array
+    {
+        return ArrayHelper::map(EventType::getList(), 'id', 'name');
+    }
+
+    /**
+     * @return array|array[]
+     */
+    public static function getStatuses(): array
+    {
+        return ArrayHelper::map(EventStatus::getList(), 'id', 'name');
+    }
 }

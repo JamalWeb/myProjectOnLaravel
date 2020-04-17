@@ -3,7 +3,9 @@
 namespace backend\controllers\Moderator;
 
 use backend\controllers\Base\BaseController;
+use backend\controllers\Moderator\Action\Event\ActionChangeStatusEvent;
 use backend\controllers\Moderator\Action\Event\ActionEventList;
+use backend\controllers\Moderator\Action\Event\ActionUserListFilter;
 use backend\controllers\Moderator\Action\User\ActionChangeStatusUser;
 use backend\controllers\Moderator\Action\User\ActionUserList;
 use backend\controllers\Moderator\Action\User\ActionUserView;
@@ -53,7 +55,8 @@ class ModeratorController extends BaseController
                             'change-status-user',
                             'event-list',
                             'event-view',
-                            'change-status-event'
+                            'change-status-event',
+                            'user-list-filter'
                         ],
                         'allow'   => true,
                         'roles'   => [
@@ -95,7 +98,11 @@ class ModeratorController extends BaseController
                 ],
             'change-status-event' =>
                 [
-
+                    'class' => ActionChangeStatusEvent::class
+                ],
+            'user-list-filter'    =>
+                [
+                    'class' => ActionUserListFilter::class
                 ]
         ];
     }
