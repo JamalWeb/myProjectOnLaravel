@@ -4,14 +4,26 @@
 namespace console\controllers;
 
 
+use backend\Entity\Services\User\UserService;
 use common\helpers\UserPermissionsHelper;
+use common\models\user\User;
 use Yii;
 use yii\base\Exception;
 use yii\console\Controller;
+use yii\console\ExitCode;
 use yii\helpers\Console;
 
 class RbacController extends Controller
 {
+    private $service;
+
+    public function __construct($id, $module, UserService $service, $config = [])
+    {
+        parent::__construct($id, $module, $config);
+
+        $this->service = $service;
+    }
+
     /**
      * @param int $idAdminUser
      * @return bool|int
@@ -19,6 +31,8 @@ class RbacController extends Controller
      */
     public function actionInit(int $idAdminUser)
     {
+        $user = $this->findUser($idAdminUser);
+
         $authManager = Yii::$app->getAuthManager();
         $authManager->removeAll();
 
@@ -89,6 +103,21 @@ class RbacController extends Controller
         } catch (\Exception $exception) {
             return $this->stdout($exception->getMessage() . PHP_EOL . $exception->getTraceAsString(), Console::FG_RED);
         }
+    }
+
+    /**
+     * @param int $id
+     * @return bool|User|int
+     */
+    private function findUser(int $id)
+    {
+        $user = User::findOne(['id' => $id]);
+
+        if ($user === null) {
+            return $this->stdout("User not found {$id}", ExitCode::NOUSER);
+        }
+
+        return $user;
     }
 
 }

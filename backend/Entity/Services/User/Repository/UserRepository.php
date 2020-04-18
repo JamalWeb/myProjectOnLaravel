@@ -5,7 +5,6 @@ namespace backend\Entity\Services\User\Repository;
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use common\components\DateHelper;
 use common\components\registry\RgUser;
-use common\helpers\UserPermissionsHelper;
 use common\models\user\User;
 use common\models\user\UserProfile;
 use Throwable;
@@ -18,10 +17,15 @@ class UserRepository implements UserRepositoryInterface
 {
     private $connection;
 
+    /**
+     * UserRepository constructor.
+     * @param Connection $connection
+     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
+
 
     /**
      * @param UserCreateDto $dto
@@ -70,9 +74,10 @@ class UserRepository implements UserRepositoryInterface
                         ]
                     )->execute();
 
-                UserPermissionsHelper::addRole($dto->role, $userId);
-
-                return true;
+                return [
+                    'userId' => $userId,
+                    'result' => true
+                ];
             }
         );
     }

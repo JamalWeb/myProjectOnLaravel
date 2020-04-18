@@ -5,6 +5,7 @@ namespace backend\Entity\Services\User;
 use backend\Entity\Services\User\Dto\UserCreateDto;
 use backend\Entity\Services\User\Repository\UserRepositoryInterface;
 use common\components\EmailSender;
+use common\helpers\UserPermissionsHelper;
 use common\models\user\User;
 use Exception;
 use Throwable;
@@ -64,13 +65,22 @@ class UserService
         }
     }
 
+    /**
+     * @param UserCreateDto $dto
+     * @return bool
+     */
     public function createUser(UserCreateDto $dto): bool
     {
         try {
             $resultSave = $this->repository->create($dto);
+
+            if ($resultSave['result']) {
+                UserPermissionsHelper::addRole($dto->role, $resultSave['userId']);
+            }
+
             $sendEmail = EmailSender::registrationConfirmSystemUser($dto);
 
-            return $resultSave && $sendEmail;
+            return $resultSave['result'] && $sendEmail;
         } catch (Exception $exception) {
             Yii::error($exception->getMessage() . PHP_EOL . $exception->getTraceAsString(), 'createUser');
             return false;
