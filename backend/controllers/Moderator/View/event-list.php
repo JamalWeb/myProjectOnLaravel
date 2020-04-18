@@ -6,8 +6,15 @@
  */
 
 use backend\models\Event\EventSearch;
+use common\components\ArrayHelper;
+use common\models\event\Event;
+use common\models\event\EventStatus;
+use kartik\editable\Editable;
+use kartik\grid\ActionColumn;
+use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
 use kartik\select2\Select2;
+use yii\bootstrap4\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\web\JsExpression;
@@ -51,11 +58,21 @@ use yii\web\View;
             [
                 'attribute' => 'user_id',
                 'header'    => 'Создатель',
-                'value'     => 'user.username',
+                'format'    => 'html',
+                'value'     => static function (Event $model) {
+                    return Html::a(
+                        $model->user->username ?? $model->user->email,
+                        [
+                            '/moderator/user-view',
+                            'id' => $model->user->id,
+                        ],
+                        ['target' => '_blank']
+                    );
+                },
                 'filter'    => Select2::widget(
                     [
                         'name'          => 'EventSearch[userId]',
-                        'options'       => ['placeholder' => 'Введите (email,username,firstName,id)'],
+                        'options'       => ['placeholder' => 'Введите (email,username,firstName)'],
                         'pluginOptions' => [
                             'allowClear'         => true,
                             'minimumInputLength' => 1,
@@ -73,7 +90,70 @@ use yii\web\View;
                         ]
                     ]
                 )
-            ]
+            ],
+            [
+                'attribute'       => 'status_id',
+                'label'           => 'Статус',
+                'filter'          => Select2::widget(
+                    [
+                        'name'          => 'EventSearch[statusId]',
+                        'data'          => EventSearch::getStatuses(),
+                        'value'         => $searchModel->statusId,
+                        'options'       => [
+                            'class'       => 'form-control',
+                            'placeholder' => 'Выберите значение',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear'    => true,
+                            'selectOnClose' => true,
+                        ],
+                    ]
+                ),
+                'class'           => EditableColumn::class,
+                'editableOptions' => static function (Event $model) {
+                    return [
+                        'value'              => static function (Event $model) {
+                            return ArrayHelper::getValue(
+                                EventStatus::getList(),
+                                $model->status_id
+                            );
+                        },
+                        'asPopover'          => true,
+                        'formOptions'        => [
+                            'action' => Url::to(['change-status-event', 'id' => $model->id])
+                        ],
+                        'displayValueConfig' => EventSearch::getStatuses(),
+                        'inputType'          => Editable::INPUT_SELECT2,
+                        'options'            => [
+                            'data'       => EventSearch::getStatuses(),
+                            'hideSearch' => true,
+                        ],
+                        'submitButton'       => [
+                            'class' => 'btn btn-sm btn-success',
+                            'icon'  => '<ion-icon name="add-outline" size="small"></ion-icon>',
+                        ],
+                        'resetButton'        => [
+                            'icon' => '<ion-icon name="refresh-outline" size="small"></ion-icon>'
+                        ],
+                        'header'             => 'Статус'
+                    ];
+                },
+            ],
+            [
+                'class'    => ActionColumn::class,
+                'template' => '{event-view}',
+                'buttons'  => [
+                    'event-view' => static function ($url) {
+                        return Html::a(
+                            '<ion-icon name="eye-outline" size="small"></ion-icon>',
+                            $url,
+                            [
+                                'title' => 'Детальная информация'
+                            ]
+                        );
+                    }
+                ],
+            ],
         ]
     ]
 )

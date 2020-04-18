@@ -40,9 +40,10 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] =
             [
-                'label'  => '<ion-icon name="enter-outline" size="large"></ion-icon>',
-                'url'    => ['/site/login'],
-                'encode' => false,
+                'label'   => '<ion-icon name="enter-outline" size="large"></ion-icon>',
+                'url'     => ['/site/login'],
+                'encode'  => false,
+                'options' => ['class' => 'login-btn']
             ];
     } else {
         $menuItems[] =
@@ -80,9 +81,10 @@ AppAsset::register($this);
 
         $menuItems[] =
             [
-                'label'  => '<ion-icon name="exit-outline" size="large"></ion-icon>',
-                'url'    => ['/site/logout'],
-                'encode' => false,
+                'label'   => '<ion-icon name="exit-outline" size="large"></ion-icon>',
+                'url'     => ['/site/logout'],
+                'encode'  => false,
+                'options' => ['class' => 'logout-btn']
             ];
     }
     echo Nav::widget(

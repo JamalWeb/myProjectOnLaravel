@@ -3,12 +3,12 @@
 namespace backend\controllers\Moderator;
 
 use backend\controllers\Base\BaseController;
-use backend\controllers\Moderator\Action\Event\ActionChangeStatusEvent;
-use backend\controllers\Moderator\Action\Event\ActionEventList;
-use backend\controllers\Moderator\Action\Event\ActionUserListFilter;
-use backend\controllers\Moderator\Action\User\ActionChangeStatusUser;
-use backend\controllers\Moderator\Action\User\ActionUserList;
-use backend\controllers\Moderator\Action\User\ActionUserView;
+use backend\controllers\Moderator\Action\Event\{ActionChangeStatusEvent,
+    ActionEventList,
+    ActionUserListFilter,
+    ActionViewEvent
+};
+use backend\controllers\Moderator\Action\User\{ActionChangeStatusUser, ActionUserList, ActionUserView};
 use backend\Entity\Moderator\Service\ModeratorService;
 use backend\models\Event\EventSearch;
 use backend\models\User\UserSearch;
@@ -72,38 +72,31 @@ class ModeratorController extends BaseController
     public function actions()
     {
         return [
-            'user-list'           =>
-                [
-                    'class'        => ActionUserList::class,
-                    'userSearch'   => UserSearch::class,
-                    'dataProvider' => ActiveDataProvider::class
-                ],
-            'user-view'           =>
-                [
-                    'class' => ActionUserView::class
-                ],
-            'change-status-user'  =>
-                [
-                    'class' => ActionChangeStatusUser::class
-                ],
-            'event-list'          =>
-                [
-                    'class'        => ActionEventList::class,
-                    'eventSearch'  => EventSearch::class,
-                    'dataProvider' => ActiveDataProvider::class
-                ],
-            'event-view'          =>
-                [
-                    'class'
-                ],
-            'change-status-event' =>
-                [
-                    'class' => ActionChangeStatusEvent::class
-                ],
-            'user-list-filter'    =>
-                [
-                    'class' => ActionUserListFilter::class
-                ]
+            'user-list'           => [
+                'class'        => ActionUserList::class,
+                'userSearch'   => UserSearch::class,
+                'dataProvider' => ActiveDataProvider::class
+            ],
+            'user-view'           => [
+                'class' => ActionUserView::class
+            ],
+            'change-status-user'  => [
+                'class' => ActionChangeStatusUser::class
+            ],
+            'event-list'          => [
+                'class'        => ActionEventList::class,
+                'eventSearch'  => EventSearch::class,
+                'dataProvider' => ActiveDataProvider::class
+            ],
+            'event-view'          => [
+                'class' => ActionViewEvent::class
+            ],
+            'change-status-event' => [
+                'class' => ActionChangeStatusEvent::class
+            ],
+            'user-list-filter'    => [
+                'class' => ActionUserListFilter::class
+            ]
         ];
     }
 }
