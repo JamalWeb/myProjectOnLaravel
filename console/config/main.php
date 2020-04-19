@@ -1,5 +1,6 @@
 <?php
 
+use backend\config\Bootstrap\UserBootstrap;
 use yii\console\controllers\FixtureController;
 use yii\console\controllers\MigrateController;
 use yii\log\FileTarget;
@@ -13,13 +14,14 @@ $params = array_merge(
 return [
     'id'                  => 'app-console',
     'basePath'            => dirname(__DIR__),
-    'bootstrap'           => ['log'],
+    'bootstrap'           => ['log', UserBootstrap::class],
     'controllerNamespace' => 'console\controllers',
     'aliases'             => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'controllerMap'       => [
+
+    'controllerMap' => [
         'fixture' => [
             'class'     => FixtureController::class,
             'namespace' => 'common\fixtures',
@@ -33,7 +35,7 @@ return [
             ],
         ],
     ],
-    'components'          => [
+    'components'    => [
         'log' => [
             'targets' => [
                 [
@@ -43,5 +45,5 @@ return [
             ],
         ],
     ],
-    'params'              => $params,
+    'params'        => $params,
 ];
