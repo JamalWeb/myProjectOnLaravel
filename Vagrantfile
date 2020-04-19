@@ -2,9 +2,9 @@ require 'yaml'
 require 'fileutils'
 
 domains = {
-  frontend:  'project.loc',
-  backend:   'backend.project.loc',
-  api:       'api.project.loc'
+  frontend:  'mappa.loc',
+  backend:   'admin.mappa.loc',
+  api:       'api.mappa.loc'
 }
 
 config = {
@@ -72,5 +72,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision 'shell', path: './vagrant/provision/always-as-root.sh', run: 'always'
 
   # post-install message (vagrant console)
-  config.vm.post_up_message = "Frontend URL: http://#{domains[:frontend]}\nBackend URL: http://#{domains[:backend]}\nApi URL: http://#{domains[:api]}"
+  config.vm.post_up_message = "Frontend URL: http://#{domains[:frontend]}
+  \nBackend URL: http://#{domains[:backend]}\nApi URL: http://#{domains[:api]}"
 end
